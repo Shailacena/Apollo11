@@ -1,0 +1,10 @@
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+.login {
+  width: 420px;
+  height: 310px;
+  margin: 120px auto;
+}
