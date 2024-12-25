@@ -1,6 +1,6 @@
 import { Space, Table, Tag, Button } from 'antd';
 import type { TableProps } from 'antd';
-import { getDataFormat, getRandomNumber } from '../Utils/Tool';
+import { getDataFormat, getRandomNumber } from '../utils/Tool';
 
 interface DataType {
   key: string;
