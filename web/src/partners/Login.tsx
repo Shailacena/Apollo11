@@ -1,10 +1,11 @@
 import React from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input, Flex } from 'antd';
+import { Button, Checkbox, Form, Input, Flex, message } from 'antd';
 
 const Login: React.FC = () => {
   const onFinish = (values: any) => {
     console.log('Received values of form: ', values);
+    message.success('Login Success!');
   };
 
   return (

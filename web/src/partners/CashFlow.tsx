@@ -24,12 +24,13 @@ const columns: TableProps<DataType>['columns'] = [
     title: 'Balance', key: 'balance', dataIndex: 'balance',
   },
   {
-    title: 'Time', key: 'time', dataIndex: 'time',
+    title: 'Time', key: 'time', dataIndex: 'time', render: (text) => {
+      const date = new Date(text);
+      return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)} ${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}:${('0' + date.getSeconds()).slice(-2)}`;
+    }
   },
   {
-    title: 'Action',
-    key: 'action',
-    render: (_, record) => (
+    title: 'Action', key: 'action', render: (_, record) => (
       <Space size="middle">
         <Button type="primary" size='small'>Details</Button>
       </Space>
@@ -42,7 +43,7 @@ const data: DataType[] = [];
 function CashFlow() {
   for(let i=0;i<10;i++) {
     data.push({
-      key: '3', order_id: '123', account_id: '123', change_money: 500, balance: 30000, time: 1735128468
+      key: '3', order_id: '123', account_id: '123', change_money: 500, balance: 30000, time: 1735131468000
     })
   }
   return (
