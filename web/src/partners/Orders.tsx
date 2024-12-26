@@ -2,6 +2,7 @@ import { Space, Table, Tag, Button, Form, message, Input, Select, Flex } from 'a
 import type { SelectProps, TableProps } from 'antd';
 import { getDataFormat, getRandomNumber } from '../utils/Tool';
 import { SearchOutlined } from '@ant-design/icons';
+import UploadInput from '../components/UploadInput';
 
 interface DataType {
   key: string;
@@ -189,6 +190,7 @@ function Orders() {
     <>
       <div>
         <SearchForm />
+        
       </div>
       <Table<DataType>
         bordered

@@ -38,7 +38,7 @@ const ChartLine: React.FC = () => {
 
   const config = {
     data,
-    height: 400,
+    height: 300,
     xField: 'date',
     yField: 'value',
     point: {
