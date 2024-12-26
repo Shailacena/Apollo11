@@ -2,6 +2,7 @@ import { Card, Col, Row, Statistic, StatisticProps, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { getDataFormat } from "../utils/Tool";
 import CountUp from 'react-countup';
+import { Line } from "@ant-design/charts";
 
 const formatter: StatisticProps['formatter'] = (value) => (
   <CountUp end={value as number} separator="," />
@@ -24,6 +25,38 @@ const CurrentTime = () => {
   );
 };
 
+const ChartLine: React.FC = () => {
+  const data = [
+    { date: '2024-12-1', value: 1007863 },
+    { date: '2024-12-2', value: 999999 },
+    { date: '2024-12-3', value: 1245678 },
+    { date: '2024-12-4', value: 2123432 },
+    { date: '2024-12-5', value: 3342221 },
+    { date: '2024-12-6', value: 1307863 },
+    { date: '2024-12-7', value: 2007863 },
+  ];
+
+  const config = {
+    data,
+    height: 400,
+    xField: 'date',
+    yField: 'value',
+    point: {
+      shapeField: 'circle',
+      sizeField: 4,
+    },
+    interaction: {
+      tooltip: {
+        marker: true,
+      },
+    },
+    style: {
+      lineWidth: 2,
+    },
+  };
+  return <Line {...config} />;
+};
+
 const Home: React.FC = () => {
   return (
     <div style={{ margin: '0 auto' }}>
@@ -31,26 +64,37 @@ const Home: React.FC = () => {
       <div className="div_time">
         <p>Hello, Boss! Now time is: {CurrentTime()}</p>
       </div>
-      <Card title="Today">
-        <Row gutter={16}>
-          <Col span={12}>
-            <Statistic title="Money" value={112893} formatter={formatter} />
-          </Col>
-          <Col span={12}>
-            <Statistic title="Order Num" value={112893} precision={2} formatter={formatter} />
-          </Col>
-        </Row>
-      </Card>
-<br></br>
-      <Card title="Month">
-        <Row gutter={16}>
-          <Col span={12}>
-            <Statistic title="Money" value={112893} formatter={formatter} />
-          </Col>
-          <Col span={12}>
-            <Statistic title="Order Num" value={112893} precision={2} formatter={formatter} />
-          </Col>
-        </Row>
+      <Row gutter={16}>
+        <Col span={12}>
+          <Card title="Today">
+            <Row gutter={16}>
+              <Col span={12}>
+                <Statistic title="Money" value={112893} formatter={formatter} />
+              </Col>
+              <Col span={12}>
+                <Statistic title="Order Num" value={112893} precision={2} formatter={formatter} />
+              </Col>
+            </Row>
+          </Card>
+        </Col>
+        <Col span={12}>
+          <Card title="Total">
+            <Row gutter={16}>
+              <Col span={12}>
+                <Statistic title="Money" value={112893} formatter={formatter} />
+              </Col>
+              <Col span={12}>
+                <Statistic title="Order Num" value={112893} precision={2} formatter={formatter} />
+              </Col>
+            </Row>
+          </Card>
+        </Col>
+      </Row>
+
+      <br></br>
+
+      <Card title="Last 7 days">
+        <ChartLine />
       </Card>
       <div>
       </div>

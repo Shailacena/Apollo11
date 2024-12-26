@@ -1,6 +1,7 @@
-import { Space, Table, Tag, Button } from 'antd';
-import type { TableProps } from 'antd';
+import { Space, Table, Tag, Button, Form, message, Input, Select, Flex } from 'antd';
+import type { SelectProps, TableProps } from 'antd';
 import { getDataFormat, getRandomNumber } from '../utils/Tool';
+import { SearchOutlined } from '@ant-design/icons';
 
 interface DataType {
   key: string;
@@ -32,29 +33,29 @@ const columns: TableProps<DataType>['columns'] = [
   },
   {
     title: 'OrderState', key: 'order_state', dataIndex: 'order_state', render: (text) => {
-      if(text === 2) {
+      if (text === 2) {
         return <div style={{ color: 'green' }}>Success</div>
       }
-      if(text === 1) {
+      if (text === 1) {
         return <div style={{ color: 'blue' }}>In progress</div>
       }
-      if(text === 3) {
+      if (text === 3) {
         return <div style={{ color: 'red' }}>Fail</div>
       }
-   }
+    }
   },
   {
     title: 'PayState', key: 'pay_state', dataIndex: 'pay_state', render: (text) => {
-      if(text === 2) {
+      if (text === 2) {
         return <div style={{ color: 'green' }}>Success</div>
       }
-      if(text === 1) {
+      if (text === 1) {
         return <div style={{ color: 'blue' }}>In progress</div>
       }
-      if(text === 3) {
+      if (text === 3) {
         return <div style={{ color: 'red' }}>Fail</div>
       }
-   }
+    }
   },
   {
     title: 'ShopName', key: 'shop_name', dataIndex: 'shop_name',
@@ -88,16 +89,16 @@ const columns: TableProps<DataType>['columns'] = [
   },
   {
     title: 'CallbackState', key: 'callback_state', dataIndex: 'callback_state', render: (text) => {
-      if(text === 2) {
+      if (text === 2) {
         return <div style={{ color: 'green' }}>Success</div>
       }
-      if(text === 1) {
+      if (text === 1) {
         return <div style={{ color: 'blue' }}>In progress</div>
       }
-      if(text === 3) {
+      if (text === 3) {
         return <div style={{ color: 'red' }}>Fail</div>
       }
-   }
+    }
   },
   {
     title: 'Action',
@@ -110,20 +111,80 @@ const columns: TableProps<DataType>['columns'] = [
   },
 ];
 
+const handleChange = (value: string | string[]) => {
+  console.log(`Selected: ${value}`);
+};
+
+const options: SelectProps['options'] = [];
+
+for (let i = 10; i < 36; i++) {
+  options.push({
+    value: i.toString(36) + i,
+    label: i.toString(36) + i,
+  });
+}
+
+const SearchForm = () => {
+  const [form] = Form.useForm();
+
+  const onFinish = (values: any) => {
+    console.log('Search values:', values);
+    message.success('Search Success!');
+  };
+
+  return (
+    <Form
+      form={form}
+      layout="inline"
+      onFinish={onFinish}
+      style={{ marginBottom: 16 }}
+    >
+      <Form.Item
+        name="searchKeyword"
+        label="Filter"
+      // rules={[{ required: true, message: '请输入搜索关键词' }]}
+      >
+        <Flex vertical={true}>
+          <div>
+            <Input placeholder="OrderID" />
+          </div>
+          <div>
+            <Select
+              size="middle"
+              placeholder="Please select"
+              defaultValue={'1'}
+              onChange={handleChange}
+              style={{ width: '100%' }}
+              options={options}
+            />
+          </div>
+        </Flex>
+      </Form.Item>
+      <Form.Item>
+        <Button type="primary" htmlType="submit" icon=<SearchOutlined />>
+        </Button>
+      </Form.Item>
+    </Form>
+  );
+};
+
 const data: DataType[] = [];
 
 function Orders() {
-  for(let i=0;i<10;i++) {
+  for (let i = 0; i < 10; i++) {
     data.push({
-      key:'3',partner_id:'123',partner_name:'Joe Black',order_id:'32',order_state:getRandomNumber(1,3),pay_state:getRandomNumber(1,3),shop_name:'xxx',product_sku:'123',product_id:'123',product_name:'xxx',product_price:'1',pay_user_id:'123',create_time:1735131468000,callback_time:1735131468000,callback_state:getRandomNumber(1,3),
+      key: '3', partner_id: '123', partner_name: 'Joe Black', order_id: '32', order_state: getRandomNumber(1, 3), pay_state: getRandomNumber(1, 3), shop_name: 'xxx', product_sku: '123', product_id: '123', product_name: 'xxx', product_price: '1', pay_user_id: '123', create_time: 1735131468000, callback_time: 1735131468000, callback_state: getRandomNumber(1, 3),
     })
   }
   return (
     <>
-      <Table<DataType> 
-      bordered
-      columns={columns} 
-      dataSource={data} />
+      <div>
+        <SearchForm />
+      </div>
+      <Table<DataType>
+        bordered
+        columns={columns}
+        dataSource={data} />
     </>
   )
 }
