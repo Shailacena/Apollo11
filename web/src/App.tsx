@@ -7,13 +7,14 @@ import PartnersOrders from './partners/Orders'
 import PartnersCashFlow from './partners/CashFlow'
 import PartnersLogin from './partners/Login'
 import Login from './Login'
+import PartnersHome from './partners/Home'
 
 function App() {
   return (
     <>
-      {/* <PartnersMainLayout> */}
-        <PartnersLogin />
-      {/* </PartnersMainLayout> */}
+      <PartnersMainLayout>
+        <PartnersOrders />
+      </PartnersMainLayout>
     </>
   )
 }
