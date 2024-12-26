@@ -103,6 +103,7 @@ const columns: TableProps<DataType>['columns'] = [
   {
     title: 'Action',
     key: 'action',
+    fixed: 'right', // 固定最右边，配合Table的scroll={{ x: 'max-content' }}使用
     render: (_, record) => (
       <Space size="middle">
         <Button type="primary" size='small'>Details</Button>
@@ -145,20 +146,28 @@ const SearchForm = () => {
       // rules={[{ required: true, message: '请输入搜索关键词' }]}
       >
         <Flex vertical={true}>
-          <div>
-            <Input placeholder="OrderID" />
-          </div>
-          <div>
-            <Select
-              size="middle"
-              placeholder="Please select"
-              defaultValue={'1'}
-              onChange={handleChange}
-              style={{ width: '100%' }}
-              options={options}
-            />
-          </div>
+          <Input placeholder="OrderID" />
         </Flex>
+      </Form.Item>
+      <Form.Item>
+        <Select
+          size="middle"
+          placeholder="Type"
+          defaultValue={'Type'}
+          onChange={handleChange}
+          style={{ width:'100px' }}
+          options={options}
+        />
+      </Form.Item>
+      <Form.Item>
+        <Select
+          size="middle"
+          placeholder="State"
+          defaultValue={'State'}
+          onChange={handleChange}
+          style={{ width: '100px' }}
+          options={options}
+        />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit" icon=<SearchOutlined />>
@@ -168,12 +177,12 @@ const SearchForm = () => {
   );
 };
 
-const data: DataType[] = [];
-
 function Orders() {
-  for (let i = 0; i < 10; i++) {
+  let data: DataType[] = [];
+  for (let i = 0; i < 50; i++) {
+    
     data.push({
-      key: '3', partner_id: '123', partner_name: 'Joe Black', order_id: '32', order_state: getRandomNumber(1, 3), pay_state: getRandomNumber(1, 3), shop_name: 'xxx', product_sku: '123', product_id: '123', product_name: 'xxx', product_price: '1', pay_user_id: '123', create_time: 1735131468000, callback_time: 1735131468000, callback_state: getRandomNumber(1, 3),
+      key: i.toString(), partner_id: i.toString(), partner_name: 'Joe Black', order_id: '32', order_state: getRandomNumber(1, 3), pay_state: getRandomNumber(1, 3), shop_name: 'xxx', product_sku: '123', product_id: '123', product_name: 'xxx', product_price: '1', pay_user_id: '123', create_time: 1735131468000, callback_time: 1735131468000, callback_state: getRandomNumber(1, 3),
     })
   }
   return (
@@ -183,7 +192,11 @@ function Orders() {
       </div>
       <Table<DataType>
         bordered
+        size='small'
+        // tableLayout='fixed'
         columns={columns}
+        pagination={{ pageSize: 15 }} // 分页
+        scroll={{ x: 'max-content' }}
         dataSource={data} />
     </>
   )
