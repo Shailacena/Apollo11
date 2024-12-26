@@ -13,7 +13,7 @@ function App() {
   return (
     <>
       <PartnersMainLayout>
-        <PartnersHome />
+        <PartnersOrders />
       </PartnersMainLayout>
     </>
   )
