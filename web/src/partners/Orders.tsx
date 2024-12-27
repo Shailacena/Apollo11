@@ -2,8 +2,8 @@ import { Space, Table, Tag, Button, Form, message, Input, Select, Flex, Upload }
 import type { SelectProps, TableProps } from 'antd';
 import { getDataFormat, getRandomNumber } from '../utils/Tool';
 import { SearchOutlined } from '@ant-design/icons';
-import UploadInput from '../components/UploadInput';
 import UploadDialog from '../components/UploadDialog';
+import OrderDetail from './OrderDetail';
 
 interface DataType {
   key: string;
@@ -108,7 +108,7 @@ const columns: TableProps<DataType>['columns'] = [
     fixed: 'right', // 固定最右边，配合Table的scroll={{ x: 'max-content' }}使用
     render: (_, record) => (
       <Space size="middle">
-        <Button type="primary" size='small'>Details</Button>
+        <Button type="primary" size='small' onClick={() => onDetailClick('0')}>Details</Button>
       </Space>
     ),
   },
@@ -116,6 +116,11 @@ const columns: TableProps<DataType>['columns'] = [
 
 const handleChange = (value: string | string[]) => {
   console.log(`Selected: ${value}`);
+};
+
+const onDetailClick = (value: string | string[]) => {
+  console.log(`Selected: ${value}`);
+  return <OrderDetail />
 };
 
 const options: SelectProps['options'] = [];
@@ -199,7 +204,7 @@ function Orders() {
           size='small'
           // tableLayout='fixed'
           columns={columns}
-          pagination={{ pageSize: 15 }} // 分页
+          pagination={{ pageSize: 12 }} // 分页
           scroll={{ x: 'max-content' }}
           dataSource={data} />
       </div>

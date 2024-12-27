@@ -50,6 +50,9 @@ function CashFlow() {
     <>
       <Table<DataType>
         bordered
+        size='small'
+        pagination={{ pageSize: 12 }} // 分页
+        scroll={{ x: 'max-content' }}
         columns={columns}
         dataSource={data} />
     </>

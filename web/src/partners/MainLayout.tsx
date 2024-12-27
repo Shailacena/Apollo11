@@ -1,37 +1,54 @@
-import React, { Children } from 'react';
 import { Layout, Menu, Dropdown, Space } from 'antd';
-import { AccountBookOutlined, BarsOutlined, EllipsisOutlined, LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
+import { IRoute, RouteConfigs } from './RouteConfigs';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
 const { Header, Content, Sider, Footer } = Layout;
 
-const menus: MenuItem[] = [
-  { key: '1', label: 'Setting', icon: <UserOutlined /> },
-  { key: '2', label: 'Orders', icon: <AccountBookOutlined /> },
-  {
-    key: 'sub1', label: 'CashFlow', icon: <BarsOutlined />,
-    children: [
-      { key: 'sub1_1', label: 'Daily', icon: <EllipsisOutlined /> },
-      { key: 'sub1_2', label: 'Total', icon: <EllipsisOutlined /> }
-    ]
-  }
-];
+const menus: MenuItem[] = RouteConfigs.map(
+  (menu) => {
+    return {
+      key: menu.path,
+      icon: menu.icon ? <menu.icon /> : null,
+      label: menu.name,
 
-interface MainLayoutProps {
-  children?: React.ReactElement
-}
+      children: menu.children?.map((sub) => {
+        return {
+          key: menu.path + sub.path,
+          label: sub.name,
+        };
+      }),
+    };
+  },
+);
 
 const items: MenuProps['items'] = [
   {
     label: "Logout",
     key: '0'
+  },
+  {
+    label: "Set Password",
+    key: '1'
   }
 ]
 
-function MainLayout({ children }: MainLayoutProps) {
+function MainLayout() {
+
+  const navigate = useNavigate()
+  const loc = useLocation()
+
+  const onClickMenu: MenuProps['onClick'] = (e) => {
+    if (loc.pathname == e.key) {
+      return
+    }
+
+    navigate(e.key)
+  }
+  
   return (
     <>
       <Layout>
@@ -52,14 +69,19 @@ function MainLayout({ children }: MainLayoutProps) {
           <Sider width={200}>
             <Menu
               mode="inline"
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['sub1']}
               style={{ height: '100%' }}
               items={menus}
+              onClick={onClickMenu}
             />
           </Sider>
           <Content style={{ padding: '30px', height: "calc(100vh - (40px + 48px))" }}>
-            {children}
+          <Routes>
+              {RouteConfigs.map((r: IRoute) => {
+                return r?.children ? r.children.map((childRoute: IRoute) => (
+                  <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<childRoute.component />} />
+                )) : <Route key={r.path} path={r.path} element={<r.component />} />
+              })}
+            </Routes>
           </Content>
         </Layout>
         <Footer style={{ padding: "12px 50px", textAlign: 'center' }}>

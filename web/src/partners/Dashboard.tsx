@@ -57,7 +57,7 @@ const ChartLine: React.FC = () => {
   return <Line {...config} />;
 };
 
-const Home: React.FC = () => {
+const Dashboard: React.FC = () => {
   return (
     <div style={{ margin: '0 auto' }}>
       {/* <CustomBreadcrumb arr={['基本','按钮']}/> */}
@@ -102,5 +102,5 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home
+export default Dashboard
 
