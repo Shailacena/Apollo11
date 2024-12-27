@@ -1,8 +1,9 @@
-import { Space, Table, Tag, Button, Form, message, Input, Select, Flex } from 'antd';
+import { Space, Table, Tag, Button, Form, message, Input, Select, Flex, Upload } from 'antd';
 import type { SelectProps, TableProps } from 'antd';
 import { getDataFormat, getRandomNumber } from '../utils/Tool';
 import { SearchOutlined } from '@ant-design/icons';
 import UploadInput from '../components/UploadInput';
+import UploadDialog from '../components/UploadDialog';
 
 interface DataType {
   key: string;
@@ -156,7 +157,7 @@ const SearchForm = () => {
           placeholder="Type"
           defaultValue={'Type'}
           onChange={handleChange}
-          style={{ width:'100px' }}
+          style={{ width: '100px' }}
           options={options}
         />
       </Form.Item>
@@ -181,7 +182,7 @@ const SearchForm = () => {
 function Orders() {
   let data: DataType[] = [];
   for (let i = 0; i < 50; i++) {
-    
+
     data.push({
       key: i.toString(), partner_id: i.toString(), partner_name: 'Joe Black', order_id: '32', order_state: getRandomNumber(1, 3), pay_state: getRandomNumber(1, 3), shop_name: 'xxx', product_sku: '123', product_id: '123', product_name: 'xxx', product_price: '1', pay_user_id: '123', create_time: 1735131468000, callback_time: 1735131468000, callback_state: getRandomNumber(1, 3),
     })
@@ -190,16 +191,18 @@ function Orders() {
     <>
       <div>
         <SearchForm />
-        
+        <UploadDialog />
       </div>
-      <Table<DataType>
-        bordered
-        size='small'
-        // tableLayout='fixed'
-        columns={columns}
-        pagination={{ pageSize: 15 }} // 分页
-        scroll={{ x: 'max-content' }}
-        dataSource={data} />
+      <div>
+        <Table<DataType>
+          bordered
+          size='small'
+          // tableLayout='fixed'
+          columns={columns}
+          pagination={{ pageSize: 15 }} // 分页
+          scroll={{ x: 'max-content' }}
+          dataSource={data} />
+      </div>
     </>
   )
 }

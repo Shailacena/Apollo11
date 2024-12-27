@@ -1,42 +1,89 @@
 import React, { useState } from 'react';
-import { Button, Modal } from 'antd';
+import { Button, ConfigProvider, Modal, Space } from 'antd';
+import { createStyles, useTheme } from 'antd-style';
+import UploadInput from './UploadInput';
+
+const useStyle = createStyles(({ token }) => ({
+  'my-modal-body': {
+    // background: token.blue1,
+    // padding: token.paddingSM,
+  },
+  'my-modal-mask': {
+    // boxShadow: `inset 0 0 15px #fff`,
+  },
+  'my-modal-header': {
+    // borderBottom: `1px dotted ${token.colorPrimary}`,
+  },
+  'my-modal-footer': {
+    // color: token.colorPrimary,
+  },
+  'my-modal-content': {
+    // border: '1px solid #333',
+  },
+}));
 
 const UploadDialog: React.FC = () => {
-  const [open, setOpen] = useState(false);
-  const [confirmLoading, setConfirmLoading] = useState(false);
-  const [modalText, setModalText] = useState('Content of the modal');
+  const [isModalOpen, setIsModalOpen] = useState([false, false]);
+  const { styles } = useStyle();
+  const token = useTheme();
 
-  const showModal = () => {
-    setOpen(true);
+  const toggleModal = (idx: number, target: boolean) => {
+    setIsModalOpen((p) => {
+      p[idx] = target;
+      return [...p];
+    });
   };
 
-  const handleOk = () => {
-    setModalText('The modal will be closed after two seconds');
-    setConfirmLoading(true);
-    setTimeout(() => {
-      setOpen(false);
-      setConfirmLoading(false);
-    }, 2000);
+  const classNames = {
+    body: styles['my-modal-body'],
+    mask: styles['my-modal-mask'],
+    header: styles['my-modal-header'],
+    footer: styles['my-modal-footer'],
+    content: styles['my-modal-content'],
   };
 
-  const handleCancel = () => {
-    console.log('Clicked cancel button');
-    setOpen(false);
+  const modalStyles = {
+    header: {
+      // borderLeft: `5px solid ${token.colorPrimary}`,
+      // borderRadius: 0,
+      // paddingInlineStart: 5,
+    },
+    body: {
+      // boxShadow: 'inset 0 0 5px #999',
+      // borderRadius: 5,
+    },
+    mask: {
+      // backdropFilter: 'blur(10px)',
+    },
+    footer: {
+      // borderTop: '1px solid #333',
+    },
+    content: {
+      // boxShadow: '0 0 30px #999',
+    },
   };
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>
-        Open Modal with async logic
-      </Button>
+      <Space>
+        <Button type="primary" onClick={() => toggleModal(0, true)}>
+          Open Modal
+        </Button>
+      </Space>
       <Modal
-        title="Title"
-        open={open}
-        onOk={handleOk}
-        confirmLoading={confirmLoading}
-        onCancel={handleCancel}
+        title="Upload"
+        open={isModalOpen[0]}
+        onOk={() => toggleModal(0, false)}
+        onCancel={() => toggleModal(0, false)}
+        classNames={classNames}
+        styles={modalStyles}
+        // centered //居中
+        style={{ top: 50 }}
+        destroyOnClose
       >
-        <p>{modalText}</p>
+        <div style={{ display: 'flex', minHeight: 200, margin: '0 auto', justifyContent: 'center', alignItems: 'center' }}>
+          <UploadInput />
+        </div>
       </Modal>
     </>
   );

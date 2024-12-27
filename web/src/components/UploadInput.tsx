@@ -1,46 +1,30 @@
-import React, { useState } from 'react';
- 
-const UploadInput = () => {
-  const [file, setFile] = useState(null);
- 
-  const handleFileChange = (event:any) => {
-    const file = event.target.files[0];
-    if (!file) {
-      return;
+import React from 'react';
+import { UploadOutlined } from '@ant-design/icons';
+import type { UploadProps } from 'antd';
+import { Button, message, Upload } from 'antd';
+
+const props: UploadProps = {
+  name: 'file',
+  action: 'https://660d2bd96ddfa2943b33731c.mockapi.io/api/upload',
+  headers: {
+    authorization: 'authorization-text',
+  },
+  onChange(info) {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
     }
-    setFile(file);
-  };
- 
-  const uploadFile = async () => {
-    if (!file) {
-      alert('请选择一个文件');
-      return;
+    if (info.file.status === 'done') {
+      message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === 'error') {
+      message.error(`${info.file.name} file upload failed.`);
     }
- 
-    const formData = new FormData();
-    formData.append('file', file);
- 
-    try {
-      const response = await fetch('YOUR_UPLOAD_ENDPOINT', {
-        method: 'POST',
-        body: formData,
-      });
-      if (response.ok) {
-        alert('上传成功');
-      } else {
-        alert('上传失败');
-      }
-    } catch (error) {
-      alert('上传异常');
-    }
-  };
- 
-  return (
-    <div>
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={uploadFile}>上传</button>
-    </div>
-  );
+  },
 };
- 
+
+const UploadInput: React.FC = () => (
+  <Upload {...props}>
+    <Button icon={<UploadOutlined />}>Click to Upload</Button>
+  </Upload>
+);
+
 export default UploadInput;
