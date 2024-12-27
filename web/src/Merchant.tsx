@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Modal, Form, Table, Select, Input, Button } from 'antd';
+import { Modal, Form, Table, Input, Button } from 'antd';
 import type { TableProps } from 'antd';
 
 const { TextArea } = Input;
@@ -20,25 +20,37 @@ type FieldType = {
 
 const columns: TableProps<DataType>['columns'] = [
   {
-    title: 'id',
+    title: '商户号',
     dataIndex: 'name',
     key: 'name',
     render: (text) => <a>{text}</a>,
   },
   {
-    title: '名称',
+    title: '商户名称',
     dataIndex: 'age',
     key: 'age',
   },
   {
-    title: '实名次数',
+    title: '秘钥',
     dataIndex: 'address',
     key: 'address',
   },
   {
-    title: '状态',
+    title: '创建时间',
     key: 'tags',
     dataIndex: 'tags',
+  },
+  {
+    title: '总交易额',
+    key: 'action',
+  },
+  {
+    title: '今日交易额',
+    key: 'action',
+  },
+  {
+    title: '状态',
+    key: 'action',
   },
   {
     title: '备注',
@@ -70,7 +82,7 @@ const data: DataType[] = [
   },
 ];
 
-function RealNameAccount() {
+function Merchant() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const showModal = () => {
@@ -85,43 +97,72 @@ function RealNameAccount() {
     setIsModalOpen(false);
   };
 
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>批量导入实名资料</Button>
+      <Button type="primary" onClick={showModal}>新增</Button>
       <Table<DataType> columns={columns} dataSource={data} />
 
-      <Modal title="导入实名资料" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+      <Modal title="新增" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <Form
+          labelCol={{ span: 4 }}
           name="basic"
           autoComplete="off"
         >
           <Form.Item<FieldType>
             name="username"
-            label="类型"
+            label="名称"
+            required
           >
-            <Select onChange={handleChange} options={[
-              { value: 'jack', label: 'Jack' },
-              { value: 'lucy', label: 'Lucy' },
-              { value: 'Yiminghe', label: 'yiminghe' },
-              { value: 'disabled', label: 'Disabled', disabled: true },
-            ]}>
-            </Select>
+            <Input />
           </Form.Item>
 
           <Form.Item<FieldType>
             name="username"
-            label="账号"
+            label="优先级"
+            required
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item<FieldType>
+            name="username"
+            label="每日限额"
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item<FieldType>
+            name="username"
+            label="白名单IP"
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item<FieldType>
+            name="username"
+            label="充值时间"
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item<FieldType>
+            name="username"
+            label="私钥"
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item<FieldType>
+            name="username"
+            label="备注"
           >
             <TextArea rows={4} />
           </Form.Item>
 
           <Form.Item>
             <Button size="large" block type="primary" htmlType="submit">
-              提交
+              确定
             </Button>
           </Form.Item>
         </Form >
@@ -130,4 +171,4 @@ function RealNameAccount() {
   )
 }
 
-export default RealNameAccount
+export default Merchant

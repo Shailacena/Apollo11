@@ -1,12 +1,12 @@
 import { Typography, Divider, Row, Col, Card, Statistic } from 'antd';
-const { Title, Paragraph } = Typography;
+const { Title } = Typography;
 
 function Dashboard() {
   return (
     <>
       <Typography>
         <Title>欢迎</Title>
-        <Paragraph>超级管理员</Paragraph>
+        <Title type="danger" level={4}>超级管理员</Title>
         {/* <Paragraph>当前时间： {new Date().toString()}</Paragraph> */}
       </Typography>
 

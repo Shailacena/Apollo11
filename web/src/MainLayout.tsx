@@ -1,37 +1,28 @@
 import React from 'react';
 import { Layout, Menu, Dropdown, Space } from 'antd';
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-
+import { routes, IRoute } from './routes';
+import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 
 const { Header, Content, Sider, Footer } = Layout;
 
-const menus = ['管理员', '账号管理'];
-
-const items2: MenuProps['items'] = menus.map(
-  (menu, index) => {
-    const key = String(index + 1);
-
+const menuItems: MenuProps['items'] = routes.map(
+  (menu) => {
     return {
-      key: `sub${key}`,
-      icon: React.createElement(UserOutlined),
-      label: `${menu}`,
+      key: menu.path,
+      icon: menu.icon ? <menu.icon /> : null,
+      label: menu.name,
 
-      children: new Array(4).fill(null).map((_, j) => {
-        const subKey = index * 4 + j + 1;
+      children: menu.children?.map((sub) => {
         return {
-          key: subKey,
-          label: `option${subKey}`,
+          key: menu.path + sub.path,
+          label: sub.name,
         };
       }),
     };
   },
 );
-
-interface MainLayoutProps {
-  children?: React.ReactElement
-}
 
 const items: MenuProps['items'] = [
   {
@@ -40,7 +31,20 @@ const items: MenuProps['items'] = [
   }
 ]
 
-function MainLayout({ children }: MainLayoutProps) {
+
+function MainLayout() {
+  const navigate = useNavigate()
+  const loc = useLocation()
+
+  const onClickMenu: MenuProps['onClick'] = (e) => {
+    if (loc.pathname == e.key) {
+      return
+    }
+
+    navigate(e.key)
+  }
+
+
   return (
     <>
       <Layout>
@@ -48,7 +52,7 @@ function MainLayout({ children }: MainLayoutProps) {
           <span>管理后台</span>
           <span style={{ position: 'absolute', right: 20 }}>
             <Dropdown menu={{ items }} trigger={['click']}>
-              <a style={{color: "#fff"}} onClick={(e) => e.preventDefault()}>
+              <a style={{ color: "#fff" }} onClick={(e) => e.preventDefault()}>
                 <Space>
                   超级管理员
                   <DownOutlined />
@@ -61,14 +65,21 @@ function MainLayout({ children }: MainLayoutProps) {
           <Sider width={200}>
             <Menu
               mode="inline"
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['sub1']}
               style={{ height: '100%' }}
-              items={items2}
+              items={menuItems}
+              onClick={onClickMenu}
             />
           </Sider>
           <Content style={{ padding: '30px', height: "calc(100vh - (40px + 48px))" }}>
-            {children}
+
+            <Routes>
+              {routes.map((r: IRoute) => {
+                return r?.children ? r.children.map((childRoute: IRoute) => (
+                  <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<childRoute.component />} />
+                )) : <Route key={r.path} path={r.path} element={<r.component />} />
+              })}
+            </Routes>
+
           </Content>
         </Layout>
         <Footer style={{ padding: "12px 50px", textAlign: 'center' }}>

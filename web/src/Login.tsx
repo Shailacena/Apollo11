@@ -1,5 +1,6 @@
 import { Flex, Button, Card, Form, Input } from 'antd';
 import bg from './assets/bg.jpg';
+import useSWR, {Fetcher} from "swr";
 
 type FieldType = {
   username?: string;
@@ -7,8 +8,13 @@ type FieldType = {
   googleCode?: string;
 };
 
+const loginFetcher: Fetcher<string, string>  = (...args) => fetch(...args).then((res) => res.json())
 
 function Login() {
+  const { data, error } = useSWR("/api/user/123", loginFetcher)
+
+  console.log(data, error)
+
   return (
     <>
       <Flex style={{ height: "100%", backgroundImage: `url(${bg})`, backgroundSize: "cover" }} >
