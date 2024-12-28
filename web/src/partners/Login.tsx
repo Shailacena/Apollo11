@@ -1,11 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Flex, message } from 'antd';
+import AuthContext from './AuthContext';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+function useAuth() {
+  return React.useContext(AuthContext);
+}
 
 const Login: React.FC = () => {
-  const onFinish = (values: any) => {
-    console.log('Received values of form: ', values);
+
+  let navigate = useNavigate();
+  let location = useLocation();
+  let auth = useAuth();
+
+  let from = location.state?.from?.pathname || '/';
+
+  const onFinish = (value: any) => {
+    console.log('Received values of form: ', value);
     message.success('Login Success!');
+
+    auth.signin(value.username, () => {
+      // 送用户回去他们试图访问的页面
+      // 使用 { replace: true } 保证我们不会把login放入history栈
+      // 意味着当用户点击回退，他不会重新回退到login页面
+      console.log('from: ', from);
+      setTimeout(() => {
+        navigate(from, { replace: true });
+      }, 500);
+    });
   };
 
   return (

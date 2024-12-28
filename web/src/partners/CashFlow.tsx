@@ -41,9 +41,9 @@ const columns: TableProps<DataType>['columns'] = [
 const data: DataType[] = [];
 
 function CashFlow() {
-  for(let i=0;i<10;i++) {
+  for(let i=0;i<50;i++) {
     data.push({
-      key: '3', order_id: '123', account_id: '123', change_money: 500, balance: 30000, time: 1735131468000
+      key: i.toString(), order_id: i.toString(), account_id: '123', change_money: 500, balance: 30000, time: 1735131468000
     })
   }
   return (

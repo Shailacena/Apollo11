@@ -23,12 +23,36 @@ export const RouteConfigs: Array<IRoute> = [
     path: '/Orders',
     name: 'Orders',
     icon: TableOutlined,
-    component: Orders,
+    component: null,
+    children: [
+      {
+        path: '/TotalOrders',
+        name: 'Total Orders',
+        component: Orders,
+      },
+      {
+        path: '/TodayOrders',
+        name: 'Today Orders',
+        component: Orders,
+      },
+    ],
   },
   {
     path: '/CashFlow',
     name: 'CashFlow',
-    icon: UserOutlined,
-    component: CashFlow,
+    icon: ShopOutlined,
+    component: null,
+    children: [
+      {
+        path: '/TotalCashFlow',
+        name: 'Total CashFlow',
+        component: CashFlow,
+      },
+      {
+        path: '/TodayCashFlow',
+        name: 'TodayCashFlow',
+        component: CashFlow,
+      },
+    ],
   },
 ];

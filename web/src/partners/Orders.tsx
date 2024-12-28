@@ -25,13 +25,13 @@ interface DataType {
 
 const columns: TableProps<DataType>['columns'] = [
   {
+    title: 'OrderID', dataIndex: 'order_id', key: 'order_id',
+  },
+  {
     title: 'PartnerID', dataIndex: 'partner_id', key: 'partner_id',
   },
   {
     title: 'PartnerName', dataIndex: 'partner_name', key: 'partner_name',
-  },
-  {
-    title: 'OrderID', dataIndex: 'order_id', key: 'order_id',
   },
   {
     title: 'OrderState', key: 'order_state', dataIndex: 'order_state', render: (text) => {
@@ -189,7 +189,7 @@ function Orders() {
   for (let i = 0; i < 50; i++) {
 
     data.push({
-      key: i.toString(), partner_id: i.toString(), partner_name: 'Joe Black', order_id: '32', order_state: getRandomNumber(1, 3), pay_state: getRandomNumber(1, 3), shop_name: 'xxx', product_sku: '123', product_id: '123', product_name: 'xxx', product_price: '1', pay_user_id: '123', create_time: 1735131468000, callback_time: 1735131468000, callback_state: getRandomNumber(1, 3),
+      key: i.toString(), partner_id: '10089', partner_name: 'Joe Black', order_id: i.toString(), order_state: getRandomNumber(1, 3), pay_state: getRandomNumber(1, 3), shop_name: 'xxx', product_sku: '123', product_id: '123', product_name: 'xxx', product_price: '1', pay_user_id: '123', create_time: 1735131468000, callback_time: 1735131468000, callback_state: getRandomNumber(1, 3),
     })
   }
   return (
