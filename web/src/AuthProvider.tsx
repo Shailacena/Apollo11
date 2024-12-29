@@ -26,6 +26,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
   let signin = (newUser: string, userType: AUTH_TYPE, callback: Function) => {
     return fakeAuthProvider.signin(userType, () => {
+      log('signin', userType)
       if (userType === AUTH_TYPE.ADMIN)
         setAdmin(newUser);
       else if (userType === AUTH_TYPE.PARTNER)
@@ -56,7 +57,7 @@ export function RequireAuth({ children }: { children: JSX.Element }) {
 
   if (!auth.admin) {
     // 重定向至login页面，但是保存用户试图访问的location，这样我们可以把登陆后的用户重定向至那个页面
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 
   return children;
