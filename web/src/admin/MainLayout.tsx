@@ -46,7 +46,6 @@ function MainLayout() {
     navigate(e.key)
   }
 
-
   return (
     <>
       <Layout>
