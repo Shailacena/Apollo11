@@ -21,13 +21,13 @@ export interface IRoute {
 
 export const routes: Array<IRoute> = [
   {
-    path: '/',
+    path: '/admin/home',
     name: '首页',
     component: Dashboard,
     icon: HomeOutlined,
   },
   {
-    path: '/admin',
+    path: '/admin/manager',
     name: '管理员',
     icon: UserOutlined,
     component: null,
@@ -40,7 +40,7 @@ export const routes: Array<IRoute> = [
     ],
   },
   {
-    path: '/account',
+    path: '/admin/account',
     name: '账号管理',
     icon: TableOutlined,
     component: null,
@@ -58,7 +58,7 @@ export const routes: Array<IRoute> = [
     ],
   },
   {
-    path: '/partner',
+    path: '/admin/partner',
     name: '合作商管理',
     icon: ShopOutlined,
     component: null,
@@ -81,7 +81,7 @@ export const routes: Array<IRoute> = [
     ],
   },
   {
-    path: '/merchant',
+    path: '/admin/merchant',
     name: '商户管理',
     icon: MergeCellsOutlined,
     component: null,
@@ -94,7 +94,7 @@ export const routes: Array<IRoute> = [
     ],
   },
   {
-    path: '/trade',
+    path: '/admin/trade',
     name: '交易统计',
     icon: PayCircleOutlined,
     component: null,
@@ -112,7 +112,7 @@ export const routes: Array<IRoute> = [
     ],
   },
   {
-    path: '/setting',
+    path: '/admin/setting',
     name: '系统设置',
     icon: SettingOutlined,
     component: null,

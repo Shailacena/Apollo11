@@ -2,8 +2,9 @@ import React from 'react';
 import { Layout, Menu, Dropdown, Space } from 'antd';
 import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { routes, IRoute } from './routes';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { routes } from './routes';
+import { AUTH_TYPE, useAuth } from '../AuthProvider';
 
 const { Header, Content, Sider, Footer } = Layout;
 
@@ -35,6 +36,7 @@ const items: MenuProps['items'] = [
 function MainLayout() {
   const navigate = useNavigate()
   const loc = useLocation()
+  const auth = useAuth()
 
   const onClickMenu: MenuProps['onClick'] = (e) => {
     if (loc.pathname == e.key) {
@@ -51,7 +53,11 @@ function MainLayout() {
         <Header style={{ color: "#fff", height: 48 }}>
           <span>管理后台</span>
           <span style={{ position: 'absolute', right: 20 }}>
-            <Dropdown menu={{ items }} trigger={['click']}>
+            <Dropdown menu={{ items, onClick:({ key })=>{
+                          if (key === '0'){
+                            auth.signout(AUTH_TYPE.ADMIN, ()=>{})
+                          }
+                        }  }} trigger={['click']}>
               <a style={{ color: "#fff" }} onClick={(e) => e.preventDefault()}>
                 <Space>
                   超级管理员
@@ -72,13 +78,7 @@ function MainLayout() {
           </Sider>
           <Content style={{ padding: '30px', height: "calc(100vh - (40px + 48px))" }}>
 
-            <Routes>
-              {routes.map((r: IRoute) => {
-                return r?.children ? r.children.map((childRoute: IRoute) => (
-                  <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<childRoute.component />} />
-                )) : <Route key={r.path} path={r.path} element={<r.component />} />
-              })}
-            </Routes>
+          <Outlet />
 
           </Content>
         </Layout>
