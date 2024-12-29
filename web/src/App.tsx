@@ -1,16 +1,12 @@
-import { BrowserRouter as Router, Route, Routes, BrowserRouter, Outlet, useLocation, Navigate, useNavigate } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, Outlet, useLocation, Navigate, useNavigate } from 'react-router-dom'
 import './App.css'
-import MainLayout from './partners/MainLayout'
-import { PrivateRoute, PublicRoute } from './RouteComponents'
-import PartnerLogin from './partners/Login'
-import PartnerDashboard from './partners/Dashboard'
 import React from 'react'
-import { fakeAuthProvider } from './partners/Auth'
-import Dashboard from './partners/Dashboard'
-import Orders from './partners/Orders'
-import Login from './partners/Login'
+import AuthProvider, { RequireAuth, RequireAuthPartner } from './AuthProvider'
+import MainLayout from './MainLayout'
+import Login from './Login'
+import LoginPartner from './partners/Login'
+import MainLayoutPartner from './partners/MainLayout'
 import { IRoute, RouteConfigs } from './partners/RouteConfigs'
-import AuthContext, { AuthProvider } from './partners/AuthContext'
 
 // import MainLayout from './MainLayout'
 
@@ -22,50 +18,38 @@ function App() {
 
     <AuthProvider>
       <Routes>
-        {/* <Route element={<Layout />}> */}
-          <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/partners/login" element={<LoginPartner />} />
+        <Route
+          path="/"
+          element={
+            <RequireAuth>
+              <MainLayout />
+            </RequireAuth>
+          }
+        />
+
           <Route
-            path="/"
+            path="/partners"
             element={
-              <RequireAuth>
-                <MainLayout />
-              </RequireAuth>
+              <RequireAuthPartner>
+                <MainLayoutPartner />
+              </RequireAuthPartner>
             }
-          />
-          {/* {RouteConfigs.map((r: IRoute) => {
-            return r?.children ? r.children.map((childRoute: IRoute) => (
-              <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<RequireAuth><childRoute.component /></RequireAuth>} />
-            )) : <Route key={r.path} path={r.path} element={<RequireAuth><r.component /></RequireAuth>} />
-          })} */}
-        {/* </Route> */}
+          >
+            {RouteConfigs.map((r: IRoute) => {
+              let route = r?.children ? r.children.map((childRoute: IRoute) => (
+                <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<childRoute.component />} />
+              )) : <Route key={r.path} path={r.path} element={<r.component />} />
+              console.log(route)
+              return route
+            })}
+
+          </Route>
+
       </Routes>
     </AuthProvider>
   )
-
-  function Layout() {
-    return (
-      <div>
-        <MainLayout />
-        <Outlet />
-      </div>
-    );
-  }
-
-  function useAuth() {
-    return React.useContext(AuthContext);
-  }
-
-  function RequireAuth({ children }: { children: JSX.Element }) {
-    let auth = useAuth();
-    let location = useLocation();
-
-    if (!auth.user) {
-      // 重定向至login页面，但是保存用户试图访问的location，这样我们可以把登陆后的用户重定向至那个页面
-      return <Navigate to="/login" state={{ from: location }} replace />;
-    }
-
-    return children;
-  }
 }
 
 export default App

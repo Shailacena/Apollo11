@@ -1,7 +1,7 @@
 import { HomeOutlined, MergeCellsOutlined, TableOutlined, UserOutlined, ShopOutlined, SettingOutlined, PayCircleOutlined } from '@ant-design/icons';
 import Dashboard from './Dashboard';
 import CashFlow from './CashFlow';
-import Orders from './Orders';
+import Orders from './OrdersToday';
 
 
 export interface IRoute {
@@ -14,42 +14,42 @@ export interface IRoute {
 
 export const RouteConfigs: Array<IRoute> = [
   {
-    path: '/',
+    path: '/partners/home',
     name: 'Home',
     component: Dashboard,
     icon: HomeOutlined,
   },
   {
-    path: '/Orders',
+    path: '/partners/orders',
     name: 'Orders',
     icon: TableOutlined,
     component: null,
     children: [
       {
-        path: '/TotalOrders',
+        path: '/total',
         name: 'Total Orders',
         component: Orders,
       },
       {
-        path: '/TodayOrders',
+        path: '/today',
         name: 'Today Orders',
         component: Orders,
       },
     ],
   },
   {
-    path: '/CashFlow',
+    path: '/partners/cashflow',
     name: 'CashFlow',
     icon: ShopOutlined,
     component: null,
     children: [
       {
-        path: '/TotalCashFlow',
+        path: '/total',
         name: 'Total CashFlow',
         component: CashFlow,
       },
       {
-        path: '/TodayCashFlow',
+        path: '/today',
         name: 'TodayCashFlow',
         component: CashFlow,
       },
