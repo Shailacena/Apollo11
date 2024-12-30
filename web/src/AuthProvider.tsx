@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { fakeAuthProvider } from "./Server";
 import { Navigate, useLocation } from "react-router-dom";
 import { log } from "./utils/Log";
@@ -25,25 +25,41 @@ export function useAuth() {
 function AuthProvider({ children }: { children: React.ReactNode }) {
   let [admin, setAdmin] = React.useState<any>(null);
   let [partner, setPartner] = React.useState<any>(null);
-  let [cookies, setCookie, removeCookie] = useCookies(['token', ]);
+  let [cookies, setCookie, removeCookie] = useCookies(['token']);
+
+  let adminData: any
+  let partnerData: any
+
+  useEffect(() => {
+    console.log('useEffect iccccccc adminData', adminData)
+    setAdmin(adminData);
+  }, [adminData]);
+
+  useEffect(() => {
+    // 异步操作或其他需要在渲染之外进行的操作
+    console.log('useEffect iccccccc partnerData', partnerData)
+    setPartner(partnerData);
+  }, [partnerData]);
 
   let signin = (account: string, password: string, userType: AUTH_TYPE, code: string, callback: Function) => {
     let params = {account, password, userType, code}
-    return fakeAuthProvider.signin(params, (data: {account: string, userType: AUTH_TYPE}, token: string) => {
-      console.log('signin', data.userType, data)
+    fakeAuthProvider.signin(params, (data: {account: string, userType: AUTH_TYPE}, token: string) => {
+      console.log('signin', data)
       if (data.userType === AUTH_TYPE.ADMIN){
+        console.log('icccccccccc1')
         setAdmin(data);
-        setCookie('token', token, {path: '/admin/', expires: new Date(new Date().getTime() + 24*60*60)});
+        setCookie('token', token, {path: '/admin/', expires: new Date(new Date().getTime() + 24*60*60*1000)});
       }else if (data.userType === AUTH_TYPE.PARTNER) {
+        console.log('icccccccccc2')
         setPartner(data);
-        setCookie('token', token, {path: '/partners/', expires: new Date(new Date().getTime() + 24*60*60)});
+        setCookie('token', token, {path: '/partners/', expires: new Date(new Date().getTime() + 24*60*60*1000)});
       }
       callback()
     });
   };
 
   let signout = (admin: any, callback: Function) => {
-    return fakeAuthProvider.signout(admin, () => {
+    fakeAuthProvider.signout(admin, () => {
       console.log('signout', admin.userType)
       if (admin.userType === AUTH_TYPE.ADMIN){
         removeCookie('token')
@@ -56,16 +72,17 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
+  // checkToken会导致setState问题，所以使用useEffect
   let checkToken = (userType: AUTH_TYPE, token: string, callback: Function) => {
-    return fakeAuthProvider.checkToken(userType, token, (data: {userType: AUTH_TYPE, account: string}) => {
+    fakeAuthProvider.checkToken(userType, token, (data: {userType: AUTH_TYPE, account: string}) => {
       console.log('checkToken token:', userType, data, token)
       if (data.userType === AUTH_TYPE.ADMIN){
         if (data.account) {
-          setAdmin(data);
+          adminData = data;
         }
       }else if (data.userType === AUTH_TYPE.PARTNER){
         if (data.account) {
-          setPartner(data);
+          partnerData = data;
         }
       }
       callback();
@@ -105,7 +122,7 @@ export function RequireAuthPartner({ children }: { children: JSX.Element }) {
   let location = useLocation();
   let [cookies] = useCookies(['token']);
   
-  console.log('RequireAuthPartner iccccccccccccccccccc admin', auth.partner)
+  console.log('RequireAuthPartner iccccccccccccccccccc partner', auth.partner)
   console.log('RequireAuthPartner iccccccccccccccccccc token ', cookies.token)
 
   // 已登陆
