@@ -4,7 +4,7 @@ import { AUTH_TYPE } from "./AuthProvider";
  * 模拟了Server API
  */
 
-const { v4: uuidv4} = require('uuid');
+import { v4 as uuidv4 } from 'uuid';
  
 function generateToken() {
   return uuidv4();
@@ -13,8 +13,10 @@ function generateToken() {
 const fakeAuthProvider = {
     isAuthenticated: false,
     token: '',
+    account: '',
     signin(params: {account: string, password: string, userType: AUTH_TYPE, code: string}, callback: Function) {
       fakeAuthProvider.isAuthenticated = true;
+      fakeAuthProvider.account = params.account;
       fakeAuthProvider.token = generateToken();
       setTimeout(callback({userType:params.userType, account: params.account}, fakeAuthProvider.token), 100); // fake async
     },
@@ -23,14 +25,15 @@ const fakeAuthProvider = {
       setTimeout(callback(), 100);
     },
     checkToken(userType: AUTH_TYPE, token: string, callback: Function) {
-      if (fakeAuthProvider.token != '' && fakeAuthProvider.token == token) {
+      console.log(fakeAuthProvider.token)
+      // if (fakeAuthProvider.token != '' && fakeAuthProvider.token == token) {
         fakeAuthProvider.isAuthenticated = true;
-        setTimeout(callback(userType, token), 100);
-      } else {
-        fakeAuthProvider.token = '';
-        fakeAuthProvider.isAuthenticated = false;
-        setTimeout(callback(userType), 100);
-      }
+        setTimeout(callback({userType:userType, account: '123'}), 100);
+      // } else {
+      //   fakeAuthProvider.token = '';
+      //   fakeAuthProvider.isAuthenticated = false;
+      //   setTimeout(callback({userType:userType}), 100);
+      // }
     }
   };
   

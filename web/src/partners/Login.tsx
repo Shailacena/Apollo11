@@ -16,7 +16,7 @@ const Login: React.FC = () => {
     console.log('Received values of form: ', value);
     message.success('Login Success!');
 
-    auth.signin(value.username, AUTH_TYPE.PARTNER, () => {
+    auth.signin(value.username, '', AUTH_TYPE.PARTNER, '', () => {
       // 使用 { replace: true } 保证我们不会把login放入history栈
       // 意味着当用户点击回退，他不会重新回退到login页面
       console.log('from: ', from);

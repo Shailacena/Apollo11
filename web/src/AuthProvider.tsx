@@ -12,7 +12,7 @@ interface AuthContextType {
   admin: any;
   partner: any;
   signin: (account: string, password: string, userType: AUTH_TYPE, code: string, callback: Function) => void;
-  signout: (callback: Function) => void;
+  signout: (admin: any, callback: Function) => void;
   checkToken: (userType: AUTH_TYPE, token: string, callback: Function) => void;
 }
 
@@ -25,25 +25,26 @@ export function useAuth() {
 function AuthProvider({ children }: { children: React.ReactNode }) {
   let [admin, setAdmin] = React.useState<any>(null);
   let [partner, setPartner] = React.useState<any>(null);
-  let [cookies, setCookie, removeCookie] = useCookies(['token']);
+  let [cookies, setCookie, removeCookie] = useCookies(['token', ]);
 
   let signin = (account: string, password: string, userType: AUTH_TYPE, code: string, callback: Function) => {
     let params = {account, password, userType, code}
     return fakeAuthProvider.signin(params, (data: {account: string, userType: AUTH_TYPE}, token: string) => {
-      log('signin', data.userType)
+      console.log('signin', data.userType, data)
       if (data.userType === AUTH_TYPE.ADMIN){
         setAdmin(data);
-        setCookie('token', token);
-      }else if (data.userType === AUTH_TYPE.PARTNER)
+        setCookie('token', token, {path: '/admin/', expires: new Date(new Date().getTime() + 24*60*60)});
+      }else if (data.userType === AUTH_TYPE.PARTNER) {
         setPartner(data);
-        setCookie('token', token);
-      callback();
+        setCookie('token', token, {path: '/partners/', expires: new Date(new Date().getTime() + 24*60*60)});
+      }
+      callback()
     });
   };
 
-  let signout = (callback: Function) => {
+  let signout = (admin: any, callback: Function) => {
     return fakeAuthProvider.signout(admin, () => {
-      log('signout', admin.userType)
+      console.log('signout', admin.userType)
       if (admin.userType === AUTH_TYPE.ADMIN){
         removeCookie('token')
         setAdmin(null);
@@ -56,14 +57,16 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   let checkToken = (userType: AUTH_TYPE, token: string, callback: Function) => {
-    return fakeAuthProvider.checkToken(userType, token, (backUserType: AUTH_TYPE) => {
-      log('checkToken', backUserType)
-      if (backUserType === AUTH_TYPE.ADMIN){
-        removeCookie('token')
-        setAdmin(null);
-      }else if (backUserType === AUTH_TYPE.PARTNER){
-        removeCookie('token')
-        setPartner(null);
+    return fakeAuthProvider.checkToken(userType, token, (data: {userType: AUTH_TYPE, account: string}) => {
+      console.log('checkToken token:', userType, data, token)
+      if (data.userType === AUTH_TYPE.ADMIN){
+        if (data.account) {
+          setAdmin(data);
+        }
+      }else if (data.userType === AUTH_TYPE.PARTNER){
+        if (data.account) {
+          setPartner(data);
+        }
       }
       callback();
     });
@@ -78,6 +81,9 @@ export function RequireAuth({ children }: { children: JSX.Element }) {
   let auth = useAuth();
   let location = useLocation();
   let [cookies] = useCookies(['token']);
+
+  console.log('RequireAuth iccccccccccccccccccc admin', auth.admin)
+  console.log('RequireAuth iccccccccccccccccccc token ', cookies.token)
 
   // 已登陆
   if (auth.admin) {
@@ -99,8 +105,11 @@ export function RequireAuthPartner({ children }: { children: JSX.Element }) {
   let location = useLocation();
   let [cookies] = useCookies(['token']);
   
+  console.log('RequireAuthPartner iccccccccccccccccccc admin', auth.partner)
+  console.log('RequireAuthPartner iccccccccccccccccccc token ', cookies.token)
+
   // 已登陆
-  if (auth.admin) {
+  if (auth.partner) {
     return children;
   }
 

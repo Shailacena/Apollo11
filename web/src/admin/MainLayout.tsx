@@ -55,7 +55,7 @@ function MainLayout() {
             <Dropdown menu={{
               items, onClick: ({ key }) => {
                 if (key === '0') {
-                  auth.signout(AUTH_TYPE.ADMIN, () => { })
+                  auth.signout(auth.admin, () => { })
                 }
               }
             }} trigger={['click']}>
