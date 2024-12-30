@@ -60,7 +60,7 @@ function MainLayout() {
           <span style={{ position: 'absolute', right: 20 }}>
             <Dropdown menu={{ items, onClick:({ key })=>{
               if (key === '0'){
-                auth.signout(AUTH_TYPE.PARTNER, ()=>{})
+                auth.signout(auth.partner, ()=>{})
               }
             } }} trigger={['click']}>
               <a style={{ color: "#fff" }} onClick={(e) => e.preventDefault()}>

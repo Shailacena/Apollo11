@@ -3,7 +3,7 @@ import type { SelectProps, TableProps } from 'antd';
 import { getDataFormat, getRandomNumber } from '../utils/Tool';
 import { SearchOutlined } from '@ant-design/icons';
 import UploadDialog from '../components/UploadDialog';
-import OrderDetail from '../partners/OrderDetail';
+import OrderDetail from './OrderDetail';
 
 interface DataType {
   key: string;

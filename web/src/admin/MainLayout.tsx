@@ -46,18 +46,19 @@ function MainLayout() {
     navigate(e.key)
   }
 
-
   return (
     <>
       <Layout>
         <Header style={{ color: "#fff", height: 48 }}>
           <span>管理后台</span>
           <span style={{ position: 'absolute', right: 20 }}>
-            <Dropdown menu={{ items, onClick:({ key })=>{
-                          if (key === '0'){
-                            auth.signout(AUTH_TYPE.ADMIN, ()=>{})
-                          }
-                        }  }} trigger={['click']}>
+            <Dropdown menu={{
+              items, onClick: ({ key }) => {
+                if (key === '0') {
+                  auth.signout(auth.admin, () => { })
+                }
+              }
+            }} trigger={['click']}>
               <a style={{ color: "#fff" }} onClick={(e) => e.preventDefault()}>
                 <Space>
                   超级管理员
@@ -77,9 +78,7 @@ function MainLayout() {
             />
           </Sider>
           <Content style={{ padding: '30px', height: "calc(100vh - (40px + 48px))" }}>
-
-          <Outlet />
-
+            <Outlet />
           </Content>
         </Layout>
         <Footer style={{ padding: "12px 50px", textAlign: 'center' }}>
