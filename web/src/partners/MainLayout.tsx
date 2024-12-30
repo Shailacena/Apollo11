@@ -1,7 +1,7 @@
 import { Layout, Menu, Dropdown, Space } from 'antd';
 import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { IRoute, RouteConfigs } from './RouteConfigs';
+import { getRouteConfig, IRoute } from './RouteConfigs';
 import { Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { AUTH_TYPE, useAuth } from '../AuthProvider';
 
@@ -9,7 +9,7 @@ type MenuItem = Required<MenuProps>['items'][number];
 
 const { Header, Content, Sider, Footer } = Layout;
 
-const menus: MenuItem[] = RouteConfigs.map(
+const menus: MenuItem[] = getRouteConfig().map(
   (menu) => {
     return {
       key: menu.path,

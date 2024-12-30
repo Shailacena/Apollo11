@@ -6,10 +6,12 @@ import MainLayout from './admin/MainLayout'
 import Login from './admin/Login'
 import LoginPartner from './partners/Login'
 import MainLayoutPartner from './partners/MainLayout'
-import { IRoute, RouteConfigs } from './partners/RouteConfigs'
+import { getRouteConfig, IRoute } from './partners/RouteConfigs'
 import { routes } from './admin/routes'
+import { getRandomPaths } from './utils/Tool'
 
 // import MainLayout from './MainLayout'
+export const randomPaths = [];
 
 function App() {
   return (
@@ -46,7 +48,7 @@ function App() {
             </RequireAuthPartner>
           }
         >
-          {RouteConfigs.map((r: IRoute) => {
+          {getRouteConfig().map((r: IRoute) => {
             let route = r?.children ? r.children.map((childRoute: IRoute) => (
               <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<childRoute.component />} />
             )) : <Route key={r.path} path={r.path} element={<r.component />} />

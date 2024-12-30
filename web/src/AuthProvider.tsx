@@ -89,7 +89,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  let value = { admin: admin, partner: partner, signin, signout, checkToken };
+  let value = { admin, partner, signin, signout, checkToken };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

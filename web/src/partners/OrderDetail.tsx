@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Button, ConfigProvider, Modal, Space } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
-import UploadInput from './UploadInput';
 
 const useStyle = createStyles(({ token }) => ({
   'my-modal-body': {

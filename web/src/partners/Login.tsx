@@ -3,6 +3,7 @@ import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Flex, message } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AUTH_TYPE, useAuth } from '../AuthProvider';
+import { getRouteConfig } from './RouteConfigs';
 
 const Login: React.FC = () => {
 
@@ -23,7 +24,7 @@ const Login: React.FC = () => {
       setTimeout(() => {
         // 送用户回去他们试图访问的页面
         // navigate(from, { replace: true });
-        navigate('/partners/home', { replace: true });
+        navigate(getRouteConfig()[0].path, { replace: true });
       }, 500);
     });
   };
