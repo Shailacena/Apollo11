@@ -4,14 +4,30 @@ import { Button, Checkbox, Form, Input, Flex, message } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { AUTH_TYPE, useAuth } from '../AuthProvider';
 import { getRouteConfig } from './RouteConfigs';
+import { useCookies } from 'react-cookie';
+
+const TAG = 'Partners Login';
 
 const Login: React.FC = () => {
 
   let navigate = useNavigate();
   let location = useLocation();
   let auth = useAuth();
-
+  let [cookies] = useCookies(['token']);  
   let from = location.state?.from?.pathname || '/';
+
+  useEffect(() => {
+    // 异步操作或其他需要在渲染之外进行的操作
+    if (auth.partner) {
+      navigate(getRouteConfig()[0].path, { replace: true });
+      return;
+    }
+    // cookie登陆
+    if (cookies.token) {
+      auth.checkToken(AUTH_TYPE.PARTNER, cookies.token, () => { });
+      return;
+    }
+  }, [auth]);
 
   const onFinish = (value: any) => {
     console.log('Received values of form: ', value);
