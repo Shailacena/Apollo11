@@ -3,21 +3,21 @@ import type { SelectProps, TableProps } from 'antd';
 import { getDataFormat, getRandomNumber } from '../utils/Tool';
 import { SearchOutlined } from '@ant-design/icons';
 import UploadDialog from '../components/UploadDialog';
-import OrderDetail from './OrderDetail';
+import OrderDetail from './GoodsDetail';
 
 interface DataType {
   key: string;
   partner_id: string;
   partner_name: string;
-  order_id: string;
-  order_state: number;
+  goods_id: string;
+  goods_state: number;
   pay_state: number;
   shop_name: string;
   product_sku: string;
   product_id: string;
   product_name: string;
   product_price: string;
-  pay_user_id: string;
+  pay_account_id: string;
   create_time: number;
   callback_time: number;
   callback_state: number;
@@ -25,16 +25,16 @@ interface DataType {
 
 const columns: TableProps<DataType>['columns'] = [
   {
-    title: 'OrderID', dataIndex: 'order_id', key: 'order_id',
+    title: '商品ID', dataIndex: 'goods_id', key: 'goods_id', align: 'center',
   },
   {
-    title: 'PartnerID', dataIndex: 'partner_id', key: 'partner_id',
+    title: '合作商ID', dataIndex: 'partner_id', key: 'partner_id', align: 'center',
   },
   {
-    title: 'PartnerName', dataIndex: 'partner_name', key: 'partner_name',
+    title: '合作商名', dataIndex: 'partner_name', key: 'partner_name', align: 'center',
   },
   {
-    title: 'OrderState', key: 'order_state', dataIndex: 'order_state', render: (text) => {
+    title: '冻结状态', key: 'goods_state', dataIndex: 'goods_state', align: 'center', render: (text) => {
       if (text === 2) {
         return <div style={{ color: 'green' }}>Success</div>
       }
@@ -47,7 +47,7 @@ const columns: TableProps<DataType>['columns'] = [
     }
   },
   {
-    title: 'PayState', key: 'pay_state', dataIndex: 'pay_state', render: (text) => {
+    title: '充值状态', key: 'pay_state', dataIndex: 'pay_state', align: 'center', render: (text) => {
       if (text === 2) {
         return <div style={{ color: 'green' }}>Success</div>
       }
@@ -60,37 +60,40 @@ const columns: TableProps<DataType>['columns'] = [
     }
   },
   {
-    title: 'ShopName', key: 'shop_name', dataIndex: 'shop_name',
+    title: '店铺名', key: 'shop_name', dataIndex: 'shop_name', align: 'center',
   },
   {
-    title: 'SkuID', key: 'product_sku', dataIndex: 'product_sku',
+    title: 'SkuID', key: 'product_sku', dataIndex: 'product_sku', align: 'center',
   },
   {
-    title: 'ProductID', key: 'product_id', dataIndex: 'product_id',
+    title: 'ProductID', key: 'product_id', dataIndex: 'product_id', align: 'center',
   },
   {
-    title: 'ProductName', key: 'product_name', dataIndex: 'product_name',
+    title: '商品名', key: 'product_name', dataIndex: 'product_name', align: 'center',
   },
   {
-    title: 'ProductPrice', key: 'product_price', dataIndex: 'product_price',
+    title: '商品金额', key: 'product_price', dataIndex: 'product_price', align: 'center',
   },
   {
-    title: 'PayUserID', key: 'pay_user_id', dataIndex: 'pay_user_id',
+    title: '实际金额', key: 'product_real_price', dataIndex: 'product_real_price', align: 'center',
   },
   {
-    title: 'CreateTime', key: 'create_time', dataIndex: 'create_time', render: (text) => {
+    title: '充值户号', key: 'pay_account_id', dataIndex: 'pay_account_id', align: 'center',
+  },
+  {
+    title: '创建时间', key: 'create_time', dataIndex: 'create_time', align: 'center', render: (text) => {
       const date = new Date(text);
       return getDataFormat(date);
     }
   },
   {
-    title: 'CallbackTime', key: 'callback_time', dataIndex: 'callback_time', render: (text) => {
+    title: '回调时间', key: 'callback_time', dataIndex: 'callback_time', align: 'center', render: (text) => {
       const date = new Date(text);
       return getDataFormat(date);
     }
   },
   {
-    title: 'CallbackState', key: 'callback_state', dataIndex: 'callback_state', render: (text) => {
+    title: '回调状态', key: 'callback_state', dataIndex: 'callback_state', align: 'center', render: (text) => {
       if (text === 2) {
         return <div style={{ color: 'green' }}>Success</div>
       }
@@ -103,12 +106,15 @@ const columns: TableProps<DataType>['columns'] = [
     }
   },
   {
-    title: 'Action',
+    title: '操作',
     key: 'action',
     fixed: 'right', // 固定最右边，配合Table的scroll={{ x: 'max-content' }}使用
+    align: 'center',
     render: (_, record) => (
       <Space size="middle">
-        <Button type="primary" size='small' onClick={() => onDetailClick('0')}>Details</Button>
+        <Button type="primary" size='small' onClick={() => onEditClick('0')}>修改</Button>
+        <Button type="primary" size='small' danger onClick={() => onDeleteClick('0')}>冻结</Button>
+        <Button type="primary" size='small' danger onClick={() => onDeleteClick('0')}>删除</Button>
       </Space>
     ),
   },
@@ -118,7 +124,11 @@ const handleChange = (value: string | string[]) => {
   console.log(`Selected: ${value}`);
 };
 
-const onDetailClick = (value: string | string[]) => {
+const onDeleteClick = (value: string | string[]) => {
+  console.log(`Selected: ${value}`);
+};
+
+const onEditClick = (value: string | string[]) => {
   console.log(`Selected: ${value}`);
   return <OrderDetail />
 };
@@ -153,7 +163,7 @@ const SearchForm = () => {
       // rules={[{ required: true, message: '请输入搜索关键词' }]}
       >
         <Flex vertical={true}>
-          <Input placeholder="OrderID" />
+          <Input placeholder="订单ID" />
         </Flex>
       </Form.Item>
       <Form.Item>
@@ -184,12 +194,12 @@ const SearchForm = () => {
   );
 };
 
-function Orders() {
+function Goods() {
   let data: DataType[] = [];
   for (let i = 0; i < 50; i++) {
 
     data.push({
-      key: i.toString(), partner_id: '10089', partner_name: 'Joe Black', order_id: i.toString(), order_state: getRandomNumber(1, 3), pay_state: getRandomNumber(1, 3), shop_name: 'xxx', product_sku: '123', product_id: '123', product_name: 'xxx', product_price: '1', pay_user_id: '123', create_time: 1735131468000, callback_time: 1735131468000, callback_state: getRandomNumber(1, 3),
+      key: i.toString(), partner_id: '10089', partner_name: 'Joe Black', goods_id: i.toString(), goods_state: getRandomNumber(1, 3), pay_state: getRandomNumber(1, 3), shop_name: 'xxx', product_sku: '123', product_id: '123', product_name: 'xxx', product_price: '1', pay_account_id: '123', create_time: 1735131468000, callback_time: 1735131468000, callback_state: getRandomNumber(1, 3),
     })
   }
   return (
@@ -212,4 +222,4 @@ function Orders() {
   )
 }
 
-export default Orders
+export default Goods

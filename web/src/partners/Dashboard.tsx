@@ -1,6 +1,6 @@
 import { Card, Col, Row, Statistic, StatisticProps, Typography } from "antd";
 import { useEffect, useState } from "react";
-import { getDataFormat } from "../utils/Tool";
+import { getDataFormat, greet } from "../utils/Tool";
 import CountUp from 'react-countup';
 import { Line } from "@ant-design/charts";
 
@@ -62,29 +62,29 @@ const Dashboard: React.FC = () => {
     <div style={{ margin: '0 auto' }}>
       {/* <CustomBreadcrumb arr={['基本','按钮']}/> */}
       <div className="div_time">
-        <p>Hello, Boss! Now time is: {CurrentTime()}</p>
+        <p>{greet()}, 老板! &nbsp;&nbsp;现在时间是: {CurrentTime()}</p>
       </div>
       <Row gutter={16}>
         <Col span={12}>
-          <Card title="Today">
+          <Card title="今日">
             <Row gutter={16}>
               <Col span={12}>
-                <Statistic title="Money" value={112893} formatter={formatter} />
+                <Statistic title="营收" value={112893} formatter={formatter} />
               </Col>
               <Col span={12}>
-                <Statistic title="Order Num" value={112893} precision={2} formatter={formatter} />
+                <Statistic title="订单" value={112893} precision={2} formatter={formatter} />
               </Col>
             </Row>
           </Card>
         </Col>
         <Col span={12}>
-          <Card title="Total">
+          <Card title="总共">
             <Row gutter={16}>
               <Col span={12}>
-                <Statistic title="Money" value={112893} formatter={formatter} />
+                <Statistic title="营收" value={112893} formatter={formatter} />
               </Col>
               <Col span={12}>
-                <Statistic title="Order Num" value={112893} precision={2} formatter={formatter} />
+                <Statistic title="订单" value={112893} precision={2} formatter={formatter} />
               </Col>
             </Row>
           </Card>
@@ -93,7 +93,7 @@ const Dashboard: React.FC = () => {
 
       <br></br>
 
-      <Card title="Last 7 days">
+      <Card title="最近7天">
         <ChartLine />
       </Card>
       <div>

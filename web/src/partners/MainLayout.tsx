@@ -3,7 +3,7 @@ import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { getRouteConfig, IRoute } from './RouteConfigs';
 import { Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { AUTH_TYPE, useAuth } from '../AuthProvider';
+import { useAuth } from '../AuthProvider';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -28,12 +28,12 @@ const menus: MenuItem[] = getRouteConfig().map(
 
 const items: MenuProps['items'] = [
   {
-    label: "Logout",
+    label: "登出",
     key: '0'
 
   },
   {
-    label: "Set Password",
+    label: "设置密码",
     key: '1'
   }
 ]
@@ -65,7 +65,7 @@ function MainLayout() {
             } }} trigger={['click']}>
               <a style={{ color: "#fff" }} onClick={(e) => e.preventDefault()}>
                 <Space>
-                  Partners
+                  {auth.partner.account}
                   <DownOutlined />
                 </Space>
               </a>

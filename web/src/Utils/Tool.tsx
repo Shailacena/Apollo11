@@ -89,3 +89,27 @@ export const getRandomPath = (index: number) => {
   }
 }
 
+/**
+ * 根据时间问候 
+ * @returns 
+ */
+export function greet(): string {
+  const hours = new Date().getHours();
+  if (!isNaN(hours)) {
+    if (hours >= 6 && hours < 11) {
+      return '早上好';
+    } else if (hours >= 11 && hours < 13) {
+      return '中午好';
+    } else if (hours >= 13 && hours < 19) {
+      return '下午好';
+    } else if (hours >= 18 && hours < 24) {
+      return '晚上好';
+    } else if (hours >= 0 && hours < 6) {
+      return '夜深了';
+    }
+    return '您好';
+  } else {
+    return '您好';
+  }
+}
+

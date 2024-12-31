@@ -31,7 +31,7 @@ const Login: React.FC = () => {
 
   const onFinish = (value: any) => {
     console.log('Received values of form: ', value);
-    message.success('Login Success!');
+    message.success('登陆成功!');
 
     auth.signin(value.username, '', AUTH_TYPE.PARTNER, '', () => {
       // 使用 { replace: true } 保证我们不会把login放入history栈
@@ -56,27 +56,27 @@ const Login: React.FC = () => {
       >
         <Form.Item
           name="username"
-          rules={[{ required: true, message: 'Please input your Username!' }]}
+          rules={[{ required: true, message: '请输入帐号!' }]}
         >
           <Input prefix={<UserOutlined />} placeholder="Username" />
         </Form.Item>
         <Form.Item
           name="password"
-          rules={[{ required: true, message: 'Please input your Password!' }]}
+          rules={[{ required: true, message: '请输入密码!' }]}
         >
           <Input prefix={<LockOutlined />} type="password" placeholder="Password" />
         </Form.Item>
         <Form.Item>
           <Flex justify="space-between" align="center">
             <Form.Item name="remember" valuePropName="checked" noStyle>
-              <Checkbox>Remember me</Checkbox>
+              <Checkbox>记住我</Checkbox>
             </Form.Item>
           </Flex>
         </Form.Item>
 
         <Form.Item>
           <Button block type="primary" htmlType="submit">
-            Log in
+            登陆
           </Button>
         </Form.Item>
       </Form>

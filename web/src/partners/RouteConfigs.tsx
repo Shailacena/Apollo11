@@ -2,7 +2,7 @@ import { HomeOutlined, MergeCellsOutlined, TableOutlined, UserOutlined, ShopOutl
 import Dashboard from './Dashboard';
 import CashFlow from './CashFlow';
 import { getRandomPath } from '../utils/Tool';
-import Orders from './Orders';
+import Goods from './Goods';
 import CashFlowToday from './CashFlowToday';
 
 export interface IRoute {
@@ -22,37 +22,37 @@ export function getRouteConfig(): Array<IRoute> {
   {
     // path: '/partners/home',
     path: '/partners/' + getRandomPath(MODEL_PATH.HOME),
-    name: 'Home',
+    name: '首页',
     component: Dashboard,
     icon: HomeOutlined,
   },
   {
     path: '/partners/' + getRandomPath(MODEL_PATH.ORDERS),
-    name: 'Orders',
+    name: '商品管理',
     icon: TableOutlined,
     component: null,
     children: [
       {
         path: '/' + getRandomPath(0),
-        name: 'Order List',
-        component: Orders,
+        name: '商品列表',
+        component: Goods,
       },
     ],
   },
   {
     path: '/partners/'  + getRandomPath(MODEL_PATH.CASHFLOW),
-    name: 'CashFlow',
+    name: '流水记录',
     icon: ShopOutlined,
     component: null,
     children: [
       {
         path: '/' + getRandomPath(0),
-        name: 'CashFlow Total',
+        name: '账户流水',
         component: CashFlow,
       },
       {
         path: '/' + getRandomPath(1),
-        name: 'CashFlow Today',
+        name: '今日流水',
         component: CashFlowToday,
       },
     ],
