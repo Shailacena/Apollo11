@@ -177,7 +177,7 @@ const SearchForm = () => {
         />
       </Form.Item>
       <Form.Item>
-        <Button type="primary" htmlType="submit" icon=<SearchOutlined />>
+        <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
         </Button>
       </Form.Item>
     </Form>
@@ -194,7 +194,7 @@ function Orders() {
   }
   return (
     <>
-      <div>
+      <div style={{display: 'Flex'}}>
         <SearchForm />
         <UploadDialog />
       </div>

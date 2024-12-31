@@ -65,11 +65,11 @@ const UploadDialog: React.FC = () => {
 
   return (
     <>
-      <Space>
+      <div>
         <Button type="primary" onClick={() => toggleModal(0, true)}>
-          Open Modal
+          Upload
         </Button>
-      </Space>
+      </div>
       <Modal
         title="Upload"
         open={isModalOpen[0]}

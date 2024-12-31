@@ -1,5 +1,5 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Space, Table, Tag, Button, Form, message, Flex, Input, Select, DatePicker } from 'antd';
+import { Space, Table, Tag, Button, Form, message, Flex, Input, Select } from 'antd';
 import type { SelectProps, TableProps } from 'antd';
 import UploadDialog from '../components/UploadDialog';
 
@@ -42,7 +42,7 @@ const columns: TableProps<DataType>['columns'] = [
 
 const data: DataType[] = [];
 
-function CashFlow() {
+function CashFlowToday() {
   for (let i = 0; i < 50; i++) {
     data.push({
       key: i.toString(), order_id: i.toString(), account_id: '123', change_money: 500, balance: 30000, time: 1735131468000
@@ -50,8 +50,7 @@ function CashFlow() {
   }
   return (
     <>
-      <div style={{ display: 'Flex' }}>
-        <SearchForm />
+      <div style={{marginBottom: 10}}>
         <Button type="primary" onClick={() => toggleModal(0, true)}>
           Export
         </Button>
@@ -67,56 +66,8 @@ function CashFlow() {
   )
 }
 
-const options: SelectProps['options'] = [];
-
-for (let i = 10; i < 36; i++) {
-  options.push({
-    value: i.toString(36) + i,
-    label: i.toString(36) + i,
-  });
-}
-
-const handleChange = (value: string | string[]) => {
-  console.log(`Selected: ${value}`);
-};
-
-const SearchForm = () => {
-  const [form] = Form.useForm();
-
-  const onFinish = (values: any) => {
-    console.log('Search values:', values);
-    message.success('Search Success!');
-  };
-
-  const { RangePicker } = DatePicker;
-
-  return (
-    <Form
-      form={form}
-      layout="inline"
-      onFinish={onFinish}
-      style={{ marginBottom: 16 }}
-    >
-      <Form.Item
-        name="searchKeyword"
-        label="Date"
-      >
-        <RangePicker
-          id={{
-            start: 'startInput',
-            end: 'endInput',
-          }} />
-      </Form.Item>
-      <Form.Item>
-        <Button type="primary" htmlType="submit" icon={<SearchOutlined />}>
-        </Button>
-      </Form.Item>
-    </Form>
-  );
-};
-
 const toggleModal = (idx: number, target: boolean) => {
 
 };
 
-export default CashFlow
+export default CashFlowToday

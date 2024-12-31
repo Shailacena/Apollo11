@@ -1,8 +1,9 @@
 import { HomeOutlined, MergeCellsOutlined, TableOutlined, UserOutlined, ShopOutlined, SettingOutlined, PayCircleOutlined } from '@ant-design/icons';
 import Dashboard from './Dashboard';
 import CashFlow from './CashFlow';
-import Orders from './OrdersToday';
 import { getRandomPath } from '../utils/Tool';
+import Orders from './Orders';
+import CashFlowToday from './CashFlowToday';
 
 export interface IRoute {
   name: string
@@ -33,12 +34,7 @@ export function getRouteConfig(): Array<IRoute> {
     children: [
       {
         path: '/' + getRandomPath(0),
-        name: 'Total Orders',
-        component: Orders,
-      },
-      {
-        path: '/' + getRandomPath(1),
-        name: 'Today Orders',
+        name: 'Order List',
         component: Orders,
       },
     ],
@@ -51,13 +47,13 @@ export function getRouteConfig(): Array<IRoute> {
     children: [
       {
         path: '/' + getRandomPath(0),
-        name: 'Total CashFlow',
+        name: 'CashFlow Total',
         component: CashFlow,
       },
       {
         path: '/' + getRandomPath(1),
-        name: 'TodayCashFlow',
-        component: CashFlow,
+        name: 'CashFlow Today',
+        component: CashFlowToday,
       },
     ],
   },
