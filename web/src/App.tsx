@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Route, Routes, Outlet, useLocation, Navigate, useNavigate } from 'react-router-dom'
 import './App.css'
-import React from 'react'
 import AuthProvider, { RequireAuth, RequireAuthPartner } from './AuthProvider'
 import MainLayout from './admin/MainLayout'
 import Login from './admin/Login'
@@ -8,10 +7,8 @@ import LoginPartner from './partners/Login'
 import MainLayoutPartner from './partners/MainLayout'
 import { getRouteConfig, IRoute } from './partners/RouteConfigs'
 import { routes } from './admin/routes'
-import { getRandomPaths } from './utils/Tool'
 
 // import MainLayout from './MainLayout'
-export const randomPaths = [];
 
 function App() {
   return (
@@ -52,7 +49,7 @@ function App() {
             let route = r?.children ? r.children.map((childRoute: IRoute) => (
               <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<childRoute.component />} />
             )) : <Route key={r.path} path={r.path} element={<r.component />} />
-            console.log(route)
+            console.log('App routes', route)
             return route
           })}
         </Route>

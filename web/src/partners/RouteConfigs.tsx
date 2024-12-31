@@ -2,7 +2,7 @@ import { HomeOutlined, MergeCellsOutlined, TableOutlined, UserOutlined, ShopOutl
 import Dashboard from './Dashboard';
 import CashFlow from './CashFlow';
 import Orders from './OrdersToday';
-import { randomPaths } from '../utils/Tool';
+import { getRandomPath } from '../utils/Tool';
 
 export interface IRoute {
   name: string
@@ -12,46 +12,50 @@ export interface IRoute {
   children?: Array<IRoute>
 }
 
+enum MODEL_PATH {
+  HOME, ORDERS, CASHFLOW
+}
+
 export function getRouteConfig(): Array<IRoute> {
   return [
   {
     // path: '/partners/home',
-    path: '/partners/' + randomPaths[0],
+    path: '/partners/' + getRandomPath(MODEL_PATH.HOME),
     name: 'Home',
     component: Dashboard,
     icon: HomeOutlined,
   },
   {
-    path: '/partners/' + randomPaths[1],
+    path: '/partners/' + getRandomPath(MODEL_PATH.ORDERS),
     name: 'Orders',
     icon: TableOutlined,
     component: null,
     children: [
       {
-        path: '/' +  + randomPaths[2],
+        path: '/' + getRandomPath(0),
         name: 'Total Orders',
         component: Orders,
       },
       {
-        path: '/today',
+        path: '/' + getRandomPath(1),
         name: 'Today Orders',
         component: Orders,
       },
     ],
   },
   {
-    path: '/partners/' +  + randomPaths[3],
+    path: '/partners/'  + getRandomPath(MODEL_PATH.CASHFLOW),
     name: 'CashFlow',
     icon: ShopOutlined,
     component: null,
     children: [
       {
-        path: '/' + randomPaths[4],
+        path: '/' + getRandomPath(0),
         name: 'Total CashFlow',
         component: CashFlow,
       },
       {
-        path: '/' + randomPaths[0],
+        path: '/' + getRandomPath(1),
         name: 'TodayCashFlow',
         component: CashFlow,
       },
@@ -59,3 +63,4 @@ export function getRouteConfig(): Array<IRoute> {
   },
 ];
 }
+

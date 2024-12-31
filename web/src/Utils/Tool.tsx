@@ -1,13 +1,28 @@
-import { useCookies } from "react-cookie";
 
+/**
+ * 获取随机数
+ * @param start: number 随机区间头 
+ * @param end: number 随机区间尾
+ * @returns value: number
+ */
 export const getRandomNumber = (start: number, end: number) => {
   return Math.floor(Math.random() * end) + start;
 }
 
+/**
+ * 获取格式化日期
+ * @param date: Date 日期
+ * @returns value: string
+ */
 export const getDataFormat = (date: Date) => {
   return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)} ${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}:${('0' + date.getSeconds()).slice(-2)}`;
 }
 
+/**
+ * 获取Cookies
+ * @param name: string key
+ * @returns value: string
+ */
 export const getCookieByDocument = (name: string) => {
   const cookies = document.cookie
     .split("; ")
@@ -16,26 +31,39 @@ export const getCookieByDocument = (name: string) => {
   return cookies ? cookies.split("=")[1] : null;
 };
 
-export const setCookieByDocument = (name: string, value: string, days = 1) => {
+/**
+ * 设置Cookies
+ * @param name: string key
+ * @param value: string value
+ * @param days: number 有效天数
+ * @param path: string 有效path
+ */
+export const setCookieByDocument = (name: string, value: string, days = 1, path = '/') => {
   const expirationDate = new Date();
   expirationDate.setDate(expirationDate.getDate() + days);
-  document.cookie = `${name}=${value}; expires=${expirationDate.toUTCString()}; path=/`;
+  document.cookie = `${name}=${value}; expires=${expirationDate.toUTCString()}; path=${path}`;
 };
 
-const getRandomPaths = () => {
-  if (document.cookie) {
-    let pathstr = getCookieByDocument('paths');
-    if (pathstr) {
-      let paths: string[] = pathstr.split(",");
-      console.log('iccccc paths', paths)
-      return paths;
+/**
+ * 获取随机路由
+ * @returns path: string
+ */
+export const getRandomPath = (index: number) => {
+  // 检查本地中是否存在路由缓存
+  let paths: string[] = [];
+  let pathstr = localStorage.getItem("paths");
+  if (pathstr) {
+    paths = paths.concat(pathstr.split(","));
+    if (paths[index] && paths[index] != '') {
+      return paths[index]
     }
   }
-  const paths = [];
+
   const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
   const charactersLength = characters.length;
-
+  // 一次生成10个
   for (let i = 0; i < 10; i++) {
+    // 随机路由4-8个字符 
     let length = getRandomNumber(4, 8);
     let result = '';
     if (window.crypto && window.crypto.getRandomValues) {
@@ -53,9 +81,11 @@ const getRandomPaths = () => {
     }
     paths.push(result)
   }
-  setCookieByDocument('paths', paths.toString());
-  return paths;
+  localStorage.setItem('paths', paths.toString());
+  if (paths[index] && paths[index] != '') {
+    return paths[index]
+  } else {
+    getRandomPath(index);
+  }
 }
-
-export const randomPaths = getRandomPaths();
 

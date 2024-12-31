@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { fakeAuthProvider } from "./Server";
 import { Navigate, useLocation } from "react-router-dom";
-import { log } from "./utils/Log";
 import { useCookies } from "react-cookie";
 
 export enum AUTH_TYPE {
