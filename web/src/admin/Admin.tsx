@@ -1,55 +1,45 @@
-import { Space, Table, Tag, Button } from 'antd';
+import { Space, Table, Button } from 'antd';
 import type { TableProps } from 'antd';
+import { useEffect, useState } from 'react';
+import { listAdmin, IAdmin } from '../api/api';
 
-interface DataType {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
+interface DataType extends IAdmin {
+  key: number;
 }
 
 const columns: TableProps<DataType>['columns'] = [
   {
-    title: '姓名',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text) => <a>{text}</a>,
+    title: 'ID',
+    dataIndex: 'id',
+    key: 'id',
   },
   {
-    title: '年龄',
-    dataIndex: 'age',
-    key: 'age',
+    title: '账号',
+    dataIndex: 'username',
+    key: 'username',
   },
   {
-    title: '地址',
-    dataIndex: 'address',
-    key: 'address',
+    title: '昵称',
+    dataIndex: 'nickname',
+    key: 'nickname',
   },
   {
-    title: '标签',
-    key: 'tags',
-    dataIndex: 'tags',
-    render: (_, { tags }) => (
-      <>
-        {tags.map((tag) => {
-          let color = tag.length > 5 ? 'geekblue' : 'green';
-          if (tag === 'loser') {
-            color = 'volcano';
-          }
-          return (
-            <Tag color={color} key={tag}>
-              {tag.toUpperCase()}
-            </Tag>
-          );
-        })}
-      </>
-    ),
+    title: '备注',
+    key: 'remark',
+    dataIndex: 'remark',
+  },
+  {
+    title: '状态',
+    key: 'enable',
+    dataIndex: 'enable',
+    render: (_, d) => (
+      d.enable === 1 ? '启动' : '禁用'
+    )
   },
   {
     title: '操作',
     key: 'action',
-    render: (_, record) => (
+    render: () => (
       <Space size="middle">
         <Button type="primary" size='small'>修改</Button>
         <Button type="primary" size='small' danger >删除</Button>
@@ -58,34 +48,26 @@ const columns: TableProps<DataType>['columns'] = [
   },
 ];
 
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
-
 function Admin() {
+  const [list, setList] = useState<DataType[]>([])
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await listAdmin({})
+      let d: DataType[] = data?.list?.map((item, index) => {
+        let newItem: DataType = {
+          key: index,
+          ...item
+        }
+        return newItem
+      })
+      setList(d)
+    })();
+  }, [])
+
   return (
     <>
-      <Table<DataType> columns={columns} dataSource={data} />
+      <Table<DataType> columns={columns} dataSource={list} />
     </>
   )
 }

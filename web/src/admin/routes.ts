@@ -34,7 +34,7 @@ export const routes: Array<IRoute> = [
     children: [
       {
         path: '/list',
-        name: '实名资料',
+        name: '管理员列表',
         component: Admin,
       },
     ],
