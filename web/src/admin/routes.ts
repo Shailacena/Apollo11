@@ -37,6 +37,11 @@ export const routes: Array<IRoute> = [
         name: '管理员列表',
         component: Admin,
       },
+      {
+        path: '/OperationLog',
+        name: '操作日志',
+        component: Admin,
+      },
     ],
   },
   {
@@ -70,7 +75,7 @@ export const routes: Array<IRoute> = [
       },
       {
         path: '/order',
-        name: '交易订单',
+        name: '商品管理',
         component: Order,
       },
       {
