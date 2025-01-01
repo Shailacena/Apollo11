@@ -1,9 +1,8 @@
 import { HomeOutlined, MergeCellsOutlined, TableOutlined, UserOutlined, ShopOutlined, SettingOutlined, PayCircleOutlined } from '@ant-design/icons';
-import Dashboard from './Dashboard';
-import CashFlow from './CashFlow';
+import TransactionRecord from './TransactionRecord';
 import { getRandomPath } from '../utils/Tool';
-import Goods from './Goods';
 import CashFlowDaily from './CashFlowDaily';
+import Dashboard from './Dashboard';
 
 export interface IRoute {
   name: string
@@ -14,7 +13,7 @@ export interface IRoute {
 }
 
 enum MODEL_PATH {
-  HOME, ORDERS, CASHFLOW
+  HOME, TRANSACTION
 }
 
 const routeconfigs: IRoute[] = []
@@ -24,35 +23,22 @@ export function getRouteConfig(): Array<IRoute> {
     return routeconfigs;
   } else {
     let routs = [{
-      // path: '/partners/home',
-      path: '/partners/' + getRandomPath(MODEL_PATH.HOME),
+      // path: '/merchant/home',
+      path: '/merchant/' + getRandomPath(MODEL_PATH.HOME),
       name: '首页',
       component: Dashboard,
       icon: HomeOutlined,
     },
     {
-      path: '/partners/' + getRandomPath(MODEL_PATH.ORDERS),
-      name: '商品管理',
-      icon: TableOutlined,
-      component: null,
-      children: [
-        {
-          path: '/' + getRandomPath(0),
-          name: '商品列表',
-          component: Goods,
-        },
-      ],
-    },
-    {
-      path: '/partners/' + getRandomPath(MODEL_PATH.CASHFLOW),
-      name: '流水记录',
+      path: '/merchant/' + getRandomPath(MODEL_PATH.TRANSACTION),
+      name: '交易管理',
       icon: ShopOutlined,
       component: null,
       children: [
         {
           path: '/' + getRandomPath(0),
-          name: '账户流水',
-          component: CashFlow,
+          name: '交易记录',
+          component: TransactionRecord,
         },
         {
           path: '/' + getRandomPath(1),

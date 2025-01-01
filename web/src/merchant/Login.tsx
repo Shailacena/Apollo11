@@ -6,7 +6,7 @@ import { AUTH_TYPE, useAuth } from '../AuthProvider';
 import { getRouteConfig } from './RouteConfigs';
 import { useCookies } from 'react-cookie';
 
-const TAG = 'Partners Login';
+const TAG = 'Merchant Login';
 
 const Login: React.FC = () => {
 
@@ -33,7 +33,7 @@ const Login: React.FC = () => {
     console.log('Received values of form: ', value);
     message.success('登陆成功!');
 
-    auth.signin(value.username, '', AUTH_TYPE.PARTNER, '', () => {
+    auth.signin(value.username, '', AUTH_TYPE.MERCHANT, '', () => {
       // 使用 { replace: true } 保证我们不会把login放入history栈
       // 意味着当用户点击回退，他不会重新回退到login页面
       console.log('from: ', from);
@@ -47,7 +47,7 @@ const Login: React.FC = () => {
 
   return (
     <div style={{ maxWidth: 300, margin: '0 auto', paddingTop: 100 }}>
-      <h2 style={{ textAlign: 'center' }}>Partner Login</h2>
+      <h2 style={{ textAlign: 'center' }}>商户管理后台</h2>
       <Form
         name="login"
         initialValues={{ remember: true }}
@@ -58,13 +58,13 @@ const Login: React.FC = () => {
           name="username"
           rules={[{ required: true, message: '请输入帐号!' }]}
         >
-          <Input prefix={<UserOutlined />} placeholder="Username" />
+          <Input prefix={<UserOutlined />} placeholder="帐号" />
         </Form.Item>
         <Form.Item
           name="password"
           rules={[{ required: true, message: '请输入密码!' }]}
         >
-          <Input prefix={<LockOutlined />} type="password" placeholder="Password" />
+          <Input prefix={<LockOutlined />} type="password" placeholder="密码" />
         </Form.Item>
         <Form.Item>
           <Flex justify="space-between" align="center">

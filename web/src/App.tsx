@@ -1,16 +1,23 @@
 import { BrowserRouter as Router, Route, Routes, Outlet, useLocation, Navigate, useNavigate, BrowserRouter } from 'react-router-dom'
 import './App.css'
-import AuthProvider, { RequireAuth, RequireAuthPartner } from './AuthProvider'
+import AuthProvider, { RequireAuth, RequireAuthMerchant, RequireAuthPartner } from './AuthProvider'
 import MainLayout from './admin/MainLayout'
 import Login from './admin/Login'
-import LoginPartner from './partners/Login'
-import MainLayoutPartner from './partners/MainLayout'
-import { getRouteConfig, IRoute } from './partners/RouteConfigs'
-import { routes } from './admin/routes'
+import LoginPartner from './partner/Login'
+import LoginMerchant from './merchant/Login'
+import MainLayoutPartner from './partner/MainLayout'
+import MainLayoutMerchant from './merchant/MainLayout'
+import { getRouteConfig as getRouteConfigPartner } from './partner/RouteConfigs'
+import { getRouteConfig as getRouteConfigMerchant } from './merchant/RouteConfigs'
+import { IRoute, routes } from './admin/routes'
+import dayjs from 'dayjs'
+import 'dayjs/locale/zh-cn';
+
 
 // import MainLayout from './MainLayout'
 
 function App() {
+  dayjs.locale('zh-cn');
   return (
     // <>
     //   <MainLayout />
@@ -19,7 +26,8 @@ function App() {
     <AuthProvider>
       <Routes>
         <Route path="/admin/login" element={<Login />} />
-        <Route path="/partners/login" element={<LoginPartner />} />
+        <Route path="/partner/login" element={<LoginPartner />} />
+        <Route path="/merchant/login" element={<LoginMerchant />} />
         <Route
           path="/admin"
           element={
@@ -32,28 +40,44 @@ function App() {
             let route = r?.children ? r.children.map((childRoute: IRoute) => (
               <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<childRoute.component />} />
             )) : <Route key={r.path} path={r.path} element={<r.component />} />
-            console.log(route)
+            // console.log('App routes', route)
             return route
           })}
         </Route>
 
         <Route
-          path="/partners"
+          path="/partner"
           element={
             <RequireAuthPartner>
               <MainLayoutPartner />
             </RequireAuthPartner>
           }
         >
-          {getRouteConfig().map((r: IRoute) => {
+          {getRouteConfigPartner().map((r: IRoute) => {
             let route = r?.children ? r.children.map((childRoute: IRoute) => (
               <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<childRoute.component />} />
             )) : <Route key={r.path} path={r.path} element={<r.component />} />
-            console.log('App routes', route)
+            // console.log('App routes', route)
             return route
           })}
         </Route>
 
+        <Route
+          path="/merchant"
+          element={
+            <RequireAuthMerchant>
+              <MainLayoutMerchant />
+            </RequireAuthMerchant>
+          }
+        >
+          {getRouteConfigMerchant().map((r: IRoute) => {
+            let route = r?.children ? r.children.map((childRoute: IRoute) => (
+              <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<childRoute.component />} />
+            )) : <Route key={r.path} path={r.path} element={<r.component />} />
+            // console.log('App routes', route)
+            return route
+          })}
+        </Route>
       </Routes>
     </AuthProvider>
   )
