@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Outlet, useLocation, Navigate, useNavigate } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes, Outlet, useLocation, Navigate, useNavigate, BrowserRouter } from 'react-router-dom'
 import './App.css'
 import AuthProvider, { RequireAuth, RequireAuthPartner } from './AuthProvider'
 import MainLayout from './admin/MainLayout'

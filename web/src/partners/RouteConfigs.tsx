@@ -17,46 +17,55 @@ enum MODEL_PATH {
   HOME, ORDERS, CASHFLOW
 }
 
+const routeconfigs: IRoute[] = []
+
 export function getRouteConfig(): Array<IRoute> {
-  return [
-  {
-    // path: '/partners/home',
-    path: '/partners/' + getRandomPath(MODEL_PATH.HOME),
-    name: '首页',
-    component: Dashboard,
-    icon: HomeOutlined,
-  },
-  {
-    path: '/partners/' + getRandomPath(MODEL_PATH.ORDERS),
-    name: '商品管理',
-    icon: TableOutlined,
-    component: null,
-    children: [
-      {
-        path: '/' + getRandomPath(0),
-        name: '商品列表',
-        component: Goods,
-      },
-    ],
-  },
-  {
-    path: '/partners/'  + getRandomPath(MODEL_PATH.CASHFLOW),
-    name: '流水记录',
-    icon: ShopOutlined,
-    component: null,
-    children: [
-      {
-        path: '/' + getRandomPath(0),
-        name: '账户流水',
-        component: CashFlow,
-      },
-      {
-        path: '/' + getRandomPath(1),
-        name: '今日流水',
-        component: CashFlowToday,
-      },
-    ],
-  },
-];
+  if (routeconfigs.length != 0) {
+    return routeconfigs;
+  } else {
+    let routs = [{
+      // path: '/partners/home',
+      path: '/partners/' + getRandomPath(MODEL_PATH.HOME),
+      name: '首页',
+      component: Dashboard,
+      icon: HomeOutlined,
+    },
+    {
+      path: '/partners/' + getRandomPath(MODEL_PATH.ORDERS),
+      name: '商品管理',
+      icon: TableOutlined,
+      component: null,
+      children: [
+        {
+          path: '/' + getRandomPath(0),
+          name: '商品列表',
+          component: Goods,
+        },
+      ],
+    },
+    {
+      path: '/partners/' + getRandomPath(MODEL_PATH.CASHFLOW),
+      name: '流水记录',
+      icon: ShopOutlined,
+      component: null,
+      children: [
+        {
+          path: '/' + getRandomPath(0),
+          name: '账户流水',
+          component: CashFlow,
+        },
+        {
+          path: '/' + getRandomPath(1),
+          name: '今日流水',
+          component: CashFlowToday,
+        },
+      ],
+    },
+    ];
+    for (let i in routs) {
+      routeconfigs.push(routs[i]);
+    }
+    return routeconfigs;
+  }
 }
 

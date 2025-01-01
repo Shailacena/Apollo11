@@ -56,7 +56,7 @@ function MainLayout() {
     <>
       <Layout>
         <Header style={{ color: "#fff", height: 48 }}>
-          <span>Content-Manage-System</span>
+          <span>合作商管理后台</span>
           <span style={{ position: 'absolute', right: 20 }}>
             <Dropdown menu={{ items, onClick:({ key })=>{
               if (key === '0'){

@@ -1,7 +1,8 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Space, Table, Tag, Button, Form, message, Flex, Input, Select } from 'antd';
+import { Space, Table, Tag, Button, Form, message, Flex, Input, Select, Card } from 'antd';
 import type { SelectProps, TableProps } from 'antd';
 import UploadDialog from '../components/UploadDialog';
+import CurrentLocation from '../components/CurrentLocation';
 
 interface DataType {
   key: string;
@@ -50,24 +51,29 @@ function CashFlowToday() {
   }
   return (
     <>
-      <div style={{marginBottom: 10}}>
-        <Button type="primary" onClick={() => toggleModal(0, true)}>
-          Export
-        </Button>
+      <div style={{ marginBottom: '10px' }}>
+        <CurrentLocation />
       </div>
-      <Table<DataType>
-        bordered
-        size='small'
-        pagination={{ pageSize: 12 }} // 分页
-        scroll={{ x: 'max-content' }}
-        columns={columns}
-        dataSource={data} />
+      <Card>
+        <div style={{ marginBottom: 10 }}>
+          <Button type="primary" onClick={() => toggleModal(0, true)}>
+            导出
+          </Button>
+        </div>
+        <Table<DataType>
+          bordered
+          size='small'
+          pagination={{ pageSize: 12 }} // 分页
+          scroll={{ x: 'max-content' }}
+          columns={columns}
+          dataSource={data} />
+      </Card>
     </>
   )
 }
 
 const toggleModal = (idx: number, target: boolean) => {
-
+  message.warning('功能还未完成...');
 };
 
 export default CashFlowToday

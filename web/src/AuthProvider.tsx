@@ -127,6 +127,7 @@ export function RequireAuthPartner({ children }: { children: JSX.Element }) {
   let location = useLocation();
   let [cookies] = useCookies(['token']);
   
+  console.log(TAG, location.pathname)
   console.log(TAG, 'RequireAuthPartner iccccccccccccccccccc partner', auth.partner)
   console.log(TAG, 'RequireAuthPartner iccccccccccccccccccc token ', cookies.token)
 

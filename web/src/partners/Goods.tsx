@@ -1,9 +1,10 @@
-import { Space, Table, Tag, Button, Form, message, Input, Select, Flex, Upload } from 'antd';
+import { Space, Table, Tag, Button, Form, message, Input, Select, Flex, Upload, Card } from 'antd';
 import type { SelectProps, TableProps } from 'antd';
 import { getDataFormat, getRandomNumber } from '../utils/Tool';
 import { SearchOutlined } from '@ant-design/icons';
 import UploadDialog from '../components/UploadDialog';
 import OrderDetail from './GoodsDetail';
+import CurrentLocation from '../components/CurrentLocation';
 
 interface DataType {
   key: string;
@@ -204,20 +205,25 @@ function Goods() {
   }
   return (
     <>
-      <div style={{display: 'Flex'}}>
-        <SearchForm />
-        <UploadDialog />
+      <div style={{ marginBottom: '10px' }}>
+        <CurrentLocation />
       </div>
-      <div>
-        <Table<DataType>
-          bordered
-          size='small'
-          // tableLayout='fixed'
-          columns={columns}
-          pagination={{ pageSize: 12 }} // 分页
-          scroll={{ x: 'max-content' }}
-          dataSource={data} />
-      </div>
+      <Card>
+        <div style={{ display: 'Flex' }}>
+          <SearchForm />
+          <UploadDialog />
+        </div>
+        <div>
+          <Table<DataType>
+            bordered
+            size='small'
+            // tableLayout='fixed'
+            columns={columns}
+            pagination={{ pageSize: 12 }} // 分页
+            scroll={{ x: 'max-content' }}
+            dataSource={data} />
+        </div>
+      </Card>
     </>
   )
 }
