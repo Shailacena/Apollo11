@@ -6,8 +6,7 @@ import CurrentLocation from '../components/CurrentLocation';
 
 interface DataType {
   key: string;
-  order_id: string;
-  account_id: string;
+  notes: string;
   change_money: number;
   balance: number;
   time: number;
@@ -15,30 +14,20 @@ interface DataType {
 
 const columns: TableProps<DataType>['columns'] = [
   {
-    title: 'OrderID', dataIndex: 'order_id', key: 'order_id',
+    title: '备注', dataIndex: 'notes', key: 'notes', align: 'center',
   },
   {
-    title: 'AccountID', key: 'account_id', dataIndex: 'account_id',
+    title: '变更金额', key: 'change_money', dataIndex: 'change_money', align: 'center',
   },
   {
-    title: 'ChangeMoney', key: 'change_money', dataIndex: 'change_money',
+    title: '当前余额', key: 'balance', dataIndex: 'balance', align: 'center',
   },
   {
-    title: 'Balance', key: 'balance', dataIndex: 'balance',
-  },
-  {
-    title: 'Time', key: 'time', dataIndex: 'time', render: (text) => {
+    title: '时间', key: 'time', dataIndex: 'time', align: 'center', render: (text) => {
       const date = new Date(text);
       return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)} ${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}:${('0' + date.getSeconds()).slice(-2)}`;
     }
-  },
-  {
-    title: 'Action', key: 'action', render: (_, record) => (
-      <Space size="middle">
-        <Button type="primary" size='small'>Details</Button>
-      </Space>
-    ),
-  },
+  }
 ];
 
 const data: DataType[] = [];
@@ -46,7 +35,7 @@ const data: DataType[] = [];
 function CashFlow() {
   for (let i = 0; i < 50; i++) {
     data.push({
-      key: i.toString(), order_id: i.toString(), account_id: '123', change_money: 500, balance: 30000, time: 1735131468000
+      key: i.toString(), notes: i.toString(), change_money: 500, balance: 30000, time: 1735131468000
     })
   }
   return (

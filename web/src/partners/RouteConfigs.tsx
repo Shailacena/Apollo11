@@ -3,7 +3,7 @@ import Dashboard from './Dashboard';
 import CashFlow from './CashFlow';
 import { getRandomPath } from '../utils/Tool';
 import Goods from './Goods';
-import CashFlowToday from './CashFlowToday';
+import CashFlowDaily from './CashFlowDaily';
 
 export interface IRoute {
   name: string
@@ -56,8 +56,8 @@ export function getRouteConfig(): Array<IRoute> {
         },
         {
           path: '/' + getRandomPath(1),
-          name: '今日流水',
-          component: CashFlowToday,
+          name: '每日流水',
+          component: CashFlowDaily,
         },
       ],
     },

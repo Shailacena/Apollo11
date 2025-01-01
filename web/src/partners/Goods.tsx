@@ -8,16 +8,14 @@ import CurrentLocation from '../components/CurrentLocation';
 
 interface DataType {
   key: string;
-  partner_id: string;
-  partner_name: string;
   goods_id: string;
-  goods_state: number;
-  pay_state: number;
   shop_name: string;
   product_sku: string;
-  product_id: string;
-  product_name: string;
+  goods_type: string;
+  goods_name: string;
   product_price: string;
+  goods_state: number;
+  pay_state: number;
   pay_account_id: string;
   create_time: number;
   callback_time: number;
@@ -29,10 +27,22 @@ const columns: TableProps<DataType>['columns'] = [
     title: '商品ID', dataIndex: 'goods_id', key: 'goods_id', align: 'center',
   },
   {
-    title: '合作商ID', dataIndex: 'partner_id', key: 'partner_id', align: 'center',
+    title: '店铺名', key: 'shop_name', dataIndex: 'shop_name', align: 'center',
   },
   {
-    title: '合作商名', dataIndex: 'partner_name', key: 'partner_name', align: 'center',
+    title: 'SkuID', key: 'product_sku', dataIndex: 'product_sku', align: 'center',
+  },
+  {
+    title: '商品类型', key: 'goods_type', dataIndex: 'goods_type', align: 'center',
+  },
+  {
+    title: '商品名', key: 'goods_name', dataIndex: 'goods_name', align: 'center',
+  },
+  {
+    title: '商品金额', key: 'product_price', dataIndex: 'product_price', align: 'center',
+  },
+  {
+    title: '实际金额', key: 'product_real_price', dataIndex: 'product_real_price', align: 'center',
   },
   {
     title: '冻结状态', key: 'goods_state', dataIndex: 'goods_state', align: 'center', render: (text) => {
@@ -59,24 +69,6 @@ const columns: TableProps<DataType>['columns'] = [
         return <div style={{ color: 'red' }}>Fail</div>
       }
     }
-  },
-  {
-    title: '店铺名', key: 'shop_name', dataIndex: 'shop_name', align: 'center',
-  },
-  {
-    title: 'SkuID', key: 'product_sku', dataIndex: 'product_sku', align: 'center',
-  },
-  {
-    title: 'ProductID', key: 'product_id', dataIndex: 'product_id', align: 'center',
-  },
-  {
-    title: '商品名', key: 'product_name', dataIndex: 'product_name', align: 'center',
-  },
-  {
-    title: '商品金额', key: 'product_price', dataIndex: 'product_price', align: 'center',
-  },
-  {
-    title: '实际金额', key: 'product_real_price', dataIndex: 'product_real_price', align: 'center',
   },
   {
     title: '充值户号', key: 'pay_account_id', dataIndex: 'pay_account_id', align: 'center',
@@ -116,6 +108,7 @@ const columns: TableProps<DataType>['columns'] = [
         <Button type="primary" size='small' onClick={() => onEditClick('0')}>修改</Button>
         <Button type="primary" size='small' danger onClick={() => onDeleteClick('0')}>冻结</Button>
         <Button type="primary" size='small' danger onClick={() => onDeleteClick('0')}>删除</Button>
+        <Button type="primary" size='small' danger onClick={() => onDeleteClick('0')}>取消订单</Button>
       </Space>
     ),
   },
@@ -134,14 +127,21 @@ const onEditClick = (value: string | string[]) => {
   return <OrderDetail />
 };
 
-const options: SelectProps['options'] = [];
+const goods_state_options: SelectProps['options'] = [
+  {value: 0, label: '正常'},
+  {value: 1, label: '冻结'}
+];
 
-for (let i = 10; i < 36; i++) {
-  options.push({
-    value: i.toString(36) + i,
-    label: i.toString(36) + i,
-  });
-}
+const pay_state_options: SelectProps['options'] = [
+  {value: 0, label: '未充值'},
+  {value: 1, label: '部分充值'},
+  {value: 2, label: '全部充值'}
+];
+
+const callback_state_options: SelectProps['options'] = [
+  {value: 0, label: '正常回调'},
+  {value: 1, label: '未回调'}
+];
 
 const SearchForm = () => {
   const [form] = Form.useForm();
@@ -160,31 +160,40 @@ const SearchForm = () => {
     >
       <Form.Item
         name="searchKeyword"
-        label="Filter"
       // rules={[{ required: true, message: '请输入搜索关键词' }]}
       >
         <Flex vertical={true}>
-          <Input placeholder="订单ID" />
+          <Input placeholder="商品ID" />
         </Flex>
       </Form.Item>
       <Form.Item>
         <Select
           size="middle"
           placeholder="Type"
-          defaultValue={'Type'}
+          defaultValue={'商品状态'}
           onChange={handleChange}
           style={{ width: '100px' }}
-          options={options}
+          options={goods_state_options}
         />
       </Form.Item>
       <Form.Item>
         <Select
           size="middle"
           placeholder="State"
-          defaultValue={'State'}
+          defaultValue={'充值状态'}
           onChange={handleChange}
           style={{ width: '100px' }}
-          options={options}
+          options={pay_state_options}
+        />
+      </Form.Item>
+      <Form.Item>
+        <Select
+          size="middle"
+          placeholder="State"
+          defaultValue={'回调状态'}
+          onChange={handleChange}
+          style={{ width: '100px' }}
+          options={callback_state_options}
         />
       </Form.Item>
       <Form.Item>
@@ -200,7 +209,7 @@ function Goods() {
   for (let i = 0; i < 50; i++) {
 
     data.push({
-      key: i.toString(), partner_id: '10089', partner_name: 'Joe Black', goods_id: i.toString(), goods_state: getRandomNumber(1, 3), pay_state: getRandomNumber(1, 3), shop_name: 'xxx', product_sku: '123', product_id: '123', product_name: 'xxx', product_price: '1', pay_account_id: '123', create_time: 1735131468000, callback_time: 1735131468000, callback_state: getRandomNumber(1, 3),
+      key: i.toString(), goods_id: i.toString(), goods_state: getRandomNumber(1, 3), pay_state: getRandomNumber(1, 3), shop_name: 'xxx', product_sku: '123', goods_type: '123', goods_name: 'xxx', product_price: '1', pay_account_id: '123', create_time: 1735131468000, callback_time: 1735131468000, callback_state: getRandomNumber(1, 3),
     })
   }
   return (

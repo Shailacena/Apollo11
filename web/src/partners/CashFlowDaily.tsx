@@ -6,47 +6,36 @@ import CurrentLocation from '../components/CurrentLocation';
 
 interface DataType {
   key: string;
-  order_id: string;
-  account_id: string;
-  change_money: number;
-  balance: number;
+  order_total_amount: string;
+  success_total_amount: string;
+  order_total_num: number;
   time: number;
 }
 
 const columns: TableProps<DataType>['columns'] = [
   {
-    title: 'OrderID', dataIndex: 'order_id', key: 'order_id',
-  },
-  {
-    title: 'AccountID', key: 'account_id', dataIndex: 'account_id',
-  },
-  {
-    title: 'ChangeMoney', key: 'change_money', dataIndex: 'change_money',
-  },
-  {
-    title: 'Balance', key: 'balance', dataIndex: 'balance',
-  },
-  {
-    title: 'Time', key: 'time', dataIndex: 'time', render: (text) => {
+    title: '日期', key: 'time', dataIndex: 'time', align: 'center', render: (text) => {
       const date = new Date(text);
-      return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)} ${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}:${('0' + date.getSeconds()).slice(-2)}`;
+      return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)}`;
     }
   },
   {
-    title: 'Action', key: 'action', render: (_, record) => (
-      <Space size="middle">
-        <Button type="primary" size='small'>Details</Button>
-      </Space>
-    ),
+    title: '订单总金额', dataIndex: 'order_total_amount', key: 'order_total_amount', align: 'center',
+  },
+  {
+    title: '成功总金额', key: 'success_total_amount', dataIndex: 'success_total_amount', align: 'center',
+  },
+  {
+    title: '总订单数', key: 'order_total_num', dataIndex: 'order_total_num', align: 'center',
   },
 ];
 
 const data: DataType[] = [];
 
-function CashFlowToday() {
+function CashFlowDaily() {
   for (let i = 0; i < 50; i++) {
     data.push({
-      key: i.toString(), order_id: i.toString(), account_id: '123', change_money: 500, balance: 30000, time: 1735131468000
+      key: i.toString(), order_total_amount: i.toString(), success_total_amount: '123', order_total_num: 500, balance: 30000, time: 1735131468000
     })
   }
   return (
@@ -76,4 +65,4 @@ const toggleModal = (idx: number, target: boolean) => {
   message.warning('功能还未完成...');
 };
 
-export default CashFlowToday
+export default CashFlowDaily
