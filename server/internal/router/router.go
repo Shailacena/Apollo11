@@ -22,4 +22,11 @@ func Init(e *echo.Echo) {
 		partnerGroup.POST("/register", handler.Partner.Register)
 		partnerGroup.POST("/list", handler.Partner.List)
 	}
+
+	merchantGroup := apiGroup.Group("/merchant")
+	{
+		merchantGroup.POST("/login", handler.Merchant.Login)
+		merchantGroup.POST("/register", handler.Merchant.Register)
+		merchantGroup.POST("/list", handler.Merchant.List)
+	}
 }

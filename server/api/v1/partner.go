@@ -16,6 +16,7 @@ type PartnerRegisterReq struct {
 	DailyLimit   int    `json:"dailyLimit"`
 	RechargeTime int64  `json:"rechargeTime"`
 	PrivateKey   string `json:"privateKey"`
+	Remark       string `json:"remark"`
 }
 
 type PartnerRegisterResp struct {
@@ -40,4 +41,5 @@ type Partner struct {
 	Level         int    `json:"level"`
 	StockAmount   int64  `json:"stockAmount"`
 	Enable        int    `json:"enable"`
+	Remark        string `json:"remark"`
 }
