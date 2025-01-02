@@ -2,6 +2,7 @@ import { request } from './request';
 
 interface IResponseBody<T> {
   success: boolean;
+  code: number;
   message: string;
   data: T;
 }
@@ -18,6 +19,24 @@ interface AdminLoginResp {
 
 export function adminLogin(data: AdminLoginReq): Promise<AdminLoginResp> {
   return request.post("/admin/login", data).then((res) => {
+    return res.data
+  })
+}
+
+export interface AdminRegisterReq {
+  username: string
+  nickname: string
+  remark: string
+}
+
+interface AdminRegisterResp {
+  username: string
+  nickname: string
+  password: string
+}
+
+export function adminRegister(data: AdminRegisterReq): Promise<IResponseBody<AdminRegisterResp>> {
+  return request.post("/admin/register", data).then((res) => {
     return res.data
   })
 }
