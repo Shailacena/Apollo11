@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Table } from 'antd';
 import type { TableProps } from 'antd';
 
-
 interface DataType {
   key: string;
   name: string;
@@ -10,8 +9,6 @@ interface DataType {
   address: string;
   tags: string[];
 }
-
-
 
 const columns: TableProps<DataType>['columns'] = [
   {
@@ -117,13 +114,13 @@ const data: DataType[] = [
   },
 ];
 
-function Order() {
+function Goods() {
 
   return (
     <>
-      <Table<DataType> columns={columns} dataSource={data} />
+      <Table<DataType> columns={columns} dataSource={data} scroll={{ x: 'max-content' }} />
     </>
   )
 }
 
-export default Order
+export default Goods
