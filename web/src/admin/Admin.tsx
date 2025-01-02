@@ -41,8 +41,8 @@ const columns: TableProps<DataType>['columns'] = [
     key: 'action',
     render: () => (
       <Space size="middle">
-        <Button type="primary" size='small'>修改</Button>
-        <Button type="primary" size='small' danger >删除</Button>
+        <Button disabled type="primary" size='small'>修改</Button>
+        <Button disabled type="primary" size='small' danger >删除</Button>
       </Space>
     ),
   },

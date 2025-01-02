@@ -91,7 +91,9 @@ function RealNameAccount() {
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>批量导入实名资料</Button>
+      <div className='mr-10'>
+        <Button type="primary" onClick={showModal}>批量导入实名资料</Button>
+      </div>
       <Table<DataType> columns={columns} dataSource={data} />
 
       <Modal title="导入实名资料" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>

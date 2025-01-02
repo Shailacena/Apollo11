@@ -39,3 +39,41 @@ export function listAdmin(data: any): Promise<IResponseBody<ListAdminResp>> {
     return res.data
   })
 }
+
+interface ListPartnerResp {
+  list: Array<IPartner>
+}
+
+export interface IPartner {
+  id: number
+  username: string
+  nickname: string
+  remark: string
+  enable: number
+}
+
+export function listPartner(data: any): Promise<IResponseBody<ListPartnerResp>> {
+  return request.post("/partner/list", data).then((res) => {
+    return res.data
+  })
+}
+
+export interface PartnerRegisterReq {
+  name: string
+  priority: number
+  dailyLimit?: number
+  rechargeTime?: number
+  privateKey?: string
+  remark?: string
+}
+
+interface PartnerRegisterResp {
+  name: string
+  password: string
+}
+
+export function partnerRegister(data: PartnerRegisterReq): Promise<PartnerRegisterResp> {
+  return request.post("/partner/register", data).then((res) => {
+    return res.data
+  })
+}

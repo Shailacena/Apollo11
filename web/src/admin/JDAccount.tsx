@@ -117,7 +117,9 @@ function JDAccount() {
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>批量导入京东账号</Button>
+      <div className='mr-10'>
+        <Button type="primary" onClick={showModal}>批量导入京东账号</Button>
+      </div>
       <Table<DataType> columns={columns} dataSource={data} />
 
       <Modal title="导入京东账号" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
