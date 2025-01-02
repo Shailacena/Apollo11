@@ -77,3 +77,40 @@ export function partnerRegister(data: PartnerRegisterReq): Promise<PartnerRegist
     return res.data
   })
 }
+
+interface ListMerchantResp {
+  list: Array<IMerchant>
+}
+
+export interface IMerchant {
+  id: string
+  name: string
+  privateKey: string
+  createAt: number
+  totalAmount: number
+  todayAmount: number
+  enable: number
+  remark: string
+}
+
+export function listMerchant(data: any): Promise<IResponseBody<ListMerchantResp>> {
+  return request.post("/merchant/list", data).then((res) => {
+    return res.data
+  })
+}
+
+export interface MerchantRegisterReq {
+  name: string
+  remark?: string
+}
+
+interface MerchantRegisterResp {
+  name: string
+  password: string
+}
+
+export function merchantRegister(data: MerchantRegisterReq): Promise<MerchantRegisterResp> {
+  return request.post("/merchant/register", data).then((res) => {
+    return res.data
+  })
+}

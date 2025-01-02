@@ -120,7 +120,7 @@ function Partner() {
 
   return (
     <>
-    {contextHolder}
+      {contextHolder}
       <div className='mr-10'>
         <Button type="primary" onClick={showModal}>新增</Button>
       </div>
