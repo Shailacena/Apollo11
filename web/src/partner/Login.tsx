@@ -24,6 +24,7 @@ const Login: React.FC = () => {
     }
     // cookie登陆
     if (cookies.token) {
+      console.log('iccccc come in here', cookies.token)
       auth.checkToken(AUTH_TYPE.PARTNER, cookies.token, () => { });
       return;
     }
@@ -47,7 +48,7 @@ const Login: React.FC = () => {
 
   return (
     <div style={{ maxWidth: 300, margin: '0 auto', paddingTop: 100 }}>
-      <h2 style={{ textAlign: 'center' }}>Partner Login</h2>
+      <h2 style={{ textAlign: 'center' }}>合作商管理后台</h2>
       <Form
         name="login"
         initialValues={{ remember: true }}
@@ -58,13 +59,13 @@ const Login: React.FC = () => {
           name="username"
           rules={[{ required: true, message: '请输入帐号!' }]}
         >
-          <Input prefix={<UserOutlined />} placeholder="Username" />
+          <Input prefix={<UserOutlined />} placeholder="帐号" />
         </Form.Item>
         <Form.Item
           name="password"
           rules={[{ required: true, message: '请输入密码!' }]}
         >
-          <Input prefix={<LockOutlined />} type="password" placeholder="Password" />
+          <Input prefix={<LockOutlined />} type="password" placeholder="密码" />
         </Form.Item>
         <Form.Item>
           <Flex justify="space-between" align="center">

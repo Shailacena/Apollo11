@@ -84,13 +84,13 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     fakeAuthProvider.signout(admin, () => {
       console.log(TAG, 'signout', admin.userType)
       if (admin.userType === AUTH_TYPE.ADMIN){
-        removeCookie('token')
+        removeCookie('token', {path: '/admin/'})
         setAdmin(null);
       } else if (admin.userType === AUTH_TYPE.PARTNER){
-        removeCookie('token')
+        removeCookie('token', {path: '/partner/'})
         setPartner(null);
       } else if (admin.userType === AUTH_TYPE.MERCHANT){
-        removeCookie('token')
+        removeCookie('token', {path: '/merchant/'})
         setMerchant(null);
       }
       callback();
@@ -99,6 +99,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // checkToken会导致setState问题，所以使用useEffect
   let checkToken = (userType: AUTH_TYPE, token: string, callback: Function) => {
+    console.log('checkToken', userType, token)
     fakeAuthProvider.checkToken(userType, token, (data: {userType: AUTH_TYPE, account: string}) => {
       console.log(TAG, 'checkToken token:', userType, data, token)
       if (data.userType === AUTH_TYPE.ADMIN){
@@ -162,6 +163,7 @@ export function RequireAuthPartner({ children }: { children: JSX.Element }) {
 
   // cookie登陆
   if (cookies.token) {
+    console.log('iccccc come in')
     auth.checkToken(AUTH_TYPE.PARTNER, cookies.token, ()=>{});
     return;
   }
