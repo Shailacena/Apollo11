@@ -5,7 +5,7 @@ import RealNameAccount from './RealNameAccount';
 import JDAccount from './JDAccount';
 import Partner from './Partner';
 import PartnerBill from './PartnerBill';
-import Order from './Order';
+import Goods from './Goods';
 import Merchant from './Merchant';
 import DailyBill from './DailyBill';
 import TradingRecord from './TradingRecord';
@@ -74,9 +74,9 @@ export const routes: Array<IRoute> = [
         component: Partner,
       },
       {
-        path: '/order',
+        path: '/goods',
         name: '商品管理',
-        component: Order,
+        component: Goods,
       },
       {
         path: '/partnerBill',

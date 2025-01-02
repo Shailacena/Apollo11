@@ -1,22 +1,22 @@
 package v1
 
-type LoginReq struct {
+type AdminLoginReq struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
 }
 
-type LoginResp struct {
+type AdminLoginResp struct {
 	Token    string `json:"token"`
 	Nickname string `json:"nickname"`
 }
 
-type RegisterReq struct {
+type AdminRegisterReq struct {
 	Username string `json:"username" binding:"required"`
 	Nickname string `json:"nickname" binding:"required"`
 	Remark   string `json:"remark"`
 }
 
-type RegisterResp struct {
+type AdminRegisterResp struct {
 	Username string `json:"username"`
 	Nickname string `json:"nickname"`
 	Password string `json:"password"`
