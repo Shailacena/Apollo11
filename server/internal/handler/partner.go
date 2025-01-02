@@ -11,20 +11,20 @@ import (
 )
 
 var (
-	Admin = new(AdminHandler)
+	Partner = new(PartnerHandler)
 )
 
-type AdminHandler struct {
+type PartnerHandler struct {
 }
 
-func (h *AdminHandler) Register(c echo.Context) error {
-	req := new(v1.AdminRegisterReq)
+func (h *PartnerHandler) Register(c echo.Context) error {
+	req := new(v1.PartnerRegisterReq)
 	err := c.Bind(req)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	resp, err := service.Admin.Register(c, req)
+	resp, err := service.Partner.Register(c, req)
 	if err != nil {
 		return err
 	}
@@ -32,13 +32,13 @@ func (h *AdminHandler) Register(c echo.Context) error {
 	return response.ResponseSuccess(c, resp)
 }
 
-func (h *AdminHandler) Login(c echo.Context) error {
-	req := new(v1.AdminLoginReq)
+func (h *PartnerHandler) Login(c echo.Context) error {
+	req := new(v1.PartnerLoginReq)
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	resp, err := service.Admin.Login(c, req)
+	resp, err := service.Partner.Login(c, req)
 	if err != nil {
 		return err
 	}
@@ -50,13 +50,13 @@ func (h *AdminHandler) Login(c echo.Context) error {
 	return response.ResponseSuccess(c, resp)
 }
 
-func (h *AdminHandler) List(c echo.Context) error {
-	req := new(v1.ListAdminReq)
+func (h *PartnerHandler) List(c echo.Context) error {
+	req := new(v1.ListPartnerReq)
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	resp, err := service.Admin.List(c, req)
+	resp, err := service.Partner.List(c, req)
 	if err != nil {
 		return err
 	}

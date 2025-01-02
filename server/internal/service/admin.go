@@ -15,7 +15,7 @@ var (
 type AdminService struct {
 }
 
-func (s *AdminService) Register(c echo.Context, req *v1.RegisterReq) (*v1.RegisterResp, error) {
+func (s *AdminService) Register(c echo.Context, req *v1.AdminRegisterReq) (*v1.AdminRegisterResp, error) {
 	u := model.SysUser{
 		Username: req.Username,
 		Nickname: req.Nickname,
@@ -26,20 +26,20 @@ func (s *AdminService) Register(c echo.Context, req *v1.RegisterReq) (*v1.Regist
 		return nil, err
 	}
 
-	return &v1.RegisterResp{
+	return &v1.AdminRegisterResp{
 		Username: req.Username,
 		Nickname: req.Nickname,
 		Password: user.Password,
 	}, nil
 }
 
-func (s *AdminService) Login(c echo.Context, req *v1.LoginReq) (*v1.LoginResp, error) {
+func (s *AdminService) Login(c echo.Context, req *v1.AdminLoginReq) (*v1.AdminLoginResp, error) {
 	user, err := repository.Admin.Login(c, req.Username, req.Password)
 	if err != nil {
 		return nil, err
 	}
 
-	return &v1.LoginResp{
+	return &v1.AdminLoginResp{
 		Token:    user.Token,
 		Nickname: user.Nickname,
 	}, nil

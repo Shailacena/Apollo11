@@ -7,12 +7,19 @@ import (
 )
 
 func Init(e *echo.Echo) {
-	apiGroup := e.Group("api")
+	apiGroup := e.Group("/api")
 
-	adminGroup := apiGroup.Group("admin")
+	adminGroup := apiGroup.Group("/admin")
 	{
 		adminGroup.POST("/login", handler.Admin.Login)
 		adminGroup.POST("/register", handler.Admin.Register)
 		adminGroup.POST("/list", handler.Admin.List)
+	}
+
+	partnerGroup := apiGroup.Group("/partner")
+	{
+		partnerGroup.POST("/login", handler.Partner.Login)
+		partnerGroup.POST("/register", handler.Partner.Register)
+		partnerGroup.POST("/list", handler.Partner.List)
 	}
 }

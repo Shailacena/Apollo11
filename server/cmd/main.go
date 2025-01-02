@@ -17,7 +17,7 @@ func main() {
 	conf := config.New("configs/config.yaml")
 
 	db := data.Init(conf.MysqlConfig)
-	db.AutoMigrate(&model.SysUser{})
+	model.InitMigrate(db)
 
 	e := app.Engine()
 	e.Use(middleware.Logger())
