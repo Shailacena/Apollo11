@@ -1,5 +1,6 @@
 package v1
 
+// 商户登录
 type MerchantLoginReq struct {
 	Id       uint   `json:"id" binding:"required"`
 	Password string `json:"password" binding:"required"`
@@ -10,6 +11,7 @@ type MerchantLoginResp struct {
 	Name  string `json:"name"`
 }
 
+// 商户注册
 type MerchantRegisterReq struct {
 	Name   string `json:"name" binding:"required"`
 	Remark string `json:"remark"`
@@ -20,6 +22,7 @@ type MerchantRegisterResp struct {
 	Password string `json:"password"`
 }
 
+// 商户列表
 type ListMerchantReq struct {
 }
 

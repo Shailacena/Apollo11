@@ -1,5 +1,6 @@
 package v1
 
+// 管理员登录
 type AdminLoginReq struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
@@ -10,6 +11,7 @@ type AdminLoginResp struct {
 	Nickname string `json:"nickname"`
 }
 
+// 管理员注册
 type AdminRegisterReq struct {
 	Username string `json:"username" binding:"required"`
 	Nickname string `json:"nickname" binding:"required"`
@@ -22,6 +24,7 @@ type AdminRegisterResp struct {
 	Password string `json:"password"`
 }
 
+// 管理员列表
 type ListAdminReq struct {
 }
 

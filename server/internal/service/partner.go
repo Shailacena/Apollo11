@@ -69,3 +69,26 @@ func (s *PartnerService) List(c echo.Context, req *v1.ListPartnerReq) (*v1.ListP
 		List: list,
 	}, nil
 }
+
+func (s *PartnerService) ListBill(c echo.Context, req *v1.ListPartnerBillReq) (*v1.ListPartnerBillResp, error) {
+	bills, err := repository.Partner.ListBill(c)
+	if err != nil {
+		return nil, err
+	}
+
+	list := make([]*v1.PartnerBill, 0, len(bills))
+	for _, b := range bills {
+		list = append(list, &v1.PartnerBill{
+			PartnerId:   b.PartnerId,
+			Type:        int(b.Type),
+			ChangeMoney: b.ChangeMoney,
+			Money:       b.Money,
+			Remark:      b.Remark,
+			CreateAt:    b.CreatedAt.Unix(),
+		})
+	}
+
+	return &v1.ListPartnerBillResp{
+		List: list,
+	}, nil
+}

@@ -63,3 +63,17 @@ func (h *PartnerHandler) List(c echo.Context) error {
 
 	return response.ResponseSuccess(c, resp)
 }
+
+func (h *PartnerHandler) ListBill(c echo.Context) error {
+	req := new(v1.ListPartnerBillReq)
+	if err := c.Bind(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	resp, err := service.Partner.ListBill(c, req)
+	if err != nil {
+		return err
+	}
+
+	return response.ResponseSuccess(c, resp)
+}

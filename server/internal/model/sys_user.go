@@ -13,7 +13,7 @@ const (
 
 type SysUser struct {
 	gorm.Model
-	Username string    `json:"username" gorm:"index;comment:用户登录名"`
+	Username string    `json:"username" gorm:"unique;comment:用户登录名"`
 	Password string    `json:"password"  gorm:"comment:用户登录密码"`
 	Nickname string    `json:"nickname" gorm:"default:系统用户;comment:用户昵称"`
 	Token    string    `json:"token"  gorm:"index;comment:登录token"`

@@ -65,3 +65,15 @@ func (r *PartnerRepo) List(c echo.Context) ([]*model.Partner, error) {
 
 	return partners, err
 }
+
+func (r *PartnerRepo) ListBill(c echo.Context) ([]*model.PartnerBill, error) {
+	db := data.Instance()
+
+	var bills []*model.PartnerBill
+	err := db.Limit(50).Find(&bills).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return bills, err
+}
