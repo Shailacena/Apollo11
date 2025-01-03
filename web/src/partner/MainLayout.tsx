@@ -4,6 +4,10 @@ import { DownOutlined } from '@ant-design/icons';
 import { getRouteConfig, IRoute } from './RouteConfigs';
 import { Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthProvider';
+import SetPasswordModal from './SetPasswordModal';
+import { useState } from 'react';
+
+const TAG = 'PartnerMainLayout'
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -39,7 +43,7 @@ const items: MenuProps['items'] = [
 ]
 
 function MainLayout() {
-
+  const [isSetpassowrdModalOpen, setIsSetpassowrdModalOpen] = useState(false);
   const navigate = useNavigate()
   const loc = useLocation()
   const auth = useAuth()
@@ -48,12 +52,17 @@ function MainLayout() {
     if (loc.pathname == e.key) {
       return
     }
-
+    console.log(TAG, 'onClickMenu', e.key)
     navigate(e.key)
   }
+
+  const updateIsSetpassowrdModalOpen = (isOpen: boolean) => {
+    setIsSetpassowrdModalOpen(isOpen);
+  };
   
   return (
     <>
+      <SetPasswordModal isOpen={isSetpassowrdModalOpen} updateIsSetpassowrdModalOpen={updateIsSetpassowrdModalOpen} />
       <Layout>
         <Header style={{ color: "#fff", height: 48 }}>
           <span>合作商管理后台</span>
@@ -61,6 +70,8 @@ function MainLayout() {
             <Dropdown menu={{ items, onClick:({ key })=>{
               if (key === '0'){
                 auth.signout(auth.partner, ()=>{})
+              } else if (key === '1') {
+                setIsSetpassowrdModalOpen(true)
               }
             } }} trigger={['click']}>
               <a style={{ color: "#fff" }} onClick={(e) => e.preventDefault()}>

@@ -66,15 +66,25 @@ function Admin() {
   }, [])
 
   const fetchListAdmin = async () => {
-    const { data } = await listAdmin({})
-    let d: DataType[] = data?.list?.map((item, index) => {
-      let newItem: DataType = {
-        key: index,
-        ...item
+    try {
+      const { data } = await listAdmin({})
+      let d: DataType[] = data?.list?.map((item, index) => {
+        let newItem: DataType = {
+          key: index,
+          ...item
+        }
+        return newItem
+      })
+      setList(d)
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        let msg = e.response?.data?.message
+        msg && messageApi.open({
+          type: 'error',
+          content: msg,
+        });
       }
-      return newItem
-    })
-    setList(d)
+    }
   }
 
   const showModal = () => {
