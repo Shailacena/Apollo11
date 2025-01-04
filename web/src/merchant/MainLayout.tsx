@@ -60,12 +60,12 @@ function MainLayout() {
           <span style={{ position: 'absolute', right: 20 }}>
             <Dropdown menu={{ items, onClick:({ key })=>{
               if (key === '0'){
-                auth.signout(auth.partner, ()=>{})
+                auth.merchantSignout(()=>{})
               }
             } }} trigger={['click']}>
               <a style={{ color: "#fff" }} onClick={(e) => e.preventDefault()}>
                 <Space>
-                  {auth.merchant.account}
+                  {auth.name}
                   <DownOutlined />
                 </Space>
               </a>

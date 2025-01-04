@@ -19,7 +19,7 @@ const Login: React.FC = () => {
   const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
-    if (auth.merchant) {
+    if (auth.token) {
       navigate(getRouteConfig()[0].path, { replace: true });
       return;
     }

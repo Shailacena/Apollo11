@@ -18,7 +18,8 @@ function Login() {
 
   useEffect(() => {
     // 异步操作或其他需要在渲染之外进行的操作
-    if (auth.admin) {
+    console.log('icccc =====> admin useEffect')
+    if (auth.token) {
       navigate(routes[0].path, { replace: true });
       return;
     }

@@ -69,14 +69,14 @@ function MainLayout() {
           <span style={{ position: 'absolute', right: 20 }}>
             <Dropdown menu={{ items, onClick:({ key })=>{
               if (key === '0'){
-                auth.signout(auth.partner, ()=>{})
+                auth.partnerSignout(()=>{})
               } else if (key === '1') {
                 setIsSetpassowrdModalOpen(true)
               }
             } }} trigger={['click']}>
               <a style={{ color: "#fff" }} onClick={(e) => e.preventDefault()}>
                 <Space>
-                  {auth.partner.account}
+                  {auth.name}
                   <DownOutlined />
                 </Space>
               </a>

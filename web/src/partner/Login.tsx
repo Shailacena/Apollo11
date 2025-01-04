@@ -19,7 +19,7 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     // 异步操作或其他需要在渲染之外进行的操作
-    if (auth.partner) {
+    if (auth.token) {
       navigate(getRouteConfig()[0].path, { replace: true });
       return;
     }
