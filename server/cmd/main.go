@@ -9,6 +9,7 @@ import (
 	"apollo/server/pkg/data"
 	"fmt"
 
+	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
 )
@@ -20,13 +21,19 @@ func main() {
 	model.InitMigrate(db)
 
 	e := app.Engine()
+
+	e.Logger.SetLevel(log.INFO)
+
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
 
-	e.Use(mw.HandleErrorMiddleware())
+	e.Use(middleware.BodyDump(func(c echo.Context, reqBody, resBody []byte) {
+		c.Logger().Info("reqBody:", string(reqBody))
+		c.Logger().Info("resBody:", string(resBody))
+	}))
 
-	e.Logger.SetLevel(log.INFO)
+	e.Use(mw.HandleErrorMiddleware())
 
 	router.Init(e)
 

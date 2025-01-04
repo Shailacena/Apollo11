@@ -23,7 +23,21 @@ func (s *OrderService) List(c echo.Context, req *v1.ListOrderReq) (*v1.ListOrder
 	list := make([]*v1.Order, 0, len(OrderList))
 	for _, g := range OrderList {
 		list = append(list, &v1.Order{
-			OrderId: g.OrderId,
+			OrderId:         g.OrderId,
+			MerchantId:      g.MerchantId,
+			MerchantOrderId: g.MerchantOrderId,
+			OfficialOrderId: g.OfficialOrderId,
+			Price:           g.Price,
+			PayType:         g.PayType,
+			PayAccount:      g.PayAccount,
+			PayStatus:       g.PayStatus,
+			SkuId:           g.SkuId,
+			Shop:            g.Shop,
+			CallbackStatus:  g.CallbackStatus,
+			IP:              g.IP,
+			Device:          g.Device,
+			Remark:          g.Remark,
+			CreateAt:        g.CreatedAt.Unix(),
 		})
 	}
 

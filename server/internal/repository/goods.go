@@ -14,10 +14,10 @@ var (
 type GoodsRepo struct {
 }
 
-func (r *GoodsRepo) Create(c echo.Context, list []*model.Goods) error {
+func (r *GoodsRepo) Create(c echo.Context, goods *model.Goods) error {
 	db := data.Instance()
 
-	err := db.Create(list).Error
+	err := db.Create(goods).Error
 
 	return err
 }
@@ -25,11 +25,11 @@ func (r *GoodsRepo) Create(c echo.Context, list []*model.Goods) error {
 func (r *GoodsRepo) List(c echo.Context) ([]*model.Goods, error) {
 	db := data.Instance()
 
-	var accounts []*model.Goods
-	err := db.Where("enable = ?", model.Enabled).Find(&accounts).Error
+	var goodsList []*model.Goods
+	err := db.Limit(20).Find(&goodsList).Error
 	if err != nil {
 		return nil, err
 	}
 
-	return accounts, err
+	return goodsList, err
 }

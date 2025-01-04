@@ -47,4 +47,15 @@ func Init(e *echo.Echo) {
 	{
 		statisticsGroup.GET("/listBill", handler.Statistics.List)
 	}
+
+	goodsGroup := apiGroup.Group("/goods")
+	{
+		goodsGroup.POST("/create", handler.Goods.Create)
+		goodsGroup.GET("/list", handler.Goods.List)
+	}
+
+	orderGroup := apiGroup.Group("/order")
+	{
+		orderGroup.GET("/list", handler.Order.List)
+	}
 }

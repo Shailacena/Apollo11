@@ -2,6 +2,7 @@ package service
 
 import (
 	v1 "apollo/server/api/v1"
+	"apollo/server/internal/model"
 	"apollo/server/internal/repository"
 
 	"github.com/labstack/echo/v4"
@@ -15,28 +16,20 @@ type GoodsService struct {
 }
 
 func (s *GoodsService) Create(c echo.Context, req *v1.GoodsCreateReq) (*v1.GoodsCreateResp, error) {
-	// list := make([]*model.Goods, 0, len(req.AccountList))
-	// for _, a := range req.AccountList {
-	// 	if len(a) == 0 {
-	// 		continue
-	// 	}
+	goods := &model.Goods{
+		PartnerId:    req.PartnerId,
+		RechargeType: req.RechargeType,
+		SkuId:        req.SkuId,
+		BrandId:      req.BrandId,
+		Price:        req.Price,
+		RealPrice:    req.RealPrice,
+		ShopName:     req.ShopName,
+	}
 
-	// 	str := strings.Split(a, ";")
-
-	// 	if len(str) <= 1 {
-	// 		continue
-	// 	}
-
-	// 	list = append(list, &model.Goods{
-	// 		Account: strings.Replace(str[0], "pin=", "", 1),
-	// 		WsKey:   strings.Replace(str[1], "wskey=", "", 1),
-	// 		Remark:  req.Remark,
-	// 	})
-	// }
-	// err := repository.Goods.Create(c, list)
-	// if err != nil {
-	// 	return nil, err
-	// }
+	err := repository.Goods.Create(c, goods)
+	if err != nil {
+		return nil, err
+	}
 
 	return &v1.GoodsCreateResp{}, nil
 }
@@ -50,7 +43,15 @@ func (s *GoodsService) List(c echo.Context, req *v1.ListGoodsReq) (*v1.ListGoods
 	list := make([]*v1.Goods, 0, len(goodsList))
 	for _, g := range goodsList {
 		list = append(list, &v1.Goods{
-			PartnerId: g.PartnerId,
+			Id:           g.ID,
+			PartnerId:    g.PartnerId,
+			RechargeType: g.RechargeType,
+			SkuId:        g.SkuId,
+			BrandId:      g.BrandId,
+			Price:        g.Price,
+			RealPrice:    g.RealPrice,
+			ShopName:     g.ShopName,
+			CreateAt:     g.CreatedAt.Unix(),
 		})
 	}
 
