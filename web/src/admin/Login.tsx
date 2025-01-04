@@ -1,10 +1,12 @@
 import { Flex, Button, Card, Form, Input, message } from 'antd';
 import bg from '../assets/bg.jpg';
-import { AUTH_TYPE, useAuth } from '../AuthProvider';
+import { useAuth } from '../AuthProvider';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { FormProps } from 'antd';
-import { adminLogin, AdminLoginReq } from '../api/api';
+import { AdminLoginReq } from '../api/api';
 import axios from 'axios';
+import { useEffect } from 'react';
+import { routes } from './routes';
 
 function Login() {
   let navigate = useNavigate();
@@ -14,24 +16,22 @@ function Login() {
 
   const [messageApi, contextHolder] = message.useMessage();
 
+  useEffect(() => {
+    // 异步操作或其他需要在渲染之外进行的操作
+    if (auth.admin) {
+      navigate(routes[0].path, { replace: true });
+      return;
+    }
+  }, [auth]);
+
   const onFinish: FormProps<AdminLoginReq>['onFinish'] = async (value) => {
     try {
-      const resp = await adminLogin(value)
-
-      console.log(resp);
-
-      auth.signin(value.username, value.password, AUTH_TYPE.ADMIN, resp.token, () => {
-        // 使用 { replace: true } 保证我们不会把login放入history栈
-        // 意味着当用户点击回退，他不会重新回退到login页面
+      auth.adminSignin(value, () => {
         console.log('from: ', from);
         setTimeout(() => {
-          // 送用户回去他们试图访问的页面
-          // navigate(from, { replace: true });
           navigate('/admin/home', { replace: true });
         }, 500);
       });
-
-      navigate('/admin/home', { replace: true });
     } catch (e) {
       if (axios.isAxiosError(e)) {
         let msg = e.response?.data?.message

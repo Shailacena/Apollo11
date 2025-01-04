@@ -97,6 +97,22 @@ export function partnerRegister(data: PartnerRegisterReq): Promise<PartnerRegist
   })
 }
 
+export interface PartnerLoginReq {
+  id: string
+  password: string
+}
+
+interface PartnerLoginResp {
+  token: string
+  name: string
+}
+
+export function partnerLogin(data: PartnerLoginReq): Promise<PartnerLoginResp> {
+  return request.post("/partner/login", data).then((res) => {
+    return res.data
+  })
+}
+
 interface ListMerchantResp {
   list: Array<IMerchant>
 }
@@ -130,6 +146,22 @@ interface MerchantRegisterResp {
 
 export function merchantRegister(data: MerchantRegisterReq): Promise<MerchantRegisterResp> {
   return request.post("/merchant/register", data).then((res) => {
+    return res.data
+  })
+}
+
+export interface MerchantLoginReq {
+  id: string
+  password: string
+}
+
+interface MerchantLoginResp {
+  token: string
+  name: string
+}
+
+export function merchantLogin(data: MerchantLoginReq): Promise<MerchantLoginResp> {
+  return request.post("/merchant/login", data).then((res) => {
     return res.data
   })
 }

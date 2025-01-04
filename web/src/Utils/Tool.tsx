@@ -45,6 +45,33 @@ export const setCookieByDocument = (name: string, value: string, days = 1, path 
 };
 
 /**
+ * 获取有效期
+ * @param days: number 有效天数
+ */
+export const getExpirationDate = (days = 1) => {
+  const expirationDate = new Date();
+  expirationDate.setDate(expirationDate.getDate() + days);
+  return expirationDate;
+};
+
+/**
+ * 获取cookies路径
+ * @param name 
+ * @returns 
+ */
+export const getCookiePath = (name: string) => {
+  const cookiePattern = new RegExp(`(^|;\\s*)${name}=([^;]*)`);
+  const cookieMatch = document.cookie.match(cookiePattern);
+  if (cookieMatch) {
+    const [pathString] = cookieMatch[0].split(';');
+    const pathPattern = /path=([^;]*)/;
+    const pathMatch = pathPattern.exec(pathString);
+    return pathMatch ? pathMatch[1] : null;
+  }
+  return null;
+};
+
+/**
  * 获取随机路由
  * @returns path: string
  */

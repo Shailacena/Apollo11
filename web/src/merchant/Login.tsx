@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { AUTH_TYPE, useAuth } from '../AuthProvider';
 import { getRouteConfig } from './RouteConfigs';
 import { useCookies } from 'react-cookie';
+import axios from 'axios';
 
 const TAG = 'Merchant Login';
 
@@ -12,19 +13,14 @@ const Login: React.FC = () => {
 
   let navigate = useNavigate();
   let location = useLocation();
-  let auth = useAuth();
-  let [cookies] = useCookies(['token']);  
+  let auth = useAuth();  
   let from = location.state?.from?.pathname || '/';
 
+  const [messageApi, contextHolder] = message.useMessage();
+
   useEffect(() => {
-    // 异步操作或其他需要在渲染之外进行的操作
-    if (auth.partner) {
+    if (auth.merchant) {
       navigate(getRouteConfig()[0].path, { replace: true });
-      return;
-    }
-    // cookie登陆
-    if (cookies.token) {
-      auth.checkToken(AUTH_TYPE.PARTNER, cookies.token, () => { });
       return;
     }
   }, [auth]);
@@ -33,16 +29,24 @@ const Login: React.FC = () => {
     console.log('Received values of form: ', value);
     message.success('登陆成功!');
 
-    auth.signin(value.username, '', AUTH_TYPE.MERCHANT, '', () => {
-      // 使用 { replace: true } 保证我们不会把login放入history栈
-      // 意味着当用户点击回退，他不会重新回退到login页面
-      console.log('from: ', from);
-      setTimeout(() => {
-        // 送用户回去他们试图访问的页面
-        // navigate(from, { replace: true });
-        navigate(getRouteConfig()[0].path, { replace: true });
-      }, 500);
-    });
+    try {
+      auth.merchantSignin(value, () => {
+        console.log('from: ', from);
+        setTimeout(() => {
+          navigate(getRouteConfig()[0].path, { replace: true });
+          // 送用户回去他们试图访问的页面
+          // navigate(from, { replace: true });
+        }, 500);
+      });
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        let msg = e.response?.data?.message
+        msg && messageApi.open({
+          type: 'error',
+          content: msg,
+        });
+      }
+    }
   };
 
   return (
