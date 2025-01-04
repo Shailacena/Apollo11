@@ -1,3 +1,4 @@
+import { AxiosResponse } from 'axios';
 import { request } from './request';
 
 interface IResponseBody<T> {
@@ -5,6 +6,13 @@ interface IResponseBody<T> {
   code: number;
   message: string;
   data: T;
+}
+
+function post(url: string, data: any): Promise<AxiosResponse> {
+  return request.post(url, data).then((res) => {
+    console.log(res)
+    return res.data
+  })
 }
 
 export interface AdminLoginReq {
@@ -18,8 +26,8 @@ interface AdminLoginResp {
 }
 
 export function adminLogin(data: AdminLoginReq): Promise<AdminLoginResp> {
-  return request.post("/admin/login", data).then((res) => {
-    return res.data.data
+  return post("/admin/login", data).then((res) => {
+    return res.data
   })
 }
 
@@ -36,7 +44,7 @@ interface AdminRegisterResp {
 }
 
 export function adminRegister(data: AdminRegisterReq): Promise<IResponseBody<AdminRegisterResp>> {
-  return request.post("/admin/register", data).then((res) => {
+  return post("/admin/register", data).then((res) => {
     return res.data
   })
 }
@@ -54,7 +62,7 @@ export interface IAdmin {
 }
 
 export function listAdmin(data: any): Promise<IResponseBody<ListAdminResp>> {
-  return request.post("/admin/list", data).then((res) => {
+  return post("/admin/list", data).then((res) => {
     return res.data
   })
 }
@@ -72,7 +80,7 @@ export interface IPartner {
 }
 
 export function listPartner(data: any): Promise<IResponseBody<ListPartnerResp>> {
-  return request.post("/partner/list", data).then((res) => {
+  return post("/partner/list", data).then((res) => {
     return res.data
   })
 }
@@ -92,7 +100,7 @@ interface PartnerRegisterResp {
 }
 
 export function partnerRegister(data: PartnerRegisterReq): Promise<PartnerRegisterResp> {
-  return request.post("/partner/register", data).then((res) => {
+  return post("/partner/register", data).then((res) => {
     return res.data
   })
 }
@@ -108,7 +116,7 @@ interface PartnerLoginResp {
 }
 
 export function partnerLogin(data: PartnerLoginReq): Promise<PartnerLoginResp> {
-  return request.post("/partner/login", data).then((res) => {
+  return post("/partner/login", data).then((res) => {
     return res.data.data
   })
 }
@@ -129,7 +137,7 @@ export interface IMerchant {
 }
 
 export function listMerchant(data: any): Promise<IResponseBody<ListMerchantResp>> {
-  return request.post("/merchant/list", data).then((res) => {
+  return post("/merchant/list", data).then((res) => {
     return res.data
   })
 }
@@ -145,7 +153,7 @@ interface MerchantRegisterResp {
 }
 
 export function merchantRegister(data: MerchantRegisterReq): Promise<MerchantRegisterResp> {
-  return request.post("/merchant/register", data).then((res) => {
+  return post("/merchant/register", data).then((res) => {
     return res.data
   })
 }
@@ -161,7 +169,7 @@ interface MerchantLoginResp {
 }
 
 export function merchantLogin(data: MerchantLoginReq): Promise<MerchantLoginResp> {
-  return request.post("/merchant/login", data).then((res) => {
+  return post("/merchant/login", data).then((res) => {
     return res.data.data
   })
 }
