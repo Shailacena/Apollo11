@@ -1,4 +1,4 @@
-import { Button, Card, Form, FormProps, Input, message, Modal } from "antd";
+import { Button, Card, Divider, Form, FormProps, Input, message, Modal } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { adminRegister, AdminRegisterReq } from "../api/api";
@@ -53,45 +53,43 @@ function SetPasswordModal(props: any) {
   }
   return (
     <>
-
       <Modal title="修改密码"
         footer={null}
         open={isModalOpen}
         onCancel={handleCancel}
         style={{ maxWidth: 480 }}
         destroyOnClose>
-        <Card>
-          <div style={{ display: 'flex', justifyContent: 'center', alignContent: 'center', marginTop: 20, alignItems: 'center' }}>
-            <Form
-              labelCol={{ span: 8 }}
-              name="basic"
-              autoComplete="off"
-              onFinish={onFinish}
+        <Divider />
+        <div style={{ display: 'flex', justifyContent: 'center', alignContent: 'center', marginTop: 20, alignItems: 'center' }}>
+          <Form
+            labelCol={{ span: 8 }}
+            name="basic"
+            autoComplete="off"
+            onFinish={onFinish}
+          >
+            <Form.Item<FieldType>
+              name="oldpassowrd"
+              label="原始密码"
+              required
             >
-              <Form.Item<FieldType>
-                name="oldpassowrd"
-                label="原始密码"
-                required
-              >
-                <Input style={{ width: 200 }} />
-              </Form.Item>
+              <Input style={{ width: 200 }} />
+            </Form.Item>
 
-              <Form.Item<FieldType>
-                name="newpassowrd"
-                label="新密码"
-                required
-              >
-                <Input style={{ width: 200 }} />
-              </Form.Item>
+            <Form.Item<FieldType>
+              name="newpassowrd"
+              label="新密码"
+              required
+            >
+              <Input style={{ width: 200 }} />
+            </Form.Item>
 
-              <Form.Item label={null} style={{ marginTop: 50 }}>
-                <Button style={{ width: 100 }} size="middle" block type="primary" htmlType="submit">
-                  确定
-                </Button>
-              </Form.Item>
-            </Form >
-          </div>
-        </Card>
+            <Form.Item label={null} style={{ marginTop: 50 }}>
+              <Button style={{ width: 100 }} size="middle" block type="primary" htmlType="submit">
+                确定
+              </Button>
+            </Form.Item>
+          </Form >
+        </div>
       </Modal>
     </>
   );

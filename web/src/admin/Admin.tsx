@@ -1,4 +1,4 @@
-import { Space, Table, Button, Modal, Form, Input, message } from 'antd';
+import { Space, Table, Button, Modal, Form, Input, message, Card, Divider } from 'antd';
 import type { FormProps, TableProps } from 'antd';
 import { useEffect, useState } from 'react';
 import { listAdmin, IAdmin, AdminRegisterReq, adminRegister } from '../api/api';
@@ -127,78 +127,44 @@ function Admin() {
       <Button type="primary" onClick={showModal}>新增管理员</Button>
       <Table<DataType> columns={columns} dataSource={list} />
 
-      <Modal title="新增管理员" footer={null} open={isModalOpen} onCancel={handleCancel} destroyOnClose>
-        <Form
-          labelCol={{ span: 4 }}
-          name="basic"
-          autoComplete="off"
-          onFinish={onFinish}
-        >
-          <Form.Item<FieldType>
-            name="username"
-            label="帐号"
-            required
-          >
-            <Input />
-          </Form.Item>
+      <Modal title="新增管理员" footer={null} open={isModalOpen} onCancel={handleCancel} style={{ maxWidth: 480 }} destroyOnClose>
+        <Divider />
+          <div style={{ display: 'flex', marginTop: 20, alignItems: 'center' }}>
+            <Form
+              labelCol={{ span: 8 }}
+              name="basic"
+              autoComplete="off"
+              onFinish={onFinish}
+            >
+              <Form.Item<FieldType>
+                name="username"
+                label="帐号"
+                required
+              >
+                <Input style={{ width: 250 }}/>
+              </Form.Item>
 
-          <Form.Item<FieldType>
-            name="nickname"
-            label="昵称"
-            required
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item<FieldType>
-            name="remark"
-            label="备注"
-          >
-            <TextArea rows={4} />
-          </Form.Item>
+              <Form.Item<FieldType>
+                name="nickname"
+                label="昵称"
+                required
+              >
+                <Input style={{ width: 250 }}/>
+              </Form.Item>
+              <Form.Item<FieldType>
+                name="remark"
+                label="备注"
+              >
+                <TextArea rows={4} style={{ width: 250 }}/>
+              </Form.Item>
 
-          <Form.Item>
-            <Button size="large" block type="primary" htmlType="submit">
-              确定
-            </Button>
-          </Form.Item>
-        </Form >
-      </Modal>
-
-      <Modal title="" footer={null} open={isModalOpen} onCancel={handleCancel} destroyOnClose>
-        <Form
-          labelCol={{ span: 4 }}
-          name="basic"
-          autoComplete="off"
-          onFinish={onFinish}
-        >
-          <Form.Item<FieldType>
-            name="username"
-            label="帐号"
-            required
-          >
-            <Input />
-          </Form.Item>
-
-          <Form.Item<FieldType>
-            name="nickname"
-            label="昵称"
-            required
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item<FieldType>
-            name="remark"
-            label="备注"
-          >
-            <TextArea rows={4} />
-          </Form.Item>
-
-          <Form.Item>
-            <Button size="large" block type="primary" htmlType="submit">
-              确定
-            </Button>
-          </Form.Item>
-        </Form >
+              <Form.Item label={null} style={{ marginTop: 30 }}>
+                <Button style={{ width: 100 }} size="large" block type="primary" htmlType="submit">
+                  确定
+                </Button>
+              </Form.Item>
+            </Form >
+          </div>
       </Modal>
     </>
   )
