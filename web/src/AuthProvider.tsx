@@ -59,6 +59,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     const resp = await adminLogin(value)
     console.log(resp);
     setAdmin(resp.nickname);
+    console.log(TAG, 'adminSignin iccccccccccccccccccc admin', admin)
     setCookie('token', resp.token, { path: '/admin/', expires: getExpirationDate(7) });
     setCookie('name', resp.nickname, { path: '/admin/', expires: getExpirationDate(7) });
     callback()

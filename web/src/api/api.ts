@@ -19,7 +19,7 @@ interface AdminLoginResp {
 
 export function adminLogin(data: AdminLoginReq): Promise<AdminLoginResp> {
   return request.post("/admin/login", data).then((res) => {
-    return res.data
+    return res.data.data
   })
 }
 
@@ -109,7 +109,7 @@ interface PartnerLoginResp {
 
 export function partnerLogin(data: PartnerLoginReq): Promise<PartnerLoginResp> {
   return request.post("/partner/login", data).then((res) => {
-    return res.data
+    return res.data.data
   })
 }
 
@@ -162,6 +162,6 @@ interface MerchantLoginResp {
 
 export function merchantLogin(data: MerchantLoginReq): Promise<MerchantLoginResp> {
   return request.post("/merchant/login", data).then((res) => {
-    return res.data
+    return res.data.data
   })
 }
