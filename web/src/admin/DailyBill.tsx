@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import type { TableProps } from 'antd';
+import { listStatisticsBill } from '../api/api';
 
 
 interface DataType {
@@ -47,21 +48,21 @@ function DailyBill() {
 
   const [list, setList] = useState<DataType[]>([])
 
-  // const fetchListJDAccount = async () => {
-  //       const { data } = await listJDAccount()
-  //       let d: DataType[] = data?.list?.map((item, index) => {
-  //         let newItem: DataType = {
-  //           key: index.toString(),
-  //           ...item
-  //         }
-  //         return newItem
-  //       })
-  //       setList(d)
-  //     }
+  const fetchListStatisticsBill = async () => {
+        const { data } = await listStatisticsBill()
+        let d: DataType[] = data?.list?.map((item, index) => {
+          let newItem: DataType = {
+            key: index.toString(),
+            ...item
+          }
+          return newItem
+        })
+        setList(d)
+      }
     
-  //     useEffect(() => {
-  //       fetchListJDAccount()
-  //     }, [])
+      useEffect(() => {
+        fetchListStatisticsBill()
+      }, [])
       
   return (
     <>

@@ -284,25 +284,6 @@ export function listStatisticsBill(): Promise<IResponseBody<ListStatisticsResp>>
   })
 }
 
-interface ListDailyBillResp {
-  list: Array<IDailyBill>
-}
-
-export interface IDailyBill {
-  Date: string
-	TotalMoney: number
-	WxFee: number
-	WxManualFee: number
-	AliFee: number
-	AliManualFee: number
-}
-
-export function listDailyBill(): Promise<IResponseBody<ListDailyBillResp>> {
-  return get("/statistics/listBill").then((res) => {
-    return res.data
-  })
-}
-
 interface ListOrderResp {
   list: Array<IOrder>
 }
