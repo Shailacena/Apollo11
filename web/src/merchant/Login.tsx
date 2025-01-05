@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Flex, message } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AUTH_TYPE, useAuth } from '../AppProvider';
+import { AUTH_TYPE, useAppContext } from '../AppProvider';
 import { getRouteConfig } from './RouteConfigs';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';
@@ -13,24 +13,24 @@ const Login: React.FC = () => {
 
   let navigate = useNavigate();
   let location = useLocation();
-  let auth = useAuth();  
+  let ctx = useAppContext();  
   let from = location.state?.from?.pathname || '/';
 
   const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
-    if (auth.token) {
+    if (ctx.auth.token) {
       navigate(getRouteConfig()[0].path, { replace: true });
       return;
     }
-  }, [auth]);
+  }, [ctx.auth]);
 
   const onFinish = (value: any) => {
     console.log('Received values of form: ', value);
     message.success('登陆成功!');
 
     try {
-      auth.merchantSignin(value, () => {
+      ctx.auth.merchantSignin(value, () => {
         console.log('from: ', from);
         setTimeout(() => {
           navigate(getRouteConfig()[0].path, { replace: true });

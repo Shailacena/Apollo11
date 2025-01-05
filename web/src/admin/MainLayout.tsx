@@ -4,7 +4,7 @@ import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
 import { routes } from './routes';
-import { AUTH_TYPE, useAuth } from '../AppProvider';
+import { AUTH_TYPE, useAppContext } from '../AppProvider';
 
 const { Header, Content, Sider, Footer } = Layout;
 
@@ -36,7 +36,7 @@ const items: MenuProps['items'] = [
 function MainLayout() {
   const navigate = useNavigate()
   const loc = useLocation()
-  const auth = useAuth()
+  const ctx = useAppContext()
 
   const onClickMenu: MenuProps['onClick'] = (e) => {
     if (loc.pathname == e.key) {
@@ -55,7 +55,7 @@ function MainLayout() {
             <Dropdown menu={{
               items, onClick: ({ key }) => {
                 if (key === '0') {
-                  auth.adminSignout(() => { })
+                  ctx.auth.adminSignout(() => { })
                 }
               }
             }} trigger={['click']}>

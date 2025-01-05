@@ -1,6 +1,6 @@
 import { Flex, Button, Card, Form, Input, message } from 'antd';
 import bg from '../assets/bg.jpg';
-import { useAuth } from '../AppProvider';
+import { useAppContext } from '../AppProvider';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { FormProps } from 'antd';
 import { AdminLoginReq } from '../api/api';
@@ -11,7 +11,7 @@ import { routes } from './routes';
 function Login() {
   let navigate = useNavigate();
   let location = useLocation();
-  let auth = useAuth();
+  let ctx = useAppContext();
   let from = location.state?.from?.pathname || '/';
 
   const [messageApi, contextHolder] = message.useMessage();
@@ -19,15 +19,15 @@ function Login() {
   useEffect(() => {
     // 异步操作或其他需要在渲染之外进行的操作
     console.log('icccc =====> admin useEffect')
-    if (auth.token) {
+    if (ctx.auth.token) {
       navigate(routes[0].path, { replace: true });
       return;
     }
-  }, [auth]);
+  }, [ctx.auth]);
 
   const onFinish: FormProps<AdminLoginReq>['onFinish'] = async (value) => {
     try {
-      auth.adminSignin(value, () => {
+      ctx.auth.adminSignin(value, () => {
         console.log('from: ', from);
         setTimeout(() => {
           navigate('/admin/home', { replace: true });

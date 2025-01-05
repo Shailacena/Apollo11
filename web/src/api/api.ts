@@ -79,11 +79,11 @@ interface ListRealNameAccountResp {
 }
 
 export interface IRealNameAccount {
-  IdNumber: string
-	Name: string
-  RealNameCount: number
-	Enable: number
-	Remark: string
+  idNumber: string
+	name: string
+  realNameCount: number
+	enable: number
+	remark: string
 }
 
 export function listRealNameAccount(): Promise<IResponseBody<ListRealNameAccountResp>> {
@@ -97,16 +97,16 @@ interface ListJDAccountResp {
 }
 
 export interface IJDAccount {
-  Id: string
-	Account: string
-	RealNameStatus: number
-	TotalOrderCount: number
-	TodayOrderCount: number
-	TotalSuccessOrderCount: number
-	LoginStatus: number
-	Enable: number
-	Remark: number
-	CreateAt: number
+  id: string
+	account: string
+	realNameStatus: number
+	totalOrderCount: number
+	todayOrderCount: number
+	totalSuccessOrderCount: number
+	loginStatus: number
+	enable: number
+	remark: number
+	createAt: number
 }
 
 export function listJDAccount(): Promise<IResponseBody<ListJDAccountResp>> {
@@ -121,10 +121,15 @@ interface ListPartnerResp {
 
 export interface IPartner {
   id: number
-  username: string
-  nickname: string
-  remark: string
-  enable: number
+	name: string
+	creditAmount: number
+	dailyLimit: number
+	priority: number
+	superiorAgent: number
+	level: number
+	stockAmount: number
+	enable: number
+	remark: string
 }
 
 

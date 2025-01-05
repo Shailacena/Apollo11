@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Flex, message } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../AppProvider';
+import { useAppContext } from '../AppProvider';
 import { getRouteConfig } from './RouteConfigs';
 import axios from 'axios';
 
@@ -12,23 +12,23 @@ const Login: React.FC = () => {
 
   let navigate = useNavigate();
   let location = useLocation();
-  let auth = useAuth(); 
+  let ctx = useAppContext(); 
   let from = location.state?.from?.pathname || '/';
 
   const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
     // 异步操作或其他需要在渲染之外进行的操作
-    if (auth.token) {
+    if (ctx.auth.token) {
       navigate(getRouteConfig()[0].path, { replace: true });
       return;
     }
-  }, [auth]);
+  }, [ctx.auth]);
 
   const onFinish = (value: any) => {
     try {
       value.id = value.id && Number(value.id)
-      auth.partnerSignin(value, () => {
+      ctx.auth.partnerSignin(value, () => {
         console.log('from: ', from);
         setTimeout(() => {
           navigate(getRouteConfig()[0].path, { replace: true });

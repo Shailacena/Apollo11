@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import { adminLogin, AdminLoginReq, merchantLogin, MerchantLoginReq, partnerLogin, PartnerLoginReq } from "./api/api";
+import { adminLogin, AdminLoginReq, IPartner, merchantLogin, MerchantLoginReq, partnerLogin, PartnerLoginReq } from "./api/api";
 import { getCookiePath, getExpirationDate } from "./utils/Tool";
 
 const TAG = 'AppProvider';
@@ -11,28 +11,33 @@ export enum AUTH_TYPE {
 }
 
 interface AuthContextType {
-  token: any;
-  name: any;
+  auth: {
+    token: any;
+    name: any;
 
-  adminSignin: (value: AdminLoginReq, callback: Function) => void;
-  adminSignout: (callback: Function) => void;
+    adminSignin: (value: AdminLoginReq, callback: Function) => void;
+    adminSignout: (callback: Function) => void;
 
-  partnerSignin: (value: PartnerLoginReq, callback: Function) => void;
-  partnerSignout: (callback: Function) => void;
+    partnerSignin: (value: PartnerLoginReq, callback: Function) => void;
+    partnerSignout: (callback: Function) => void;
 
-  merchantSignin: (value: MerchantLoginReq, callback: Function) => void;
-  merchantSignout: (callback: Function) => void;
+    merchantSignin: (value: MerchantLoginReq, callback: Function) => void;
+    merchantSignout: (callback: Function) => void;
+  }
+
+  partnerList: IPartner[];
 }
 
 let AuthContext = React.createContext<AuthContextType>(null!);
 
-export function useAuth() {
+export function useAppContext() {
   return React.useContext(AuthContext);
 }
 
 function AppProvider({ children }: { children: React.ReactNode }) {
   let [token, setToken] = React.useState<any>(null);
   let [name, setName] = React.useState<any>(null);
+  let [partnerList, setPartnerList] = React.useState<any>(null);
 
   let [cookies, setCookie, removeCookie] = useCookies(['token', 'name']);
 
@@ -95,25 +100,29 @@ function AppProvider({ children }: { children: React.ReactNode }) {
     callback();
   };
 
-  let value = { token, name, adminSignin, adminSignout, partnerSignin, partnerSignout, merchantSignin, merchantSignout };
+  // let value = { token, name, adminSignin, adminSignout, partnerSignin, partnerSignout, merchantSignin, merchantSignout };
+  let value = {
+      auth: { token, name, adminSignin, adminSignout, partnerSignin, partnerSignout, merchantSignin, merchantSignout },
+      partnerList,
+    }
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function RequireAuth({ children }: { children: JSX.Element }) {
-  let auth = useAuth();
+  let ctx = useAppContext();
   
   let location = useLocation();
   let [cookies] = useCookies(['token']);
 
-  console.log(TAG, 'RequireAuth iccccccccccccccccccc auth', auth)
-  console.log(TAG, 'RequireAuth iccccccccccccccccccc auth.token', auth.token)
+  console.log(TAG, 'RequireAuth iccccccccccccccccccc auth', ctx)
+  console.log(TAG, 'RequireAuth iccccccccccccccccccc auth.token', ctx.auth.token)
   console.log(TAG, 'RequireAuth iccccccccccccccccccc cookies token ', cookies.token)
 
   // 已登陆
-  if (auth.token) {
+  if (ctx.auth.token) {
     return children;
   } else if (cookies.token) {
-    auth.token = cookies.token
+    ctx.auth.token = cookies.token
     return children;
   }
 
@@ -122,19 +131,19 @@ export function RequireAuth({ children }: { children: JSX.Element }) {
 }
 
 export function RequireAuthPartner({ children }: { children: JSX.Element }) {
-  let auth = useAuth();
+  let ctx = useAppContext();
   let location = useLocation();
   let [cookies] = useCookies(['token']);
 
   console.log(TAG, location.pathname)
-  console.log(TAG, 'RequireAuthPartner iccccccccccccccccccc auth.token', auth.token)
+  console.log(TAG, 'RequireAuthPartner iccccccccccccccccccc auth.token', ctx.auth.token)
   console.log(TAG, 'RequireAuthPartner iccccccccccccccccccc cookies token ', cookies.token)
 
   // 已登陆
-  if (auth.token) {
+  if (ctx.auth.token) {
     return children;
   } else if (cookies.token) {
-    auth.token = cookies.token
+    ctx.auth.token = cookies.token
     return children;
   }
 
@@ -143,19 +152,19 @@ export function RequireAuthPartner({ children }: { children: JSX.Element }) {
 }
 
 export function RequireAuthMerchant({ children }: { children: JSX.Element }) {
-  let auth = useAuth();
+  let ctx = useAppContext();
   let location = useLocation();
   let [cookies] = useCookies(['token']);
 
   console.log(TAG, location.pathname)
-  console.log(TAG, 'RequireAuthMerchant iccccccccccccccccccc auth.token', auth.token)
+  console.log(TAG, 'RequireAuthMerchant iccccccccccccccccccc auth.token', ctx.auth.token)
   console.log(TAG, 'RequireAuthMerchant iccccccccccccccccccc cookies token ', cookies.token)
 
   // 已登陆
-  if (auth.token) {
+  if (ctx.auth.token) {
     return children;
   } else if (cookies.token) {
-    auth.token = cookies.token
+    ctx.auth.token = cookies.token
     return children;
   }
 

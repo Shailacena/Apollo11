@@ -3,6 +3,7 @@ import { Modal, Space, Form, Table, Input, Button, message } from 'antd';
 import type { FormProps, TableProps } from 'antd';
 import { IPartner, listPartner, partnerRegister, PartnerRegisterReq } from '../api/api';
 import axios from 'axios';
+import { useAppContext } from '../AppProvider';
 
 const { TextArea } = Input;
 
@@ -72,7 +73,8 @@ function Partner() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [list, setList] = useState<DataType[]>([])
   const [messageApi, contextHolder] = message.useMessage();
-
+  let ctx = useAppContext();
+  
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -111,8 +113,8 @@ function Partner() {
   const fetchListPartner = async () => {
     const { data } = await listPartner()
     console.log(data.list)
-    // console.log(appCt)
-    // appCt.partnerList = data.list;
+    console.log(ctx)
+    ctx.partnerList = data.list;
     let d: DataType[] = data?.list?.map((item, index) => {
       let newItem: DataType = {
         key: index,

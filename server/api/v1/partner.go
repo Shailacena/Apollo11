@@ -72,7 +72,7 @@ type GoodsCreateReq struct {
 	BrandId      string `json:"brandId"`
 	Price        int    `json:"price"`
 	RealPrice    int    `json:"realPrice"`
-	ShopName     string `json:"shopName"`
+	ShopName     int    `json:"shopName"`
 }
 
 type GoodsCreateResp struct {
@@ -87,15 +87,13 @@ type ListGoodsResp struct {
 }
 
 type Goods struct {
-	Id           uint   `json:"id"`
 	PartnerId    uint   `json:"partnerId"`
 	RechargeType int    `json:"rechargeType"`
 	SkuId        string `json:"skuId"`
 	BrandId      string `json:"brandId"`
 	Price        int    `json:"price"`
 	RealPrice    int    `json:"realPrice"`
-	ShopName     string `json:"shopName"`
-	CreateAt     int64  `json:"createAt"`
+	ShopName     int    `json:"shopName"`
 }
 
 // 订单列表
@@ -107,19 +105,5 @@ type ListOrderResp struct {
 }
 
 type Order struct {
-	OrderId         string `json:"orderId"`
-	MerchantId      uint   `json:"merchantId"`
-	MerchantOrderId string `json:"merchantOrderId"`
-	OfficialOrderId string `json:"officialOrderId"`
-	Price           int    `json:"price"`
-	PayType         int    `json:"payType"`
-	PayAccount      string `json:"payAccount"`
-	PayStatus       uint   `json:"payStatus"`
-	SkuId           string `json:"skuId"`
-	Shop            string `json:"shop"`
-	CallbackStatus  string `json:"callbackStatus"`
-	IP              string `json:"ip"`
-	Device          string `json:"device"`
-	Remark          string `json:"remark"`
-	CreateAt        int64  `json:"createAt"`
+	OrderId string `json:"orderId"`
 }

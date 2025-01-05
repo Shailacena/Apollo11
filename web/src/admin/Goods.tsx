@@ -4,6 +4,7 @@ import type { FormProps, TableProps } from 'antd';
 import { createGoods, GoodsCreateReq, listGoods } from '../api/api';
 import axios from 'axios';
 import TextArea from 'antd/es/input/TextArea';
+import { useAppContext } from '../AppProvider';
 
 interface DataType {
   key: string;
@@ -104,8 +105,8 @@ function Goods() {
   const [list, setList] = useState<DataType[]>([])
   const [isShowAddGoodsModal, setIsAddGoodsModalOpen] = useState(false);
   const [messageApi, contextHolder] = message.useMessage();
-  // const appCt = useAppContext();
-  
+  const ctx = useAppContext();
+
   const fetchListGoods = async () => {
 
     const { data } = await listGoods()
@@ -164,34 +165,69 @@ function Goods() {
             name="basic"
             autoComplete="off"
             onFinish={onFinish}
+            initialValues={{ rechargeType: '0' }}
           >
             <Form.Item<FieldTypeCreateGoods>
               name="partnerId"
               label="合作商"
             >
-              {/* <Select options={appCt.partnerList}
-              // [
-              //   { value: 'jack', label: 'Jack' },
-              //   { value: 'lucy', label: 'Lucy' },
-              //   { value: 'Yiminghe', label: 'yiminghe' },
-              //   { value: 'disabled', label: 'Disabled', disabled: true },
-              // ]}
+              <Select options={ctx.partnerList.map((item) => {
+                let newItem = {
+                  value: item.id,
+                  label: item.name
+                }
+                return newItem
+              })}
               >
-              </Select> */}
+              </Select>
             </Form.Item>
 
             <Form.Item<FieldTypeCreateGoods>
               name="rechargeType"
-              label="昵称"
-              required
+              label="充值类型"
             >
-              <Input style={{ width: 250 }} />
+              <Select
+                options={[
+                  { value: '0', label: '京东游戏' },
+                  { value: '1', label: '京东实物' }
+                ]}
+              >
+              </Select>
             </Form.Item>
+
             <Form.Item<FieldTypeCreateGoods>
               name="skuId"
-              label="SKU"
+              label="skuid"
             >
-              <TextArea rows={4} style={{ width: 250 }} />
+              <Input/>
+            </Form.Item>
+
+            <Form.Item<FieldTypeCreateGoods>
+              name="brandId"
+              label="BrandId"
+            >
+              <Input/>
+            </Form.Item>
+            
+            <Form.Item<FieldTypeCreateGoods>
+              name="price"
+              label="金额"
+            >
+              <Input/>
+            </Form.Item>
+
+            <Form.Item<FieldTypeCreateGoods>
+              name="realPrice"
+              label="真实金额"
+            >
+              <Input/>
+            </Form.Item>
+
+            <Form.Item<FieldTypeCreateGoods>
+              name="shopName"
+              label="店铺名称"
+            >
+              <Input/>
             </Form.Item>
 
             <Form.Item label={null} style={{ marginTop: 30 }}>

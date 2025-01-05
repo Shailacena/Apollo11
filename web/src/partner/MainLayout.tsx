@@ -3,7 +3,7 @@ import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { getRouteConfig, IRoute } from './RouteConfigs';
 import { Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../AppProvider';
+import { useAppContext } from '../AppProvider';
 import SetPasswordModal from './SetPasswordModal';
 import { useState } from 'react';
 
@@ -46,7 +46,7 @@ function MainLayout() {
   const [isSetpassowrdModalOpen, setIsSetpassowrdModalOpen] = useState(false);
   const navigate = useNavigate()
   const loc = useLocation()
-  const auth = useAuth()
+  const ctx = useAppContext()
 
   const onClickMenu: MenuProps['onClick'] = (e) => {
     if (loc.pathname == e.key) {
@@ -69,14 +69,14 @@ function MainLayout() {
           <span style={{ position: 'absolute', right: 20 }}>
             <Dropdown menu={{ items, onClick:({ key })=>{
               if (key === '0'){
-                auth.partnerSignout(()=>{})
+                ctx.auth.partnerSignout(()=>{})
               } else if (key === '1') {
                 setIsSetpassowrdModalOpen(true)
               }
             } }} trigger={['click']}>
               <a style={{ color: "#fff" }} onClick={(e) => e.preventDefault()}>
                 <Space>
-                  {auth.name}
+                  {ctx.auth.name}
                   <DownOutlined />
                 </Space>
               </a>

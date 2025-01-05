@@ -2,7 +2,7 @@ import { Layout, Menu, Dropdown, Space } from 'antd';
 import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../AppProvider';
+import { useAppContext } from '../AppProvider';
 import { getRouteConfig } from './RouteConfigs';
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -42,7 +42,7 @@ function MainLayout() {
 
   const navigate = useNavigate()
   const loc = useLocation()
-  const auth = useAuth()
+  const ctx = useAppContext()
 
   const onClickMenu: MenuProps['onClick'] = (e) => {
     if (loc.pathname == e.key) {
@@ -60,12 +60,12 @@ function MainLayout() {
           <span style={{ position: 'absolute', right: 20 }}>
             <Dropdown menu={{ items, onClick:({ key })=>{
               if (key === '0'){
-                auth.merchantSignout(()=>{})
+                ctx.auth.merchantSignout(()=>{})
               }
             } }} trigger={['click']}>
               <a style={{ color: "#fff" }} onClick={(e) => e.preventDefault()}>
                 <Space>
-                  {auth.name}
+                  {ctx.auth.name}
                   <DownOutlined />
                 </Space>
               </a>
