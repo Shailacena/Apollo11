@@ -30,6 +30,12 @@ const Login: React.FC = () => {
       value.id = value.id && Number(value.id)
       ctx.auth.partnerSignin(value, () => {
         console.log('from: ', from);
+        if (value.remember) {
+          console.log('用户选择了记住我');
+          localStorage.setItem('login_id', value.id)
+        } else {
+          localStorage.removeItem('login_id')
+        }
         setTimeout(() => {
           navigate(getRouteConfig()[0].path, { replace: true });
           // 送用户回去他们试图访问的页面
@@ -52,7 +58,7 @@ const Login: React.FC = () => {
       <h2 style={{ textAlign: 'center' }}>合作商管理后台</h2>
       <Form
         name="login"
-        initialValues={{ remember: true }}
+        initialValues={{ remember: true, id: localStorage.getItem('login_id') }}
         style={{ maxWidth: 360 }}
         onFinish={onFinish}
       >
