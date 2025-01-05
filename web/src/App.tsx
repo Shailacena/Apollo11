@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, Outlet, useLocation, Navigate, useNavigate, BrowserRouter } from 'react-router-dom'
 import './App.css'
-import AuthProvider, { RequireAuth, RequireAuthMerchant, RequireAuthPartner } from './AuthProvider'
+import AppProvider, { RequireAuth, RequireAuthMerchant, RequireAuthPartner } from './AppProvider'
 import MainLayout from './admin/MainLayout'
 import Login from './admin/Login'
 import LoginPartner from './partner/Login'
@@ -23,7 +23,7 @@ function App() {
     //   <MainLayout />
     // </>
 
-    <AuthProvider>
+    <AppProvider>
       <Routes>
         <Route path="/admin/login" element={<Login />} />
         <Route path="/partner/login" element={<LoginPartner />} />
@@ -79,7 +79,7 @@ function App() {
           })}
         </Route>
       </Routes>
-    </AuthProvider>
+    </AppProvider>
   )
 }
 

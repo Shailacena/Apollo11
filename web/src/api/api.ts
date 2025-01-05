@@ -212,6 +212,26 @@ export function listGoods(): Promise<IResponseBody<ListGoodsResp>> {
   })
 }
 
+export interface GoodsCreateReq {
+  PartnerId: number
+	RechargeType: number
+	SkuId: string
+	BrandId: string
+	Price: number
+	RealPrice: number
+	ShopName: string
+}
+
+interface GoodsCreateResp {
+  
+}
+
+export function createGoods(data: GoodsCreateReq): Promise<IResponseBody<GoodsCreateResp>> {
+  return post("/goods/create", data).then((res) => {
+    return res.data
+  })
+}
+
 interface ListMerchantResp {
   list: Array<IMerchant>
 }

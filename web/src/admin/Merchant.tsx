@@ -125,7 +125,7 @@ function Merchant() {
       </div>
       <Table<DataType> columns={columns} dataSource={list} />
 
-      <Modal title="新增" footer={null} onCancel={handleCancel} open={isModalOpen}>
+      <Modal title="新增商户" footer={null} onCancel={handleCancel} open={isModalOpen}>
         <Form
           preserve={false}
           labelCol={{ span: 4 }}

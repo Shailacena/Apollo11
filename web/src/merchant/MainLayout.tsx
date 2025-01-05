@@ -2,7 +2,7 @@ import { Layout, Menu, Dropdown, Space } from 'antd';
 import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../AuthProvider';
+import { useAuth } from '../AppProvider';
 import { getRouteConfig } from './RouteConfigs';
 
 type MenuItem = Required<MenuProps>['items'][number];

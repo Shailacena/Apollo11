@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Flex, message } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AUTH_TYPE, useAuth } from '../AuthProvider';
+import { AUTH_TYPE, useAuth } from '../AppProvider';
 import { getRouteConfig } from './RouteConfigs';
 import { useCookies } from 'react-cookie';
 import axios from 'axios';

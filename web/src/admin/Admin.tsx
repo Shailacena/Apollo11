@@ -67,7 +67,7 @@ function Admin() {
 
   const fetchListAdmin = async () => {
     try {
-      const { data } = await listAdmin({})
+      const { data } = await listAdmin()
       let d: DataType[] = data?.list?.map((item, index) => {
         let newItem: DataType = {
           key: index,

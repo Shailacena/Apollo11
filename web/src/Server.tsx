@@ -1,4 +1,4 @@
-import { AUTH_TYPE } from "./AuthProvider";
+import { AUTH_TYPE } from "./AppProvider";
 
 /**
  * 模拟了Server API
@@ -10,32 +10,32 @@ function generateToken() {
   return uuidv4();
 }
 
-const fakeAuthProvider = {
+const fakeAppProvider = {
     isAuthenticated: false,
     token: '',
     account: '',
     signin(params: {account: string, password: string, userType: AUTH_TYPE, code: string}, callback: Function) {
-      fakeAuthProvider.isAuthenticated = true;
-      fakeAuthProvider.account = params.account;
-      fakeAuthProvider.token = generateToken();
-      setTimeout(callback({userType:params.userType, account: params.account}, fakeAuthProvider.token), 100); // fake async
+      fakeAppProvider.isAuthenticated = true;
+      fakeAppProvider.account = params.account;
+      fakeAppProvider.token = generateToken();
+      setTimeout(callback({userType:params.userType, account: params.account}, fakeAppProvider.token), 100); // fake async
     },
     signout(params: {account: string, userType: AUTH_TYPE}, callback: Function) {
-      fakeAuthProvider.isAuthenticated = false;
+      fakeAppProvider.isAuthenticated = false;
       setTimeout(callback(), 100);
     },
     checkToken(userType: AUTH_TYPE, token: string, callback: Function) {
-      console.log(fakeAuthProvider.token)
-      // if (fakeAuthProvider.token != '' && fakeAuthProvider.token == token) {
-        fakeAuthProvider.isAuthenticated = true;
+      console.log(fakeAppProvider.token)
+      // if (fakeAppProvider.token != '' && fakeAppProvider.token == token) {
+        fakeAppProvider.isAuthenticated = true;
         setTimeout(callback({userType:userType, account: '123'}), 100);
       // } else {
-      //   fakeAuthProvider.token = '';
-      //   fakeAuthProvider.isAuthenticated = false;
+      //   fakeAppProvider.token = '';
+      //   fakeAppProvider.isAuthenticated = false;
       //   setTimeout(callback({userType:userType}), 100);
       // }
     }
   };
   
-  export { fakeAuthProvider };
+  export { fakeAppProvider };
   

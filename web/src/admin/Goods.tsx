@@ -1,10 +1,23 @@
 import { useEffect, useState } from 'react';
-import { Table } from 'antd';
-import type { TableProps } from 'antd';
-import { listGoods } from '../api/api';
+import { Button, Divider, Form, Input, message, Modal, Select, Table } from 'antd';
+import type { FormProps, TableProps } from 'antd';
+import { createGoods, GoodsCreateReq, listGoods } from '../api/api';
+import axios from 'axios';
+import TextArea from 'antd/es/input/TextArea';
 
 interface DataType {
   key: string;
+}
+
+type FieldTypeCreateGoods = {
+  key: string;
+  partnerId: number;
+  rechargeType: number;
+  skuId: string;
+  brandId: string;
+  price: number;
+  realPrice: number;
+  shopName: string;
 }
 
 const columns: TableProps<DataType>['columns'] = [
@@ -88,11 +101,13 @@ const columns: TableProps<DataType>['columns'] = [
 ];
 
 function Goods() {
-
   const [list, setList] = useState<DataType[]>([])
+  const [isShowAddGoodsModal, setIsAddGoodsModalOpen] = useState(false);
+  const [messageApi, contextHolder] = message.useMessage();
+  // const appCt = useAppContext();
   
   const fetchListGoods = async () => {
-    
+
     const { data } = await listGoods()
     let d: DataType[] = data?.list?.map((item, index) => {
       let newItem: DataType = {
@@ -108,9 +123,85 @@ function Goods() {
     fetchListGoods()
   }, [])
 
+  const showAddGoodsModal = () => {
+    setIsAddGoodsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsAddGoodsModalOpen(false);
+  };
+
+  const onFinish: FormProps<GoodsCreateReq>['onFinish'] = async (value) => {
+    try {
+      console.log(value);
+      let { data } = await createGoods(value)
+      console.log(data)
+      fetchListGoods()
+      // success(data.password);
+      // setIsModalOpen(false);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        let msg = e.response?.data?.message
+        msg && messageApi.open({
+          type: 'error',
+          content: msg,
+        });
+      }
+    }
+  }
+
   return (
     <>
+      <Button type="primary" onClick={showAddGoodsModal}>新增商品</Button>
+      <Divider />
       <Table<DataType> columns={columns} dataSource={list} scroll={{ x: 'max-content' }} />
+
+      <Modal title="新增商品" footer={null} open={isShowAddGoodsModal} onCancel={handleCancel} style={{ maxWidth: 480 }} destroyOnClose>
+        <Divider />
+        <div style={{ display: 'flex', marginTop: 20, alignItems: 'center' }}>
+          <Form
+            labelCol={{ span: 8 }}
+            name="basic"
+            autoComplete="off"
+            onFinish={onFinish}
+          >
+            <Form.Item<FieldTypeCreateGoods>
+              name="partnerId"
+              label="合作商"
+            >
+              {/* <Select options={appCt.partnerList}
+              // [
+              //   { value: 'jack', label: 'Jack' },
+              //   { value: 'lucy', label: 'Lucy' },
+              //   { value: 'Yiminghe', label: 'yiminghe' },
+              //   { value: 'disabled', label: 'Disabled', disabled: true },
+              // ]}
+              >
+              </Select> */}
+            </Form.Item>
+
+            <Form.Item<FieldTypeCreateGoods>
+              name="rechargeType"
+              label="昵称"
+              required
+            >
+              <Input style={{ width: 250 }} />
+            </Form.Item>
+            <Form.Item<FieldTypeCreateGoods>
+              name="skuId"
+              label="SKU"
+            >
+              <TextArea rows={4} style={{ width: 250 }} />
+            </Form.Item>
+
+            <Form.Item label={null} style={{ marginTop: 30 }}>
+              <Button style={{ width: 100 }} size="large" block type="primary" htmlType="submit">
+                确定
+              </Button>
+            </Form.Item>
+          </Form >
+        </div>
+      </Modal>
     </>
   )
 }

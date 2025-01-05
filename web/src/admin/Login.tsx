@@ -1,6 +1,6 @@
 import { Flex, Button, Card, Form, Input, message } from 'antd';
 import bg from '../assets/bg.jpg';
-import { useAuth } from '../AuthProvider';
+import { useAuth } from '../AppProvider';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { FormProps } from 'antd';
 import { AdminLoginReq } from '../api/api';

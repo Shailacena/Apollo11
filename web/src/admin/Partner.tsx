@@ -110,6 +110,9 @@ function Partner() {
 
   const fetchListPartner = async () => {
     const { data } = await listPartner()
+    console.log(data.list)
+    // console.log(appCt)
+    // appCt.partnerList = data.list;
     let d: DataType[] = data?.list?.map((item, index) => {
       let newItem: DataType = {
         key: index,

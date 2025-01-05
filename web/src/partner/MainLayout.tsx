@@ -3,7 +3,7 @@ import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { getRouteConfig, IRoute } from './RouteConfigs';
 import { Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../AuthProvider';
+import { useAuth } from '../AppProvider';
 import SetPasswordModal from './SetPasswordModal';
 import { useState } from 'react';
 

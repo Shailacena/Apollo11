@@ -4,7 +4,7 @@ import { useCookies } from "react-cookie";
 import { adminLogin, AdminLoginReq, merchantLogin, MerchantLoginReq, partnerLogin, PartnerLoginReq } from "./api/api";
 import { getCookiePath, getExpirationDate } from "./utils/Tool";
 
-const TAG = 'AuthProvider';
+const TAG = 'AppProvider';
 
 export enum AUTH_TYPE {
   ADMIN, PARTNER, MERCHANT
@@ -30,14 +30,14 @@ export function useAuth() {
   return React.useContext(AuthContext);
 }
 
-function AuthProvider({ children }: { children: React.ReactNode }) {
+function AppProvider({ children }: { children: React.ReactNode }) {
   let [token, setToken] = React.useState<any>(null);
   let [name, setName] = React.useState<any>(null);
 
   let [cookies, setCookie, removeCookie] = useCookies(['token', 'name']);
 
   useEffect(() => {
-    console.log('icccc =====> authprovider useEffect')
+    console.log('icccc =====> AppProvider useEffect')
   }, []);
 
   let adminSignin = async (value: AdminLoginReq, callback: Function) => {
@@ -101,9 +101,11 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function RequireAuth({ children }: { children: JSX.Element }) {
   let auth = useAuth();
+  
   let location = useLocation();
   let [cookies] = useCookies(['token']);
 
+  console.log(TAG, 'RequireAuth iccccccccccccccccccc auth', auth)
   console.log(TAG, 'RequireAuth iccccccccccccccccccc auth.token', auth.token)
   console.log(TAG, 'RequireAuth iccccccccccccccccccc cookies token ', cookies.token)
 
@@ -161,4 +163,4 @@ export function RequireAuthMerchant({ children }: { children: JSX.Element }) {
   return <Navigate to="/merchant/login" state={{ from: location }} replace />;
 }
 
-export default AuthProvider
+export default AppProvider
