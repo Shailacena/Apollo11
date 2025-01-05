@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Modal, Form, Table, Select, Input, Button } from 'antd';
+import { Modal, Form, Table, Select, Input, Button, Card } from 'antd';
 import type { TableProps } from 'antd';
 import { listJDAccount } from '../api/api';
+import CurrentLocation from '../components/CurrentLocation';
+import { routes } from './routes';
 
 const { TextArea } = Input;
 
@@ -72,7 +74,7 @@ const columns: TableProps<DataType>['columns'] = [
 function JDAccount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [list, setList] = useState<DataType[]>([])
-  
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -90,60 +92,65 @@ function JDAccount() {
   };
 
   const fetchListJDAccount = async () => {
-      const { data } = await listJDAccount()
-      let d: DataType[] = data?.list?.map((item, index) => {
-        let newItem: DataType = {
-          key: index.toString(),
-          ...item
-        }
-        return newItem
-      })
-      setList(d)
-    }
-  
-    useEffect(() => {
-      fetchListJDAccount()
-    }, [])
+    const { data } = await listJDAccount()
+    let d: DataType[] = data?.list?.map((item, index) => {
+      let newItem: DataType = {
+        key: index.toString(),
+        ...item
+      }
+      return newItem
+    })
+    setList(d)
+  }
+
+  useEffect(() => {
+    fetchListJDAccount()
+  }, [])
 
   return (
     <>
-      <div className='mr-10'>
-        <Button type="primary" onClick={showModal}>批量导入京东账号</Button>
+      <div style={{ marginBottom: '10px' }}>
+        <CurrentLocation routeconfigs={routes} />
       </div>
-      <Table<DataType> columns={columns} dataSource={list} />
+      <Card>
+        <div className='mr-10'>
+          <Button type="primary" onClick={showModal}>批量导入京东账号</Button>
+        </div>
+        <Table<DataType> bordered columns={columns} dataSource={list} />
 
-      <Modal title="导入京东账号" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <Form
-          name="basic"
-          autoComplete="off"
-        >
-          <Form.Item<FieldType>
-            name="username"
-            label="类型"
+        <Modal title="导入京东账号" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+          <Form
+            name="basic"
+            autoComplete="off"
           >
-            <Select onChange={handleChange} options={[
-              { value: 'jack', label: 'Jack' },
-              { value: 'lucy', label: 'Lucy' },
-              { value: 'Yiminghe', label: 'yiminghe' },
-              { value: 'disabled', label: 'Disabled', disabled: true },
-            ]}>
-            </Select>
-          </Form.Item>
+            <Form.Item<FieldType>
+              name="username"
+              label="类型"
+            >
+              <Select onChange={handleChange} options={[
+                { value: 'jack', label: 'Jack' },
+                { value: 'lucy', label: 'Lucy' },
+                { value: 'Yiminghe', label: 'yiminghe' },
+                { value: 'disabled', label: 'Disabled', disabled: true },
+              ]}>
+              </Select>
+            </Form.Item>
 
-          <Form.Item<FieldType>
-            name="username"
-            label="账号"
-          >
-            <TextArea rows={4} />
-          </Form.Item>
+            <Form.Item<FieldType>
+              name="username"
+              label="账号"
+            >
+              <TextArea rows={4} />
+            </Form.Item>
 
-          <Form.Item>
-            <Button size="large" block type="primary" htmlType="submit">
-              提交
-            </Button>
-          </Form.Item>
-        </Form >
-      </Modal>
+            <Form.Item>
+              <Button size="large" block type="primary" htmlType="submit">
+                提交
+              </Button>
+            </Form.Item>
+          </Form >
+        </Modal>
+      </Card>
     </>
   )
 }

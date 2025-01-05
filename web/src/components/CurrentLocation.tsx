@@ -1,18 +1,19 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { getRouteConfig } from '../partner/RouteConfigs';
 import { Breadcrumb } from 'antd';
 import { IRoute } from '../admin/routes';
 
-const CurrentLocation: React.FC = () => {
+// 定义props的接口
+interface CurrentLocationProps {
+  routeconfigs: IRoute[];
+}
+
+const CurrentLocation: React.FC<CurrentLocationProps> = ({routeconfigs}) => {
+  
   const location = useLocation();
-
   // 使用路由路径找到模块名称
-
-  const routeconfigs = getRouteConfig();
   let routes: IRoute[] = []
   getRoutesFormPath(routes, routeconfigs, location.pathname);
-
 
   function getRoutesFormPath(routes: IRoute[], routeconfigs: IRoute[], path: string) {
     let leftPath = path;
@@ -35,8 +36,8 @@ const CurrentLocation: React.FC = () => {
     let isLast = currentRoute?.path === items[items.length - 1]?.path;
     let isFirst = currentRoute?.path === items[0]?.path;
     console.log('CurrentLocation', currentRoute, params, items, paths)
-    return isLast ? (<span>{currentRoute.name}</span>) : 
-    (isFirst ? (<span>{currentRoute.name}</span>) : (<Link to={`/${paths.join("/")}`}>{currentRoute.name}</Link>));
+    return isLast ? (<span>{currentRoute.name}</span>) :
+      (isFirst ? (<span>{currentRoute.name}</span>) : (<Link to={`/${paths.join("/")}`}>{currentRoute.name}</Link>));
   }
 
   return <Breadcrumb itemRender={itemRender} items={routes} />;

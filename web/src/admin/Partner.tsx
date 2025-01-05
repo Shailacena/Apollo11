@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Modal, Space, Form, Table, Input, Button, message } from 'antd';
+import { Modal, Space, Form, Table, Input, Button, message, Card } from 'antd';
 import type { FormProps, TableProps } from 'antd';
 import { IPartner, listPartner, partnerRegister, PartnerRegisterReq } from '../api/api';
 import axios from 'axios';
 import { useAppContext } from '../AppProvider';
+import CurrentLocation from '../components/CurrentLocation';
+import { routes } from './routes';
 
 const { TextArea } = Input;
 
@@ -74,7 +76,7 @@ function Partner() {
   const [list, setList] = useState<DataType[]>([])
   const [messageApi, contextHolder] = message.useMessage();
   let ctx = useAppContext();
-  
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -91,7 +93,7 @@ function Partner() {
       value.dailyLimit = value.dailyLimit && Number(value.dailyLimit)
       value.rechargeTime = value.rechargeTime && Number(value.rechargeTime)
       console.log(value);
-      let {data} = await partnerRegister(value)
+      let { data } = await partnerRegister(value)
       fetchListPartner()
       success(data.password);
       setIsModalOpen(false);
@@ -132,70 +134,75 @@ function Partner() {
   return (
     <>
       {contextHolder}
-      <div className='mr-10'>
-        <Button type="primary" onClick={showModal}>新增</Button>
+      <div style={{ marginBottom: '10px' }}>
+        <CurrentLocation routeconfigs={routes} />
       </div>
-      <Table<DataType> columns={columns} dataSource={list} />
+      <Card>
+        <div className='mr-10'>
+          <Button type="primary" onClick={showModal}>新增</Button>
+        </div>
+        <Table<DataType> bordered columns={columns} dataSource={list} />
 
-      <Modal title="新增" footer={null} onCancel={handleCancel} open={isModalOpen}>
-        <Form
-          preserve={false}
-          labelCol={{ span: 4 }}
-          name="basic"
-          autoComplete="off"
-          onFinish={onFinish}
-        >
-          <Form.Item<PartnerRegisterReq>
-            name="name"
-            label="名称"
-            required
+        <Modal title="新增" footer={null} onCancel={handleCancel} open={isModalOpen}>
+          <Form
+            preserve={false}
+            labelCol={{ span: 4 }}
+            name="basic"
+            autoComplete="off"
+            onFinish={onFinish}
           >
-            <Input />
-          </Form.Item>
+            <Form.Item<PartnerRegisterReq>
+              name="name"
+              label="名称"
+              required
+            >
+              <Input />
+            </Form.Item>
 
-          <Form.Item<PartnerRegisterReq>
-            name="priority"
-            label="优先级"
-            required
-          >
-            <Input type='number' />
-          </Form.Item>
+            <Form.Item<PartnerRegisterReq>
+              name="priority"
+              label="优先级"
+              required
+            >
+              <Input type='number' />
+            </Form.Item>
 
-          <Form.Item<PartnerRegisterReq>
-            name="dailyLimit"
-            label="每日限额"
-          >
-            <Input type='number' />
-          </Form.Item>
+            <Form.Item<PartnerRegisterReq>
+              name="dailyLimit"
+              label="每日限额"
+            >
+              <Input type='number' />
+            </Form.Item>
 
-          <Form.Item<PartnerRegisterReq>
-            name="rechargeTime"
-            label="充值时间"
-          >
-            <Input type='number' />
-          </Form.Item>
+            <Form.Item<PartnerRegisterReq>
+              name="rechargeTime"
+              label="充值时间"
+            >
+              <Input type='number' />
+            </Form.Item>
 
-          <Form.Item<PartnerRegisterReq>
-            name="privateKey"
-            label="私钥"
-          >
-            <Input />
-          </Form.Item>
+            <Form.Item<PartnerRegisterReq>
+              name="privateKey"
+              label="私钥"
+            >
+              <Input />
+            </Form.Item>
 
-          <Form.Item<PartnerRegisterReq>
-            name="remark"
-            label="备注"
-          >
-            <TextArea rows={4} />
-          </Form.Item>
+            <Form.Item<PartnerRegisterReq>
+              name="remark"
+              label="备注"
+            >
+              <TextArea rows={4} />
+            </Form.Item>
 
-          <Form.Item>
-            <Button size="large" block type="primary" htmlType="submit">
-              确定
-            </Button>
-          </Form.Item>
-        </Form >
-      </Modal>
+            <Form.Item>
+              <Button size="large" block type="primary" htmlType="submit">
+                确定
+              </Button>
+            </Form.Item>
+          </Form >
+        </Modal>
+      </Card>
     </>
   )
 }

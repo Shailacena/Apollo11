@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Table } from 'antd';
+import { Card, Table } from 'antd';
 import type { TableProps } from 'antd';
 import { listOrder } from '../api/api';
+import CurrentLocation from '../components/CurrentLocation';
+import { routes } from './routes';
 
 
 interface DataType {
@@ -102,7 +104,12 @@ function TradingRecord() {
 
   return (
     <>
-      <Table<DataType> columns={columns} dataSource={list} />
+      <div style={{ marginBottom: '10px' }}>
+        <CurrentLocation routeconfigs={routes} />
+      </div>
+      <Card>
+        <Table<DataType> bordered columns={columns} dataSource={list} />
+      </Card>
     </>
   )
 }

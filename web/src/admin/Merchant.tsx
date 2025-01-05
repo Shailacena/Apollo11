@@ -123,7 +123,7 @@ function Merchant() {
       <div className='mr-10'>
         <Button type="primary" onClick={showModal}>新增</Button>
       </div>
-      <Table<DataType> columns={columns} dataSource={list} />
+      <Table<DataType> bordered columns={columns} dataSource={list} />
 
       <Modal title="新增商户" footer={null} onCancel={handleCancel} open={isModalOpen}>
         <Form

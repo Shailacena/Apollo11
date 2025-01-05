@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import { listAdmin, IAdmin, AdminRegisterReq, adminRegister } from '../api/api';
 import TextArea from 'antd/es/input/TextArea';
 import axios from 'axios';
+import CurrentLocation from '../components/CurrentLocation';
+import { routes } from './routes';
 
 interface DataType extends IAdmin {
   key: number;
@@ -104,7 +106,7 @@ function Admin() {
   const onFinish: FormProps<AdminRegisterReq>['onFinish'] = async (value) => {
     try {
       console.log(value);
-      let {data} = await adminRegister(value)
+      let { data } = await adminRegister(value)
       console.log(data)
       fetchListAdmin()
       success(data.password);
@@ -122,11 +124,15 @@ function Admin() {
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>新增管理员</Button>
-      <Table<DataType> columns={columns} dataSource={list} />
+      <div style={{ marginBottom: '10px' }}>
+        <CurrentLocation routeconfigs={routes} />
+      </div>
+      <Card>
+        <Button type="primary" onClick={showModal}>新增管理员</Button>
+        <Table<DataType> bordered columns={columns} dataSource={list} />
 
-      <Modal title="新增管理员" footer={null} open={isModalOpen} onCancel={handleCancel} style={{ maxWidth: 480 }} destroyOnClose>
-        <Divider />
+        <Modal title="新增管理员" footer={null} open={isModalOpen} onCancel={handleCancel} style={{ maxWidth: 480 }} destroyOnClose>
+          <Divider />
           <div style={{ display: 'flex', marginTop: 20, alignItems: 'center' }}>
             <Form
               labelCol={{ span: 8 }}
@@ -139,7 +145,7 @@ function Admin() {
                 label="帐号"
                 required
               >
-                <Input style={{ width: 250 }}/>
+                <Input style={{ width: 250 }} />
               </Form.Item>
 
               <Form.Item<FieldType>
@@ -147,13 +153,13 @@ function Admin() {
                 label="昵称"
                 required
               >
-                <Input style={{ width: 250 }}/>
+                <Input style={{ width: 250 }} />
               </Form.Item>
               <Form.Item<FieldType>
                 name="remark"
                 label="备注"
               >
-                <TextArea rows={4} style={{ width: 250 }}/>
+                <TextArea rows={4} style={{ width: 250 }} />
               </Form.Item>
 
               <Form.Item label={null} style={{ marginTop: 30 }}>
@@ -163,7 +169,8 @@ function Admin() {
               </Form.Item>
             </Form >
           </div>
-      </Modal>
+        </Modal>
+      </Card>
     </>
   )
 }

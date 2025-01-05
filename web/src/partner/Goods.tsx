@@ -5,6 +5,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import UploadDialog from '../components/UploadDialog';
 import OrderDetail from './GoodsDetail';
 import CurrentLocation from '../components/CurrentLocation';
+import { getRouteConfig } from './RouteConfigs';
 
 interface DataType {
   key: string;
@@ -215,7 +216,7 @@ function Goods() {
   return (
     <>
       <div style={{ marginBottom: '10px' }}>
-        <CurrentLocation />
+        <CurrentLocation routeconfigs={getRouteConfig()} />
       </div>
       <Card>
         <div style={{ display: 'Flex' }}>
@@ -224,7 +225,7 @@ function Goods() {
         </div>
         <div>
           <Table<DataType>
-            bordered
+            bordered // 边框
             size='small'
             // tableLayout='fixed'
             columns={columns}

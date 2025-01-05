@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Modal, Form, Table, Select, Input, Button } from 'antd';
+import { Modal, Form, Table, Select, Input, Button, Card } from 'antd';
 import type { TableProps } from 'antd';
 import { listRealNameAccount } from '../api/api';
+import CurrentLocation from '../components/CurrentLocation';
+import { routes } from './routes';
 
 const { TextArea } = Input;
 
@@ -44,7 +46,7 @@ const columns: TableProps<DataType>['columns'] = [
 function RealNameAccount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [list, setList] = useState<DataType[]>([])
-  
+
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -75,30 +77,35 @@ function RealNameAccount() {
 
   return (
     <>
-      <div className='mr-10'>
-        <Button type="primary" onClick={showModal}>批量导入实名资料</Button>
+      <div style={{ marginBottom: '10px' }}>
+        <CurrentLocation routeconfigs={routes} />
       </div>
-      <Table<DataType> columns={columns} dataSource={list} />
+      <Card>
+        <div className='mr-10'>
+          <Button type="primary" onClick={showModal}>批量导入实名资料</Button>
+        </div>
+        <Table<DataType> bordered columns={columns} dataSource={list} />
 
-      <Modal title="导入实名资料" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <Form
-          name="basic"
-          autoComplete="off"
-        >
-          <Form.Item<FieldType>
-            name="accounts"
-            label="账号"
+        <Modal title="导入实名资料" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+          <Form
+            name="basic"
+            autoComplete="off"
           >
-            <TextArea rows={4} />
-          </Form.Item>
+            <Form.Item<FieldType>
+              name="accounts"
+              label="账号"
+            >
+              <TextArea rows={4} />
+            </Form.Item>
 
-          <Form.Item>
-            <Button size="large" block type="primary" htmlType="submit">
-              提交
-            </Button>
-          </Form.Item>
-        </Form >
-      </Modal>
+            <Form.Item>
+              <Button size="large" block type="primary" htmlType="submit">
+                提交
+              </Button>
+            </Form.Item>
+          </Form >
+        </Modal>
+      </Card>
     </>
   )
 }

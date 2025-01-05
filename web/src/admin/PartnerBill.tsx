@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Table } from 'antd';
+import { Card, Table } from 'antd';
 import type { TableProps } from 'antd';
 import { listPartnerBill } from '../api/api';
+import CurrentLocation from '../components/CurrentLocation';
+import { routes } from './routes';
 
 
 interface DataType {
@@ -43,25 +45,30 @@ const columns: TableProps<DataType>['columns'] = [
 function PartnerBill() {
   const [list, setList] = useState<DataType[]>([])
 
-const fetchListPartnerBill = async () => {
-      const { data } = await listPartnerBill()
-      let d: DataType[] = data?.list?.map((item, index) => {
-        let newItem: DataType = {
-          key: index.toString(),
-          ...item
-        }
-        return newItem
-      })
-      setList(d)
-    }
-  
-    useEffect(() => {
-      fetchListPartnerBill()
-    }, [])
+  const fetchListPartnerBill = async () => {
+    const { data } = await listPartnerBill()
+    let d: DataType[] = data?.list?.map((item, index) => {
+      let newItem: DataType = {
+        key: index.toString(),
+        ...item
+      }
+      return newItem
+    })
+    setList(d)
+  }
+
+  useEffect(() => {
+    fetchListPartnerBill()
+  }, [])
 
   return (
     <>
-      <Table<DataType> columns={columns} dataSource={list} />
+      <div style={{ marginBottom: '10px' }}>
+        <CurrentLocation routeconfigs={routes} />
+      </div>
+      <Card>
+        <Table<DataType> bordered columns={columns} dataSource={list} />
+      </Card>
     </>
   )
 }

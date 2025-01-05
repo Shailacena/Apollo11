@@ -180,12 +180,12 @@ interface ListPartnerBillResp {
 }
 
 export interface IPartnerBill {
-  PartnerId: number
-	Type: number
-	ChangeMoney: number
-	Money: number
-	Remark: string
-	CreateAt: number
+  partnerId: number
+	type: number
+	changeMoney: number
+	money: number
+	remark: string
+	createAt: number
 }
 
 export function listPartnerBill(): Promise<IResponseBody<ListPartnerBillResp>> {
@@ -199,15 +199,15 @@ interface ListGoodsResp {
 }
 
 export interface IGoods {
-  Id: number
-	PartnerId: number
-	RechargeType: number
-	SkuId: string
-	BrandId: string
-	Price: number
-	RealPrice: number
-	ShopName: string
-	CreateAt: number
+  id: number
+	partnerId: number
+	rechargeType: number
+	skuId: string
+	brandId: string
+	price: number
+	realPrice: number
+	shopName: string
+	createAt: number
 }
 
 
@@ -218,13 +218,13 @@ export function listGoods(): Promise<IResponseBody<ListGoodsResp>> {
 }
 
 export interface GoodsCreateReq {
-  PartnerId: number
-	RechargeType: number
-	SkuId: string
-	BrandId: string
-	Price: number
-	RealPrice: number
-	ShopName: string
+  partnerId: number
+	rechargeType: number
+	skuId: string
+	brandId: string
+	price: number
+	realPrice: number
+	shopName: string
 }
 
 interface GoodsCreateResp {
