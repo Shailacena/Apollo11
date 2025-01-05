@@ -1,14 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import type { TableProps } from 'antd';
 
 
 interface DataType {
   key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
 }
 
 const columns: TableProps<DataType>['columns'] = [
@@ -47,35 +43,29 @@ const columns: TableProps<DataType>['columns'] = [
   },
 ];
 
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
-
 function DailyBill() {
 
+  const [list, setList] = useState<DataType[]>([])
+
+  // const fetchListJDAccount = async () => {
+  //       const { data } = await listJDAccount()
+  //       let d: DataType[] = data?.list?.map((item, index) => {
+  //         let newItem: DataType = {
+  //           key: index.toString(),
+  //           ...item
+  //         }
+  //         return newItem
+  //       })
+  //       setList(d)
+  //     }
+    
+  //     useEffect(() => {
+  //       fetchListJDAccount()
+  //     }, [])
+      
   return (
     <>
-      <Table<DataType> columns={columns} dataSource={data} />
+      <Table<DataType> columns={columns} dataSource={list} />
     </>
   )
 }

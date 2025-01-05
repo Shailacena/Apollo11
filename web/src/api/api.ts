@@ -74,6 +74,47 @@ export function listAdmin(): Promise<IResponseBody<ListAdminResp>> {
   })
 }
 
+interface ListRealNameAccountResp {
+  list: Array<IRealNameAccount>
+}
+
+export interface IRealNameAccount {
+  IdNumber: string
+	Name: string
+  RealNameCount: number
+	Enable: number
+	Remark: string
+}
+
+export function listRealNameAccount(): Promise<IResponseBody<ListRealNameAccountResp>> {
+  return get("/realNameAccount/list").then((res) => {
+    return res.data
+  })
+}
+
+interface ListJDAccountResp {
+  list: Array<IJDAccount>
+}
+
+export interface IJDAccount {
+  Id: string
+	Account: string
+	RealNameStatus: number
+	TotalOrderCount: number
+	TodayOrderCount: number
+	TotalSuccessOrderCount: number
+	LoginStatus: number
+	Enable: number
+	Remark: number
+	CreateAt: number
+}
+
+export function listJDAccount(): Promise<IResponseBody<ListJDAccountResp>> {
+  return get("/jdAccount/list").then((res) => {
+    return res.data
+  })
+}
+
 interface ListPartnerResp {
   list: Array<IPartner>
 }
@@ -85,6 +126,7 @@ export interface IPartner {
   remark: string
   enable: number
 }
+
 
 export function listPartner(): Promise<IResponseBody<ListPartnerResp>> {
   return get("/partner/list").then((res) => {
@@ -124,6 +166,48 @@ interface PartnerLoginResp {
 
 export function partnerLogin(data: PartnerLoginReq): Promise<IResponseBody<PartnerLoginResp>> {
   return post("/partner/login", data).then((res) => {
+    return res.data
+  })
+}
+
+interface ListPartnerBillResp {
+  list: Array<IPartnerBill>
+}
+
+export interface IPartnerBill {
+  PartnerId: number
+	Type: number
+	ChangeMoney: number
+	Money: number
+	Remark: string
+	CreateAt: number
+}
+
+export function listPartnerBill(): Promise<IResponseBody<ListPartnerBillResp>> {
+  return get("/partner/listBill").then((res) => {
+    return res.data
+  })
+}
+
+interface ListGoodsResp {
+  list: Array<IGoods>
+}
+
+export interface IGoods {
+  Id: number
+	PartnerId: number
+	RechargeType: number
+	SkuId: string
+	BrandId: string
+	Price: number
+	RealPrice: number
+	ShopName: string
+	CreateAt: number
+}
+
+
+export function listGoods(): Promise<IResponseBody<ListGoodsResp>> {
+  return get("/goods/list").then((res) => {
     return res.data
   })
 }
@@ -181,29 +265,6 @@ export function merchantLogin(data: MerchantLoginReq): Promise<IResponseBody<Mer
   })
 }
 
-interface ListJDAccountResp {
-  list: Array<IJDAccount>
-}
-
-export interface IJDAccount {
-  Id: string
-	Account: string
-	RealNameStatus: number
-	TotalOrderCount: number
-	TodayOrderCount: number
-	TotalSuccessOrderCount: number
-	LoginStatus: number
-	Enable: number
-	Remark: number
-	CreateAt: number
-}
-
-export function listJDAccount(): Promise<IResponseBody<ListJDAccountResp>> {
-  return get("/jdAccount/list").then((res) => {
-    return res.data
-  })
-}
-
 interface ListStatisticsResp {
   list: Array<IStatistics>
 }
@@ -223,20 +284,40 @@ export function listStatisticsBill(): Promise<IResponseBody<ListStatisticsResp>>
   })
 }
 
-interface ListRealNameAccountResp {
-  list: Array<IRealNameAccount>
+interface ListDailyBillResp {
+  list: Array<IDailyBill>
 }
 
-export interface IRealNameAccount {
-  IdNumber: string
-	Name: string
-  RealNameCount: number
-	Enable: number
-	Remark: string
+export interface IDailyBill {
+  Date: string
+	TotalMoney: number
+	WxFee: number
+	WxManualFee: number
+	AliFee: number
+	AliManualFee: number
 }
 
-export function listRealNameAccount(): Promise<IResponseBody<ListRealNameAccountResp>> {
-  return get("/realNameAccount/list").then((res) => {
+export function listDailyBill(): Promise<IResponseBody<ListDailyBillResp>> {
+  return get("/statistics/listBill").then((res) => {
+    return res.data
+  })
+}
+
+interface ListOrderResp {
+  list: Array<IOrder>
+}
+
+export interface IOrder {
+  Date: string
+	TotalMoney: number
+	WxFee: number
+	WxManualFee: number
+	AliFee: number
+	AliManualFee: number
+}
+
+export function listOrder(): Promise<IResponseBody<ListOrderResp>> {
+  return get("/order/list").then((res) => {
     return res.data
   })
 }

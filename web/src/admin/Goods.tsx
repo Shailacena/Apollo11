@@ -1,13 +1,10 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Table } from 'antd';
 import type { TableProps } from 'antd';
+import { listGoods } from '../api/api';
 
 interface DataType {
   key: string;
-  name: string;
-  age: number;
-  address: string;
-  tags: string[];
 }
 
 const columns: TableProps<DataType>['columns'] = [
@@ -90,35 +87,30 @@ const columns: TableProps<DataType>['columns'] = [
   },
 ];
 
-const data: DataType[] = [
-  {
-    key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park',
-    tags: ['nice', 'developer'],
-  },
-  {
-    key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 1 Lake Park',
-    tags: ['loser'],
-  },
-  {
-    key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sydney No. 1 Lake Park',
-    tags: ['cool', 'teacher'],
-  },
-];
-
 function Goods() {
+
+  const [list, setList] = useState<DataType[]>([])
+  
+  const fetchListGoods = async () => {
+    
+    const { data } = await listGoods()
+    let d: DataType[] = data?.list?.map((item, index) => {
+      let newItem: DataType = {
+        key: index.toString(),
+        ...item
+      }
+      return newItem
+    })
+    setList(d)
+  }
+
+  useEffect(() => {
+    fetchListGoods()
+  }, [])
 
   return (
     <>
-      <Table<DataType> columns={columns} dataSource={data} scroll={{ x: 'max-content' }} />
+      <Table<DataType> columns={columns} dataSource={list} scroll={{ x: 'max-content' }} />
     </>
   )
 }

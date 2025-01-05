@@ -57,7 +57,7 @@ function RealNameAccount() {
     setIsModalOpen(false);
   };
 
-  const fetchListPartner = async () => {
+  const fetchListRealNameAccount = async () => {
     const { data } = await listRealNameAccount()
     let d: DataType[] = data?.list?.map((item, index) => {
       let newItem: DataType = {
@@ -70,7 +70,7 @@ function RealNameAccount() {
   }
 
   useEffect(() => {
-    fetchListPartner()
+    fetchListRealNameAccount()
   }, [])
 
   return (
