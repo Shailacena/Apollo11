@@ -124,7 +124,6 @@ function Partner() {
     fetchListPartner()
   }, [])
 
-
   return (
     <>
       {contextHolder}

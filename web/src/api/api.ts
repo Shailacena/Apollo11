@@ -222,3 +222,21 @@ export function listStatisticsBill(): Promise<IResponseBody<ListStatisticsResp>>
     return res.data
   })
 }
+
+interface ListRealNameAccountResp {
+  list: Array<IRealNameAccount>
+}
+
+export interface IRealNameAccount {
+  IdNumber: string
+	Name: string
+  RealNameCount: number
+	Enable: number
+	Remark: string
+}
+
+export function listRealNameAccount(): Promise<IResponseBody<ListRealNameAccountResp>> {
+  return get("/realNameAccount/list").then((res) => {
+    return res.data
+  })
+}
