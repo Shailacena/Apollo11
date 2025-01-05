@@ -8,10 +8,17 @@ interface IResponseBody<T> {
   data: T;
 }
 
+function get(url: string): Promise<AxiosResponse> {
+  return request.get(url).then((res) => {
+    console.log(res)
+    return res
+  })
+}
+
 function post(url: string, data: any): Promise<AxiosResponse> {
   return request.post(url, data).then((res) => {
     console.log(res)
-    return res.data
+    return res
   })
 }
 
@@ -25,7 +32,7 @@ interface AdminLoginResp {
   nickname: string
 }
 
-export function adminLogin(data: AdminLoginReq): Promise<AdminLoginResp> {
+export function adminLogin(data: AdminLoginReq): Promise<IResponseBody<AdminLoginResp>>{
   return post("/admin/login", data).then((res) => {
     return res.data
   })
@@ -61,8 +68,8 @@ export interface IAdmin {
   enable: number
 }
 
-export function listAdmin(data: any): Promise<IResponseBody<ListAdminResp>> {
-  return post("/admin/list", data).then((res) => {
+export function listAdmin(): Promise<IResponseBody<ListAdminResp>> {
+  return get("/admin/list").then((res) => {
     return res.data
   })
 }
@@ -79,8 +86,8 @@ export interface IPartner {
   enable: number
 }
 
-export function listPartner(data: any): Promise<IResponseBody<ListPartnerResp>> {
-  return post("/partner/list", data).then((res) => {
+export function listPartner(): Promise<IResponseBody<ListPartnerResp>> {
+  return get("/partner/list").then((res) => {
     return res.data
   })
 }
@@ -99,14 +106,14 @@ interface PartnerRegisterResp {
   password: string
 }
 
-export function partnerRegister(data: PartnerRegisterReq): Promise<PartnerRegisterResp> {
+export function partnerRegister(data: PartnerRegisterReq): Promise<IResponseBody<PartnerRegisterResp>> {
   return post("/partner/register", data).then((res) => {
     return res.data
   })
 }
 
 export interface PartnerLoginReq {
-  id: string
+  id: number
   password: string
 }
 
@@ -115,9 +122,9 @@ interface PartnerLoginResp {
   name: string
 }
 
-export function partnerLogin(data: PartnerLoginReq): Promise<PartnerLoginResp> {
+export function partnerLogin(data: PartnerLoginReq): Promise<IResponseBody<PartnerLoginResp>> {
   return post("/partner/login", data).then((res) => {
-    return res.data.data
+    return res.data
   })
 }
 
@@ -136,8 +143,8 @@ export interface IMerchant {
   remark: string
 }
 
-export function listMerchant(data: any): Promise<IResponseBody<ListMerchantResp>> {
-  return post("/merchant/list", data).then((res) => {
+export function listMerchant(): Promise<IResponseBody<ListMerchantResp>> {
+  return get("/merchant/list").then((res) => {
     return res.data
   })
 }
@@ -152,7 +159,7 @@ interface MerchantRegisterResp {
   password: string
 }
 
-export function merchantRegister(data: MerchantRegisterReq): Promise<MerchantRegisterResp> {
+export function merchantRegister(data: MerchantRegisterReq): Promise<IResponseBody<MerchantRegisterResp>> {
   return post("/merchant/register", data).then((res) => {
     return res.data
   })
@@ -168,8 +175,50 @@ interface MerchantLoginResp {
   name: string
 }
 
-export function merchantLogin(data: MerchantLoginReq): Promise<MerchantLoginResp> {
+export function merchantLogin(data: MerchantLoginReq): Promise<IResponseBody<MerchantLoginResp>> {
   return post("/merchant/login", data).then((res) => {
     return res.data.data
+  })
+}
+
+interface ListJDAccountResp {
+  list: Array<IJDAccount>
+}
+
+export interface IJDAccount {
+  Id: string
+	Account: string
+	RealNameStatus: number
+	TotalOrderCount: number
+	TodayOrderCount: number
+	TotalSuccessOrderCount: number
+	LoginStatus: number
+	Enable: number
+	Remark: number
+	CreateAt: number
+}
+
+export function listJDAccount(): Promise<IResponseBody<ListJDAccountResp>> {
+  return get("/jdAccount/list").then((res) => {
+    return res.data
+  })
+}
+
+interface ListStatisticsResp {
+  list: Array<IStatistics>
+}
+
+export interface IStatistics {
+  Date: string
+	TotalMoney: number
+	WxFee: number
+	WxManualFee: number
+	AliFee: number
+	AliManualFee: number
+}
+
+export function listStatisticsBill(): Promise<IResponseBody<ListStatisticsResp>> {
+  return get("/statistics/listBill").then((res) => {
+    return res.data
   })
 }

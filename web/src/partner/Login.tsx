@@ -27,6 +27,7 @@ const Login: React.FC = () => {
 
   const onFinish = (value: any) => {
     try {
+      value.id = value.id && Number(value.id)
       auth.partnerSignin(value, () => {
         console.log('from: ', from);
         setTimeout(() => {
@@ -56,7 +57,7 @@ const Login: React.FC = () => {
         onFinish={onFinish}
       >
         <Form.Item
-          name="username"
+          name="id"
           rules={[{ required: true, message: '请输入帐号!' }]}
         >
           <Input prefix={<UserOutlined />} placeholder="帐号" />

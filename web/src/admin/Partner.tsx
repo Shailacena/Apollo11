@@ -77,14 +77,21 @@ function Partner() {
     setIsModalOpen(true);
   };
 
+  const success = (password: string) => {
+    Modal.success({
+      content: `添加成功, 密位为${password}`,
+    });
+  };
+
   const onFinish: FormProps<PartnerRegisterReq>['onFinish'] = async (value) => {
     try {
       value.priority = value.priority && Number(value.priority)
       value.dailyLimit = value.dailyLimit && Number(value.dailyLimit)
       value.rechargeTime = value.rechargeTime && Number(value.rechargeTime)
       console.log(value);
-      await partnerRegister(value)
+      let {data} = await partnerRegister(value)
       fetchListPartner()
+      success(data.password);
       setIsModalOpen(false);
     } catch (e) {
       if (axios.isAxiosError(e)) {
@@ -102,7 +109,7 @@ function Partner() {
   };
 
   const fetchListPartner = async () => {
-    const { data } = await listPartner({})
+    const { data } = await listPartner()
     let d: DataType[] = data?.list?.map((item, index) => {
       let newItem: DataType = {
         key: index,

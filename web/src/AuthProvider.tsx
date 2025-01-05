@@ -41,53 +41,56 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   let adminSignin = async (value: AdminLoginReq, callback: Function) => {
-    const resp = await adminLogin(value)
-    console.log(resp);
-    setToken(resp.token)
-    setName(resp.nickname);
+    const {data} = await adminLogin(value)
+    console.log(data);
+    setToken(data.token)
+    setName(data.nickname);
     console.log(TAG, 'adminSignin iccccccccccccccccccc token', token)
-    setCookie('token', resp.token, { path: '/admin/', expires: getExpirationDate(7) });
-    setCookie('name', resp.nickname, { path: '/admin/', expires: getExpirationDate(7) });
+    setCookie('token', data.token, { path: '/admin/', expires: getExpirationDate(7) });
+    setCookie('name', data.nickname, { path: '/admin/', expires: getExpirationDate(7) });
     callback()
   };
 
   let adminSignout = (callback: Function) => {
     removeCookie('token', { path: '/admin/' })
     removeCookie('name', { path: '/admin/' })
+    setToken(null)
     setName(null);
     callback();
   };
 
   let partnerSignin = async (value: PartnerLoginReq, callback: Function) => {
-    const resp = await partnerLogin(value)
-    console.log(resp);
-    setToken(resp.token)
-    setName(resp.name);
-    setCookie('token', resp.token, { path: '/partner/', expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
-    setCookie('name', resp.name, { path: '/partner/', expires: getExpirationDate(7) });
+    const {data} = await partnerLogin(value)
+    console.log(data);
+    setToken(data.token)
+    setName(data.name);
+    setCookie('token', data.token, { path: '/partner/', expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
+    setCookie('name', data.name, { path: '/partner/', expires: getExpirationDate(7) });
     callback()
   };
 
   let partnerSignout = (callback: Function) => {
     removeCookie('token', { path: '/partner/' })
     removeCookie('name', { path: '/partner/' })
+    setToken(null)
     setName(null);
     callback();
   };
 
   let merchantSignin = async (value: MerchantLoginReq, callback: Function) => {
-    const resp = await merchantLogin(value)
-    console.log(resp);
-    setToken(resp.token)
-    setName(resp.name);
-    setCookie('token', resp.token, { path: '/merchant/', expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
-    setCookie('name', resp.name, { path: '/merchant/', expires: getExpirationDate(7) });
+    const {data} = await merchantLogin(value)
+    console.log(data);
+    setToken(data.token)
+    setName(data.name);
+    setCookie('token', data.token, { path: '/merchant/', expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
+    setCookie('name', data.name, { path: '/merchant/', expires: getExpirationDate(7) });
     callback()
   };
 
   let merchantSignout = (callback: Function) => {
     removeCookie('token', { path: '/merchant/' })
     removeCookie('name', { path: '/merchant/' })
+    setToken(null)
     setName(null);
     callback();
   };

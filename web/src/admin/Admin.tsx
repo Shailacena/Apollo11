@@ -97,20 +97,18 @@ function Admin() {
 
   const success = (password: string) => {
     Modal.success({
-      content: `添加成功, 密位为${password}!`,
+      content: `添加成功, 密位为${password}`,
     });
   };
 
   const onFinish: FormProps<AdminRegisterReq>['onFinish'] = async (value) => {
     try {
       console.log(value);
-      let resp = await adminRegister(value)
-      console.log(resp)
-      if (resp.code == 0) {
-        fetchListAdmin()
-        success(resp.data.username);
-        setIsModalOpen(false);
-      }
+      let {data} = await adminRegister(value)
+      console.log(data)
+      fetchListAdmin()
+      success(data.password);
+      setIsModalOpen(false);
     } catch (e) {
       if (axios.isAxiosError(e)) {
         let msg = e.response?.data?.message
