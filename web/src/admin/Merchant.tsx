@@ -101,7 +101,7 @@ function Merchant() {
   };
 
   const fetchListMerchant = async () => {
-    const { data } = await listMerchant({})
+    const { data } = await listMerchant()
     let d: DataType[] = data?.list?.map((item, index) => {
       let newItem: DataType = {
         key: index,

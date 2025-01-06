@@ -1,7 +1,6 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Space, Table, Tag, Button, Form, message, Flex, Input, Select, DatePicker, Card, ConfigProvider } from 'antd';
-import type { SelectProps, TableProps } from 'antd';
-import UploadDialog from '../components/UploadDialog';
+import { Table, Button, Form, message, DatePicker, Card, ConfigProvider } from 'antd';
+import type { TableProps } from 'antd';
 import CurrentLocation from '../components/CurrentLocation';
 import locale from 'antd/locale/zh_CN';
 import { getRouteConfig } from './RouteConfigs';
@@ -43,12 +42,12 @@ function TransactionRecord() {
   return (
     <>
       <div style={{ marginBottom: '10px' }}>
-        <CurrentLocation routeconfigs={getRouteConfig()}/>
+        <CurrentLocation routeconfigs={getRouteConfig()} />
       </div>
       <Card>
         <div style={{ display: 'Flex' }}>
           <SearchForm />
-          <Button type="primary" onClick={() => toggleModal(0, true)}>
+          <Button type="primary" onClick={() => toggleModal()}>
             导出
           </Button>
         </div>
@@ -58,15 +57,11 @@ function TransactionRecord() {
           pagination={{ pageSize: 12 }} // 分页
           scroll={{ x: 'max-content' }}
           columns={columns}
-          dataSource={data||[]} />
+          dataSource={data || []} />
       </Card>
     </>
   )
 }
-
-const handleChange = (value: string | string[]) => {
-  console.log(`Selected: ${value}`);
-};
 
 const SearchForm = () => {
   const [form] = Form.useForm();
@@ -105,7 +100,7 @@ const SearchForm = () => {
   );
 };
 
-const toggleModal = (idx: number, target: boolean) => {
+const toggleModal = () => {
   message.warning('功能还未完成...');
 };
 

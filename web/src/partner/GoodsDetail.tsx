@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Button, ConfigProvider, Modal, Space } from 'antd';
-import { createStyles, useTheme } from 'antd-style';
+import { Button, Modal, Space } from 'antd';
+import { createStyles } from 'antd-style';
 
-const useStyle = createStyles(({ token }) => ({
+const useStyle = createStyles(() => ({
   'my-modal-body': {
     // background: token.blue1,
     // padding: token.paddingSM,
@@ -24,7 +24,7 @@ const useStyle = createStyles(({ token }) => ({
 const OrderDetail: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState([false, false]);
   const { styles } = useStyle();
-  const token = useTheme();
+  // const token = useTheme();
 
   const toggleModal = (idx: number, target: boolean) => {
     setIsModalOpen((p) => {

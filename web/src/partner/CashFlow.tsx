@@ -56,7 +56,7 @@ function CashFlow() {
       <Card>
         <div style={{ display: 'Flex' }}>
           <SearchForm />
-          <Button type="primary" onClick={() => toggleModal(0, true)}>
+          <Button type="primary" onClick={() => toggleModal()}>
             导出
           </Button>
         </div>
@@ -80,10 +80,6 @@ for (let i = 10; i < 36; i++) {
     label: i.toString(36) + i,
   });
 }
-
-const handleChange = (value: string | string[]) => {
-  console.log(`Selected: ${value}`);
-};
 
 const SearchForm = () => {
   const [form] = Form.useForm();
@@ -120,7 +116,7 @@ const SearchForm = () => {
   );
 };
 
-const toggleModal = (idx: number, target: boolean) => {
+const toggleModal = () => {
   message.warning('功能还未完成...');
 };
 

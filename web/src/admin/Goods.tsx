@@ -3,7 +3,6 @@ import { Button, Card, Divider, Form, Input, message, Modal, Select, Space, Tabl
 import type { FormProps, TableProps } from 'antd';
 import { createGoods, GoodsCreateReq, listGoods, listPartner } from '../api/api';
 import axios from 'axios';
-import TextArea from 'antd/es/input/TextArea';
 import { useAppContext } from '../AppProvider';
 import CurrentLocation from '../components/CurrentLocation';
 import { routes } from './routes';
@@ -118,12 +117,12 @@ const columns: TableProps<DataType>['columns'] = [
     title: '备注',
     key: 'action',
   },
-    {
+  {
     title: '操作',
     key: 'action',
     fixed: 'right', // 固定最右边，配合Table的scroll={{ x: 'max-content' }}使用
     align: 'center',
-    render: (_, record) => (
+    render: () => (
       <Space size="middle">
         <Button type="primary" size='small' onClick={() => onEditClick('0')}>修改</Button>
         <Button type="primary" size='small' danger onClick={() => onEditClick('0')}>冻结</Button>
@@ -142,7 +141,7 @@ const onEditClick = (value: string | string[]) => {
 function Goods() {
   const [list, setList] = useState<DataType[]>([])
   const [isShowAddGoodsModal, setIsAddGoodsModalOpen] = useState(false);
-  const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi, _] = message.useMessage();
   const ctx = useAppContext();
 
   const fetchListGoods = async () => {

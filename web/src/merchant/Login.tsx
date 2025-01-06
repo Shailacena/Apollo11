@@ -2,21 +2,20 @@ import React, { useEffect } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Flex, message } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AUTH_TYPE, useAppContext } from '../AppProvider';
+import {  useAppContext } from '../AppProvider';
 import { getRouteConfig } from './RouteConfigs';
-import { useCookies } from 'react-cookie';
 import axios from 'axios';
 
-const TAG = 'Merchant Login';
+// const TAG = 'Merchant Login';
 
 const Login: React.FC = () => {
 
   let navigate = useNavigate();
   let location = useLocation();
-  let ctx = useAppContext();  
+  let ctx = useAppContext();
   let from = location.state?.from?.pathname || '/';
 
-  const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi, _] = message.useMessage();
 
   useEffect(() => {
     if (ctx.auth.token) {

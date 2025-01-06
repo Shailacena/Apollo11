@@ -7,10 +7,9 @@ export interface Response {
 }
 
 export const request = axios.create({
-  baseURL: 'http://localhost:5173/api/',
+  baseURL: `${window.location.origin}/api/`,
   timeout: 1000,
   headers: {
-    'X-Custom-Header': 'foobar',
     'Content-Type': 'application/json'
   },
 });

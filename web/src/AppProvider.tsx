@@ -41,6 +41,8 @@ function AppProvider({ children }: { children: React.ReactNode }) {
 
   let [cookies, setCookie, removeCookie] = useCookies(['token', 'name']);
 
+  console.log(setPartnerList, cookies);
+
   useEffect(() => {
     console.log('icccc =====> AppProvider useEffect')
   }, []);
@@ -110,7 +112,7 @@ function AppProvider({ children }: { children: React.ReactNode }) {
 
 export function RequireAuth({ children }: { children: JSX.Element }) {
   let ctx = useAppContext();
-  
+
   let location = useLocation();
   let [cookies] = useCookies(['token']);
 

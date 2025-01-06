@@ -1,7 +1,7 @@
 import { Layout, Menu, Dropdown, Space } from 'antd';
 import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../AppProvider';
 import { getRouteConfig } from './RouteConfigs';
 
@@ -51,18 +51,20 @@ function MainLayout() {
 
     navigate(e.key)
   }
-  
+
   return (
     <>
       <Layout>
         <Header style={{ color: "#fff", height: 48 }}>
           <span>合作商管理后台</span>
           <span style={{ position: 'absolute', right: 20 }}>
-            <Dropdown menu={{ items, onClick:({ key })=>{
-              if (key === '0'){
-                ctx.auth.merchantSignout(()=>{})
+            <Dropdown menu={{
+              items, onClick: ({ key }) => {
+                if (key === '0') {
+                  ctx.auth.merchantSignout(() => { })
+                }
               }
-            } }} trigger={['click']}>
+            }} trigger={['click']}>
               <a style={{ color: "#fff" }} onClick={(e) => e.preventDefault()}>
                 <Space>
                   {ctx.auth.name}

@@ -1,4 +1,4 @@
-import { HomeOutlined, MergeCellsOutlined, TableOutlined, UserOutlined, ShopOutlined, SettingOutlined, PayCircleOutlined } from '@ant-design/icons';
+import { HomeOutlined, TableOutlined, ShopOutlined } from '@ant-design/icons';
 import Dashboard from './Dashboard';
 import CashFlow from './CashFlow';
 import { getRandomPath } from '../utils/Tool';

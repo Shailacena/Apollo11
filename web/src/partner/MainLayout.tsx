@@ -1,8 +1,8 @@
 import { Layout, Menu, Dropdown, Space } from 'antd';
 import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { getRouteConfig, IRoute } from './RouteConfigs';
-import { Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { getRouteConfig } from './RouteConfigs';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../AppProvider';
 import SetPasswordModal from './SetPasswordModal';
 import { useState } from 'react';
@@ -59,7 +59,7 @@ function MainLayout() {
   const updateIsSetpassowrdModalOpen = (isOpen: boolean) => {
     setIsSetpassowrdModalOpen(isOpen);
   };
-  
+
   return (
     <>
       <SetPasswordModal isOpen={isSetpassowrdModalOpen} updateIsSetpassowrdModalOpen={updateIsSetpassowrdModalOpen} />
@@ -67,13 +67,15 @@ function MainLayout() {
         <Header style={{ color: "#fff", height: 48 }}>
           <span>合作商管理后台</span>
           <span style={{ position: 'absolute', right: 20 }}>
-            <Dropdown menu={{ items, onClick:({ key })=>{
-              if (key === '0'){
-                ctx.auth.partnerSignout(()=>{})
-              } else if (key === '1') {
-                setIsSetpassowrdModalOpen(true)
+            <Dropdown menu={{
+              items, onClick: ({ key }) => {
+                if (key === '0') {
+                  ctx.auth.partnerSignout(() => { })
+                } else if (key === '1') {
+                  setIsSetpassowrdModalOpen(true)
+                }
               }
-            } }} trigger={['click']}>
+            }} trigger={['click']}>
               <a style={{ color: "#fff" }} onClick={(e) => e.preventDefault()}>
                 <Space>
                   {ctx.auth.name}

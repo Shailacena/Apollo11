@@ -1,13 +1,12 @@
 import { Table, Button, Form, message, Input, Select, Flex, Card } from 'antd';
 import type { SelectProps, TableProps } from 'antd';
-import { getDataFormat, getRandomNumber } from '../utils/Tool';
+import { getDataFormat } from '../utils/Tool';
 import { SearchOutlined } from '@ant-design/icons';
 import UploadDialog from '../components/UploadDialog';
 import CurrentLocation from '../components/CurrentLocation';
 import { getRouteConfig } from './RouteConfigs';
 import { useEffect, useState } from 'react';
 import { listGoods } from '../api/api';
-import { useAppContext } from '../AppProvider';
 
 interface DataType {
   key: string;
@@ -202,7 +201,7 @@ function Goods() {
             columns={columns}
             pagination={{ pageSize: 12 }} // 分页
             scroll={{ x: 'max-content' }}
-            dataSource={list||[]} />
+            dataSource={list || []} />
         </div>
       </Card>
     </>

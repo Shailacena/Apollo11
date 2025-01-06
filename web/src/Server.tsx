@@ -5,7 +5,7 @@ import { AUTH_TYPE } from "./AppProvider";
  */
 
 import { v4 as uuidv4 } from 'uuid';
- 
+
 function generateToken() {
   return uuidv4();
 }
@@ -20,11 +20,11 @@ const fakeAppProvider = {
       fakeAppProvider.token = generateToken();
       setTimeout(callback({userType:params.userType, account: params.account}, fakeAppProvider.token), 100); // fake async
     },
-    signout(params: {account: string, userType: AUTH_TYPE}, callback: Function) {
+    signout(_: {account: string, userType: AUTH_TYPE}, callback: Function) {
       fakeAppProvider.isAuthenticated = false;
       setTimeout(callback(), 100);
     },
-    checkToken(userType: AUTH_TYPE, token: string, callback: Function) {
+    checkToken(userType: AUTH_TYPE, _: string, callback: Function) {
       console.log(fakeAppProvider.token)
       // if (fakeAppProvider.token != '' && fakeAppProvider.token == token) {
         fakeAppProvider.isAuthenticated = true;
@@ -36,6 +36,5 @@ const fakeAppProvider = {
       // }
     }
   };
-  
+
   export { fakeAppProvider };
-  

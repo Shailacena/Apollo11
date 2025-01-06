@@ -44,7 +44,7 @@ function CashFlowDaily() {
       </div>
       <Card>
         <div style={{ marginBottom: 10 }}>
-          <Button type="primary" onClick={() => toggleModal(0, true)}>
+          <Button type="primary" onClick={() => toggleModal()}>
             导出
           </Button>
         </div>
@@ -60,7 +60,7 @@ function CashFlowDaily() {
   )
 }
 
-const toggleModal = (idx: number, target: boolean) => {
+const toggleModal = () => {
   message.warning('功能还未完成...');
 };
 

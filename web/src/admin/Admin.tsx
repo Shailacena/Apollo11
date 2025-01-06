@@ -61,7 +61,7 @@ const columns: TableProps<DataType>['columns'] = [
 function Admin() {
   const [list, setList] = useState<DataType[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi, _] = message.useMessage();
 
   useEffect(() => {
     fetchListAdmin();

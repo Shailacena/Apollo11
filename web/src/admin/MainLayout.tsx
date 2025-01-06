@@ -1,10 +1,9 @@
-import React from 'react';
 import { Layout, Menu, Dropdown, Space } from 'antd';
 import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-import { Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { routes } from './routes';
-import { AUTH_TYPE, useAppContext } from '../AppProvider';
+import { useAppContext } from '../AppProvider';
 
 const { Header, Content, Sider, Footer } = Layout;
 

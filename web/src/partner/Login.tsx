@@ -6,16 +6,16 @@ import { useAppContext } from '../AppProvider';
 import { getRouteConfig } from './RouteConfigs';
 import axios from 'axios';
 
-const TAG = 'Partner Login';
+// const TAG = 'Partner Login';
 
 const Login: React.FC = () => {
 
   let navigate = useNavigate();
   let location = useLocation();
-  let ctx = useAppContext(); 
+  let ctx = useAppContext();
   let from = location.state?.from?.pathname || '/';
 
-  const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi, _] = message.useMessage();
 
   useEffect(() => {
     // 异步操作或其他需要在渲染之外进行的操作
