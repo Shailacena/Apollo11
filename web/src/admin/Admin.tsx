@@ -128,7 +128,7 @@ function Admin() {
         <CurrentLocation routeconfigs={routes} />
       </div>
       <Card>
-        <Button type="primary" onClick={showModal}>新增管理员</Button>
+        <Button  className='mr-10' type="primary" onClick={showModal}>新增管理员</Button>
         <Table<DataType> bordered columns={columns} dataSource={list} />
 
         <Modal title="新增管理员" footer={null} open={isModalOpen} onCancel={handleCancel} style={{ maxWidth: 480 }} destroyOnClose>

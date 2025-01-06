@@ -86,7 +86,8 @@ function RealNameAccount() {
         </div>
         <Table<DataType> bordered columns={columns} dataSource={list} />
 
-        <Modal title="导入实名资料" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <Modal title="导入实名资料" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
+          <Divider />
           <Form
             name="basic"
             autoComplete="off"
@@ -99,9 +100,11 @@ function RealNameAccount() {
             </Form.Item>
 
             <Form.Item>
-              <Button size="large" block type="primary" htmlType="submit">
-                提交
-              </Button>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Button size="large" block type="primary" htmlType="submit" style={{ width: 100 }}>
+                  提交
+                </Button>
+              </div>
             </Form.Item>
           </Form >
         </Modal>

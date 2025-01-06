@@ -9,6 +9,7 @@ import Goods from './Goods';
 import Merchant from './Merchant';
 import DailyBill from './DailyBill';
 import TradingRecord from './TradingRecord';
+import SystemConfig from './SystemConfig';
 
 
 export interface IRoute {
@@ -125,7 +126,7 @@ export const routes: Array<IRoute> = [
       {
         path: '/config',
         name: '配置',
-        component: Merchant,
+        component: SystemConfig,
       },
     ],
   },

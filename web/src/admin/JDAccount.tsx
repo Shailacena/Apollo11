@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Modal, Form, Table, Select, Input, Button, Card } from 'antd';
+import { Modal, Form, Table, Select, Input, Button, Card, Divider } from 'antd';
 import type { TableProps } from 'antd';
 import { listJDAccount } from '../api/api';
 import CurrentLocation from '../components/CurrentLocation';
@@ -118,7 +118,8 @@ function JDAccount() {
         </div>
         <Table<DataType> bordered columns={columns} dataSource={list} />
 
-        <Modal title="导入京东账号" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <Modal title="导入京东账号" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
+          <Divider />
           <Form
             name="basic"
             autoComplete="off"
@@ -132,7 +133,7 @@ function JDAccount() {
                 { value: 'lucy', label: 'Lucy' },
                 { value: 'Yiminghe', label: 'yiminghe' },
                 { value: 'disabled', label: 'Disabled', disabled: true },
-              ]}>
+              ]} style={{ width: 200 }}>
               </Select>
             </Form.Item>
 
@@ -140,13 +141,15 @@ function JDAccount() {
               name="username"
               label="账号"
             >
-              <TextArea rows={4} />
+              <TextArea rows={8} />
             </Form.Item>
 
             <Form.Item>
-              <Button size="large" block type="primary" htmlType="submit">
-                提交
-              </Button>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems:'center'}}>
+                <Button size="large" block type="primary" htmlType="submit" style={{ width: 100}}>
+                  提交
+                </Button>
+              </div>
             </Form.Item>
           </Form >
         </Modal>
