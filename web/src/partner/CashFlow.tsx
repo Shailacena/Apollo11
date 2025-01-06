@@ -3,6 +3,7 @@ import { Space, Table, Tag, Button, Form, message, Flex, Input, Select, DatePick
 import type { SelectProps, TableProps } from 'antd';
 import UploadDialog from '../components/UploadDialog';
 import CurrentLocation from '../components/CurrentLocation';
+import { getRouteConfig } from './RouteConfigs';
 
 interface DataType {
   key: string;
@@ -41,7 +42,7 @@ function CashFlow() {
   return (
     <>
       <div style={{ marginBottom: '10px' }}>
-        <CurrentLocation />
+        <CurrentLocation routeconfigs={getRouteConfig()}/>
       </div>
       <Card>
         <div style={{ display: 'Flex' }}>
@@ -56,7 +57,7 @@ function CashFlow() {
           pagination={{ pageSize: 12 }} // 分页
           scroll={{ x: 'max-content' }}
           columns={columns}
-          dataSource={data} />
+          dataSource={data||[]} />
       </Card>
     </>
   )

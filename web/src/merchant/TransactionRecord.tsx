@@ -4,6 +4,7 @@ import type { SelectProps, TableProps } from 'antd';
 import UploadDialog from '../components/UploadDialog';
 import CurrentLocation from '../components/CurrentLocation';
 import locale from 'antd/locale/zh_CN';
+import { getRouteConfig } from './RouteConfigs';
 
 interface DataType {
   key: string;
@@ -42,7 +43,7 @@ function TransactionRecord() {
   return (
     <>
       <div style={{ marginBottom: '10px' }}>
-        <CurrentLocation />
+        <CurrentLocation routeconfigs={getRouteConfig()}/>
       </div>
       <Card>
         <div style={{ display: 'Flex' }}>
@@ -57,7 +58,7 @@ function TransactionRecord() {
           pagination={{ pageSize: 12 }} // 分页
           scroll={{ x: 'max-content' }}
           columns={columns}
-          dataSource={data} />
+          dataSource={data||[]} />
       </Card>
     </>
   )

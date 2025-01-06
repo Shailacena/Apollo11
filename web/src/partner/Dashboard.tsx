@@ -27,13 +27,13 @@ const CurrentTime = () => {
 
 const ChartLine: React.FC = () => {
   const data = [
-    { date: '2024-12-1', value: 1007863 },
-    { date: '2024-12-2', value: 999999 },
-    { date: '2024-12-3', value: 1245678 },
-    { date: '2024-12-4', value: 2123432 },
-    { date: '2024-12-5', value: 3342221 },
-    { date: '2024-12-6', value: 1307863 },
-    { date: '2024-12-7', value: 2007863 },
+    { date: '2024-12-1', value: 0 },
+    { date: '2024-12-2', value: 0 },
+    { date: '2024-12-3', value: 0 },
+    { date: '2024-12-4', value: 0 },
+    { date: '2024-12-5', value: 0 },
+    { date: '2024-12-6', value: 0 },
+    { date: '2024-12-7', value: 0 },
   ];
 
   const config = {
@@ -69,10 +69,10 @@ const Dashboard: React.FC = () => {
           <Card title="今日">
             <Row gutter={16}>
               <Col span={12}>
-                <Statistic title="营收" value={112893} formatter={formatter} />
+                <Statistic title="营收" value={0} formatter={formatter} />
               </Col>
               <Col span={12}>
-                <Statistic title="订单" value={112893} precision={2} formatter={formatter} />
+                <Statistic title="订单" value={0} precision={2} formatter={formatter} />
               </Col>
             </Row>
           </Card>
@@ -81,10 +81,10 @@ const Dashboard: React.FC = () => {
           <Card title="总共">
             <Row gutter={16}>
               <Col span={12}>
-                <Statistic title="营收" value={112893} formatter={formatter} />
+                <Statistic title="营收" value={0} formatter={formatter} />
               </Col>
               <Col span={12}>
-                <Statistic title="订单" value={112893} precision={2} formatter={formatter} />
+                <Statistic title="订单" value={0} precision={2} formatter={formatter} />
               </Col>
             </Row>
           </Card>

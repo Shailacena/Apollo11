@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Card, Divider, Form, Input, message, Modal, Select, Table } from 'antd';
+import { Button, Card, Divider, Form, Input, message, Modal, Select, Space, Table } from 'antd';
 import type { FormProps, TableProps } from 'antd';
 import { createGoods, GoodsCreateReq, listGoods, listPartner } from '../api/api';
 import axios from 'axios';
@@ -118,7 +118,26 @@ const columns: TableProps<DataType>['columns'] = [
     title: '备注',
     key: 'action',
   },
+    {
+    title: '操作',
+    key: 'action',
+    fixed: 'right', // 固定最右边，配合Table的scroll={{ x: 'max-content' }}使用
+    align: 'center',
+    render: (_, record) => (
+      <Space size="middle">
+        <Button type="primary" size='small' onClick={() => onEditClick('0')}>修改</Button>
+        <Button type="primary" size='small' danger onClick={() => onEditClick('0')}>冻结</Button>
+        <Button type="primary" size='small' danger onClick={() => onEditClick('0')}>删除</Button>
+        <Button type="primary" size='small' danger onClick={() => onEditClick('0')}>取消订单</Button>
+      </Space>
+    ),
+  },
 ];
+
+const onEditClick = (value: string | string[]) => {
+  console.log(`Selected: ${value}`);
+  // return <OrderDetail />
+};
 
 function Goods() {
   const [list, setList] = useState<DataType[]>([])
