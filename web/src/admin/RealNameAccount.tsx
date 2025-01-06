@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Modal, Form, Table, Input, Button, Card } from 'antd';
+import { Modal, Form, Table, Input, Button, Card, Divider } from 'antd';
 import type { TableProps } from 'antd';
 import { listRealNameAccount } from '../api/api';
 import CurrentLocation from '../components/CurrentLocation';

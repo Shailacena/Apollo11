@@ -95,7 +95,7 @@ function SystemConfig() {
           size="small"
           itemLayout="horizontal"
           dataSource={data}
-          renderItem={(item, index) => (
+          renderItem={(item) => (
             <List.Item>
               <span style={{ width: '20%' }}>{item.title}</span>
               <span style={{ width: '60%' }}>
