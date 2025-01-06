@@ -1,5 +1,8 @@
 # Apollo11 🚀 to the Moon!!!
 
+go dowdloading 超时，设置代理
+go env -w GOPROXY=https://goproxy.cn,direct
+
 mysql password: abc123!!!
 
 启动MySQL服务

@@ -5,7 +5,6 @@ import { listPartnerBill } from '../api/api';
 import CurrentLocation from '../components/CurrentLocation';
 import { routes } from './routes';
 
-
 interface DataType {
   key: string;
 }
@@ -13,32 +12,31 @@ interface DataType {
 const columns: TableProps<DataType>['columns'] = [
   {
     title: '用户编号',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text) => <a>{text}</a>,
+    dataIndex: 'partnerId',
+    key: 'partnerId',
   },
   {
     title: '用户类型',
-    dataIndex: 'age',
-    key: 'age',
+    dataIndex: 'type',
+    key: 'type',
   },
   {
     title: '变更金额',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'changeMoney',
+    key: 'changeMoney',
   },
   {
     title: '当前余额',
-    key: 'tags',
-    dataIndex: 'tags',
+    key: 'money',
+    dataIndex: 'money',
   },
   {
     title: '备注',
-    key: 'action',
+    key: 'remark',
   },
   {
     title: '时间',
-    key: 'action',
+    key: 'createAt',
   },
 ];
 

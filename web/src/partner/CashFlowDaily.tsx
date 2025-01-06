@@ -1,7 +1,6 @@
-import { SearchOutlined } from '@ant-design/icons';
-import { Space, Table, Tag, Button, Form, message, Flex, Input, Select, Card } from 'antd';
-import type { SelectProps, TableProps } from 'antd';
-import UploadDialog from '../components/UploadDialog';
+
+import { Table, Button, message, Card } from 'antd';
+import type { TableProps } from 'antd';
 import CurrentLocation from '../components/CurrentLocation';
 import { getRouteConfig } from './RouteConfigs';
 
@@ -36,7 +35,7 @@ const data: DataType[] = [];
 function CashFlowDaily() {
   for (let i = 0; i < 50; i++) {
     data.push({
-      key: i.toString(), order_total_amount: i.toString(), success_total_amount: '123', order_total_num: 500, balance: 30000, time: 1735131468000
+      key: i.toString(), order_total_amount: i.toString(), success_total_amount: '123', order_total_num: 500, time: 1735131468000
     })
   }
   return (

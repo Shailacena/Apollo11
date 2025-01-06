@@ -295,12 +295,12 @@ interface ListStatisticsResp {
 }
 
 export interface IStatistics {
-  Date: string
-	TotalMoney: number
-	WxFee: number
-	WxManualFee: number
-	AliFee: number
-	AliManualFee: number
+  date: string
+	totalMoney: number
+	wxFee: number
+	wxManualFee: number
+	aliFee: number
+	aliManualFee: number
 }
 
 export function listStatisticsBill(): Promise<IResponseBody<ListStatisticsResp>> {
@@ -314,12 +314,12 @@ interface ListOrderResp {
 }
 
 export interface IOrder {
-  Date: string
-	TotalMoney: number
-	WxFee: number
-	WxManualFee: number
-	AliFee: number
-	AliManualFee: number
+  date: string
+	totalMoney: number
+	wxFee: number
+	wxManualFee: number
+	aliFee: number
+	aliManualFee: number
 }
 
 export function listOrder(): Promise<IResponseBody<ListOrderResp>> {

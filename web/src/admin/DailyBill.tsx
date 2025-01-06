@@ -13,36 +13,45 @@ interface DataType {
 const columns: TableProps<DataType>['columns'] = [
   {
     title: '日期',
-    dataIndex: 'name',
-    key: 'name',
+    dataIndex: 'date',
+    key: 'date',
+    align: 'center',
     render: (text) => <a>{text}</a>,
   },
   {
     title: '成功总金额',
-    dataIndex: 'age',
-    key: 'age',
+    dataIndex: 'totalMoney',
+    key: 'totalMoney',
+    align: 'center',
   },
   {
     title: '微信缴费',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'wxFee',
+    key: 'wxFee',
+    align: 'center',
   },
   {
     title: '支付宝缴费',
-    key: 'tags',
-    dataIndex: 'tags',
+    key: 'aliFee',
+    dataIndex: 'aliFee',
+    align: 'center',
   },
   {
     title: '支付宝手动缴费',
-    key: 'action',
+    key: 'aliManualFee',
+    dataIndex: 'aliManualFee',
+    align: 'center',
   },
   {
-    title: '微信',
-    key: 'action',
+    title: '微信手动缴费',
+    key: 'wxManualFee',
+    dataIndex: 'wxManualFee',
+    align: 'center',
   },
   {
     title: '成功率',
     key: 'action',
+    align: 'center',
   },
 ];
 
@@ -72,7 +81,7 @@ function DailyBill() {
         <CurrentLocation routeconfigs={routes} />
       </div>
       <Card>
-        <Table<DataType> bordered columns={columns} dataSource={list} />
+        <Table<DataType> bordered columns={columns} dataSource={list || []} />
       </Card>
     </>
   )

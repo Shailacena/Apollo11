@@ -1,16 +1,14 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Space, Table, Tag, Button, Form, message, Flex, Input, Select, DatePicker, Card } from 'antd';
+import { Table, Button, Form, message, DatePicker, Card } from 'antd';
 import type { SelectProps, TableProps } from 'antd';
-import UploadDialog from '../components/UploadDialog';
 import CurrentLocation from '../components/CurrentLocation';
 import { getRouteConfig } from './RouteConfigs';
+import { getDataFormat } from '../utils/Tool';
+import { useEffect, useState } from 'react';
+import { listPartnerBill } from '../api/api';
 
 interface DataType {
   key: string;
-  notes: string;
-  change_money: number;
-  balance: number;
-  time: number;
 }
 
 const columns: TableProps<DataType>['columns'] = [
@@ -18,31 +16,42 @@ const columns: TableProps<DataType>['columns'] = [
     title: '备注', dataIndex: 'notes', key: 'notes', align: 'center',
   },
   {
-    title: '变更金额', key: 'change_money', dataIndex: 'change_money', align: 'center',
+    title: '变更金额', key: 'changeMoney', dataIndex: 'changeMoney', align: 'center',
   },
   {
-    title: '当前余额', key: 'balance', dataIndex: 'balance', align: 'center',
+    title: '当前余额', key: 'money', dataIndex: 'money', align: 'center',
   },
   {
-    title: '时间', key: 'time', dataIndex: 'time', align: 'center', render: (text) => {
+    title: '时间', key: 'createAt', dataIndex: 'createAt', align: 'center', render: (text) => {
       const date = new Date(text);
-      return `${date.getFullYear()}-${('0' + (date.getMonth() + 1)).slice(-2)}-${('0' + date.getDate()).slice(-2)} ${('0' + date.getHours()).slice(-2)}:${('0' + date.getMinutes()).slice(-2)}:${('0' + date.getSeconds()).slice(-2)}`;
+      return getDataFormat(date);
     }
   }
 ];
 
-const data: DataType[] = [];
-
 function CashFlow() {
-  for (let i = 0; i < 50; i++) {
-    data.push({
-      key: i.toString(), notes: i.toString(), change_money: 500, balance: 30000, time: 1735131468000
+  const [list, setList] = useState<DataType[]>([])
+
+  const fetchListPartnerBill = async () => {
+    const { data } = await listPartnerBill()
+    let d: DataType[] = data?.list?.map((item, index) => {
+      let newItem: DataType = {
+        key: index.toString(),
+        ...item
+      }
+      return newItem
     })
+    setList(d)
   }
+
+  useEffect(() => {
+    fetchListPartnerBill()
+  }, [])
+
   return (
     <>
       <div style={{ marginBottom: '10px' }}>
-        <CurrentLocation routeconfigs={getRouteConfig()}/>
+        <CurrentLocation routeconfigs={getRouteConfig()} />
       </div>
       <Card>
         <div style={{ display: 'Flex' }}>
@@ -57,7 +66,7 @@ function CashFlow() {
           pagination={{ pageSize: 12 }} // 分页
           scroll={{ x: 'max-content' }}
           columns={columns}
-          dataSource={data||[]} />
+          dataSource={list || []} />
       </Card>
     </>
   )
