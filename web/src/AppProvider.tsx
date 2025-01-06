@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
 import { adminLogin, AdminLoginReq, IPartner, merchantLogin, MerchantLoginReq, partnerLogin, PartnerLoginReq } from "./api/api";
-import { getCookiePath, getExpirationDate } from "./utils/Tool";
+import { getExpirationDate } from "./utils/Tool";
 
 const TAG = 'AppProvider';
 
@@ -51,14 +51,14 @@ function AppProvider({ children }: { children: React.ReactNode }) {
     setToken(data.token)
     setName(data.nickname);
     console.log(TAG, 'adminSignin iccccccccccccccccccc token', token)
-    setCookie('token', data.token, { path: '/admin/', expires: getExpirationDate(7) });
-    setCookie('name', data.nickname, { path: '/admin/', expires: getExpirationDate(7) });
+    setCookie('token', data.token, { path: '/admin', expires: getExpirationDate(7) });
+    setCookie('name', data.nickname, { path: '/admin', expires: getExpirationDate(7) });
     callback()
   };
 
   let adminSignout = (callback: Function) => {
-    removeCookie('token', { path: '/admin/' })
-    removeCookie('name', { path: '/admin/' })
+    removeCookie('token', { path: '/admin' })
+    removeCookie('name', { path: '/admin' })
     setToken(null)
     setName(null);
     callback();
@@ -69,14 +69,14 @@ function AppProvider({ children }: { children: React.ReactNode }) {
     console.log(data);
     setToken(data.token)
     setName(data.name);
-    setCookie('token', data.token, { path: '/partner/', expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
-    setCookie('name', data.name, { path: '/partner/', expires: getExpirationDate(7) });
+    setCookie('token', data.token, { path: '/partner', expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
+    setCookie('name', data.name, { path: '/partner', expires: getExpirationDate(7) });
     callback()
   };
 
   let partnerSignout = (callback: Function) => {
-    removeCookie('token', { path: '/partner/' })
-    removeCookie('name', { path: '/partner/' })
+    removeCookie('token', { path: '/partner' })
+    removeCookie('name', { path: '/partner' })
     setToken(null)
     setName(null);
     callback();
@@ -87,14 +87,14 @@ function AppProvider({ children }: { children: React.ReactNode }) {
     console.log(data);
     setToken(data.token)
     setName(data.name);
-    setCookie('token', data.token, { path: '/merchant/', expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
-    setCookie('name', data.name, { path: '/merchant/', expires: getExpirationDate(7) });
+    setCookie('token', data.token, { path: '/merchant', expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
+    setCookie('name', data.name, { path: '/merchant', expires: getExpirationDate(7) });
     callback()
   };
 
   let merchantSignout = (callback: Function) => {
-    removeCookie('token', { path: '/merchant/' })
-    removeCookie('name', { path: '/merchant/' })
+    removeCookie('token', { path: '/merchant' })
+    removeCookie('name', { path: '/merchant' })
     setToken(null)
     setName(null);
     callback();
