@@ -10,8 +10,9 @@ func Init(e *echo.Echo) {
 	apiGroup := e.Group("/api")
 
 	adminGroup := apiGroup.Group("/admin")
+	adminGroupWithoutAuth := apiGroup.Group("/admin")
 	{
-		adminGroup.POST("/login", handler.Admin.Login)
+		adminGroupWithoutAuth.POST("/login", handler.Admin.Login)
 		adminGroup.POST("/register", handler.Admin.Register)
 		adminGroup.GET("/list", handler.Admin.List)
 	}

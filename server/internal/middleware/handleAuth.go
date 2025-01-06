@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"apollo/server/internal/repository"
 	"apollo/server/pkg/util"
 
 	"github.com/labstack/echo/v4"
@@ -9,9 +10,13 @@ import (
 func HandleAuth() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			// token := GetToken(c)
+			token := GetToken(c)
 
-			// token不相同
+			// 校验token
+			err := repository.Admin.CheckToken(c, token)
+			if err != nil {
+				return err
+			}
 
 			return next(c)
 		}

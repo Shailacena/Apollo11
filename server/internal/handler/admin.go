@@ -4,7 +4,6 @@ import (
 	v1 "apollo/server/api/v1"
 	"apollo/server/internal/service"
 	"apollo/server/pkg/response"
-	"apollo/server/pkg/util"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -43,10 +42,6 @@ func (h *AdminHandler) Login(c echo.Context) error {
 		return err
 	}
 
-	c.SetCookie(&http.Cookie{
-		Name:  util.TokenCookieKey,
-		Value: resp.Token,
-	})
 	return response.ResponseSuccess(c, resp)
 }
 

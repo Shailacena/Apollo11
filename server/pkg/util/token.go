@@ -3,7 +3,7 @@ package util
 import "github.com/google/uuid"
 
 const (
-	TokenCookieKey = "X-TOKEN"
+	TokenCookieKey = "token"
 )
 
 func NewToken() string {
