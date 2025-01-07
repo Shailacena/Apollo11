@@ -76,9 +76,10 @@ function RealNameAccount() {
   return (
     <>
       <Card>
-        <div className='mr-10'>
+        <div>
           <Button type="primary" onClick={showModal}>批量导入实名资料</Button>
         </div>
+        <Divider />
         <Table<DataType> bordered columns={columns} dataSource={list} />
 
         <Modal title="导入实名资料" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>

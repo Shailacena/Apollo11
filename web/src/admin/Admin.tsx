@@ -123,7 +123,8 @@ function Admin() {
   return (
     <>
       <Card>
-        <Button  className='mr-10' type="primary" onClick={showModal}>新增管理员</Button>
+        <Button type="primary" onClick={showModal}>新增管理员</Button>
+        <Divider />
         <Table<DataType> bordered columns={columns} dataSource={list} />
 
         <Modal title="新增管理员" footer={null} open={isModalOpen} onCancel={handleCancel} style={{ maxWidth: 480 }} destroyOnClose>

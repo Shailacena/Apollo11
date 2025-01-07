@@ -103,7 +103,12 @@ function TradingRecord() {
   return (
     <>
       <Card>
-        <Table<DataType> bordered columns={columns} dataSource={list} />
+        <Table<DataType>
+          bordered
+          pagination={{ pageSize: 12 }} // 分页
+          columns={columns} 
+          dataSource={list} 
+          scroll={{ x: 'max-content' }} />
       </Card>
     </>
   )

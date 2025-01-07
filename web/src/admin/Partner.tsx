@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, Space, Form, Table, Input, Button, message, Card } from 'antd';
+import { Modal, Space, Form, Table, Input, Button, message, Card, Divider } from 'antd';
 import type { FormProps, TableProps } from 'antd';
 import { IPartner, listPartner, partnerRegister, PartnerRegisterReq } from '../api/api';
 import axios from 'axios';
@@ -133,9 +133,10 @@ function Partner() {
     <>
       {contextHolder}
       <Card>
-        <div className='mr-10'>
+        <div>
           <Button type="primary" onClick={showModal}>新增</Button>
         </div>
+        <Divider />
         <Table<DataType> bordered columns={columns} dataSource={list} />
 
         <Modal title="新增" footer={null} onCancel={handleCancel} open={isModalOpen}>

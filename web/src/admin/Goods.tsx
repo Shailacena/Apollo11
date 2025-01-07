@@ -218,7 +218,9 @@ function Goods() {
   return (
     <>
       <Card>
+      <div>
         <Button type="primary" onClick={showAddGoodsModal}>新增商品</Button>
+        </div>
         <Divider />
         <Table<DataType>
           bordered

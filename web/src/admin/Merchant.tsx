@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Modal, Form, Table, Input, Button, message, Space } from 'antd';
+import { Modal, Form, Table, Input, Button, message, Space, Card, Divider } from 'antd';
 import type { FormProps, TableProps } from 'antd';
 import { IMerchant, listMerchant, merchantRegister, MerchantRegisterReq } from '../api/api';
 import dayjs from 'dayjs';
@@ -120,9 +120,11 @@ function Merchant() {
   return (
     <>
       {contextHolder}
-      <div className='mr-10'>
+      <Card>
+      <div>
         <Button type="primary" onClick={showModal}>新增</Button>
       </div>
+      <Divider />
       <Table<DataType> bordered columns={columns} dataSource={list} />
 
       <Modal title="新增商户" footer={null} onCancel={handleCancel} open={isModalOpen}>
@@ -155,6 +157,7 @@ function Merchant() {
           </Form.Item>
         </Form >
       </Modal>
+      </Card>
     </>
   )
 }
