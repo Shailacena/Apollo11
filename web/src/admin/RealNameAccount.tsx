@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { Modal, Form, Table, Input, Button, Card, Divider } from 'antd';
 import type { TableProps } from 'antd';
 import { listRealNameAccount } from '../api/api';
-import CurrentLocation from '../components/CurrentLocation';
-import { routes } from './routes';
 
 const { TextArea } = Input;
 
@@ -77,9 +75,6 @@ function RealNameAccount() {
 
   return (
     <>
-      <div style={{ marginBottom: '10px' }}>
-        <CurrentLocation routeconfigs={routes} />
-      </div>
       <Card>
         <div className='mr-10'>
           <Button type="primary" onClick={showModal}>批量导入实名资料</Button>

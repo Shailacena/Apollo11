@@ -4,8 +4,6 @@ import type { FormProps, TableProps } from 'antd';
 import { createGoods, GoodsCreateReq, listGoods, listPartner } from '../api/api';
 import axios from 'axios';
 import { useAppContext } from '../AppProvider';
-import CurrentLocation from '../components/CurrentLocation';
-import { routes } from './routes';
 
 interface DataType {
   key: string;
@@ -219,9 +217,6 @@ function Goods() {
 
   return (
     <>
-      <div style={{ marginBottom: '10px' }}>
-        <CurrentLocation routeconfigs={routes} />
-      </div>
       <Card>
         <Button type="primary" onClick={showAddGoodsModal}>新增商品</Button>
         <Divider />

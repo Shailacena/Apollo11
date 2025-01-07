@@ -4,8 +4,6 @@ import { useEffect, useState } from 'react';
 import { listAdmin, IAdmin, AdminRegisterReq, adminRegister } from '../api/api';
 import TextArea from 'antd/es/input/TextArea';
 import axios from 'axios';
-import CurrentLocation from '../components/CurrentLocation';
-import { routes } from './routes';
 
 interface DataType extends IAdmin {
   key: number;
@@ -124,9 +122,6 @@ function Admin() {
 
   return (
     <>
-      <div style={{ marginBottom: '10px' }}>
-        <CurrentLocation routeconfigs={routes} />
-      </div>
       <Card>
         <Button  className='mr-10' type="primary" onClick={showModal}>新增管理员</Button>
         <Table<DataType> bordered columns={columns} dataSource={list} />

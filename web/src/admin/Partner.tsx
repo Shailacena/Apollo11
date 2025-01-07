@@ -4,8 +4,6 @@ import type { FormProps, TableProps } from 'antd';
 import { IPartner, listPartner, partnerRegister, PartnerRegisterReq } from '../api/api';
 import axios from 'axios';
 import { useAppContext } from '../AppProvider';
-import CurrentLocation from '../components/CurrentLocation';
-import { routes } from './routes';
 
 const { TextArea } = Input;
 
@@ -134,9 +132,6 @@ function Partner() {
   return (
     <>
       {contextHolder}
-      <div style={{ marginBottom: '10px' }}>
-        <CurrentLocation routeconfigs={routes} />
-      </div>
       <Card>
         <div className='mr-10'>
           <Button type="primary" onClick={showModal}>新增</Button>

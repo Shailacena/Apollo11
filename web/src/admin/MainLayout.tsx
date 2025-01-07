@@ -5,6 +5,7 @@ import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { routes } from './routes';
 import { useAppContext } from '../AppProvider';
 import { useState } from 'react';
+import CurrentLocation from '../components/CurrentLocation';
 
 const { Header, Content, Sider, Footer } = Layout;
 
@@ -79,17 +80,13 @@ function MainLayout() {
       const repeatIndex = openKeys
         .filter((key) => key !== currentOpenKey)
         .findIndex((key) => levelKeys[key] === levelKeys[currentOpenKey]);
-        // console.log(repeatIndex)
-        // console.log(levelKeys)
       console.log(openKeys
         // remove repeat key
         .filter((_, index) => index !== repeatIndex)
         // remove current level all child
-        .filter((key) => { 
-          // console.log(levelKeys[key], key)
-          // console.log(levelKeys[currentOpenKey], currentOpenKey)
-          // console.log(levelKeys[key] <= levelKeys[currentOpenKey])
-          return levelKeys[key] <= levelKeys[currentOpenKey]}))
+        .filter((key) => {
+          return levelKeys[key] <= levelKeys[currentOpenKey]
+        }))
       setStateOpenKeys(
         openKeys
           // remove repeat key
@@ -138,6 +135,9 @@ function MainLayout() {
             />
           </Sider>
           <Content style={{ padding: '30px', height: "calc(100vh - (40px + 48px))" }}>
+            <div style={{ marginBottom: '10px' }}>
+              <CurrentLocation routeconfigs={routes} />
+            </div>
             <Outlet />
           </Content>
         </Layout>

@@ -1,7 +1,5 @@
 
 import { Button, Card, Input, List } from 'antd';
-import CurrentLocation from '../components/CurrentLocation';
-import { routes } from './routes';
 
 const data = [
   {
@@ -87,9 +85,6 @@ function SystemConfig() {
 
   return (
     <>
-      <div style={{ marginBottom: '10px' }}>
-        <CurrentLocation routeconfigs={routes} />
-      </div>
       <Card>
         <List
           size="small"

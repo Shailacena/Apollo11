@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { Modal, Form, Table, Select, Input, Button, Card, Divider } from 'antd';
 import type { TableProps } from 'antd';
 import { listJDAccount } from '../api/api';
-import CurrentLocation from '../components/CurrentLocation';
-import { routes } from './routes';
 
 const { TextArea } = Input;
 
@@ -109,9 +107,6 @@ function JDAccount() {
 
   return (
     <>
-      <div style={{ marginBottom: '10px' }}>
-        <CurrentLocation routeconfigs={routes} />
-      </div>
       <Card>
         <div className='mr-10'>
           <Button type="primary" onClick={showModal}>批量导入京东账号</Button>
