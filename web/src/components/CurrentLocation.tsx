@@ -23,7 +23,7 @@ const CurrentLocation: React.FC<CurrentLocationProps> = ({routeconfigs}) => {
         routes.push(route)
         if (route.children && route.children.length > 0) {
           leftPath = leftPath.replace(route.path, '');
-          console.log('lefypath', leftPath)
+          // console.log('lefypath', leftPath)
           getRoutesFormPath(routes, route.children, leftPath);
         }
       }
@@ -31,11 +31,11 @@ const CurrentLocation: React.FC<CurrentLocationProps> = ({routeconfigs}) => {
   }
 
   function itemRender(currentRoute: any, params: any, items: any, paths: any) {
-    console.log(location)
-    console.log(routes)
+    // console.log(location)
+    // console.log(routes)
     let isLast = currentRoute?.path === items[items.length - 1]?.path;
     let isFirst = currentRoute?.path === items[0]?.path;
-    console.log('CurrentLocation', currentRoute, params, items, paths)
+    // console.log('CurrentLocation', currentRoute, params, items, paths)
     return isLast ? (<span>{currentRoute.name}</span>) :
       (isFirst ? (<span>{currentRoute.name}</span>) : (<Link to={`/${paths.join("/")}`}>{currentRoute.name}</Link>));
   }
