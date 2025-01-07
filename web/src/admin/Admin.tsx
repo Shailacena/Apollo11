@@ -1,7 +1,7 @@
 import { Space, Table, Button, Modal, Form, Input, message, Card, Divider } from 'antd';
 import type { FormProps, TableProps } from 'antd';
 import { useEffect, useState } from 'react';
-import { listAdmin, IAdmin, AdminRegisterReq, adminRegister } from '../api/api';
+import { listAdmin, IAdmin, AdminRegisterReq, adminRegister, adminResetPassword } from '../api/api';
 import TextArea from 'antd/es/input/TextArea';
 import axios from 'axios';
 
@@ -15,51 +15,54 @@ type FieldType = {
   remark?: string;
 };
 
-const columns: TableProps<DataType>['columns'] = [
-  {
-    title: 'ID',
-    dataIndex: 'id',
-    key: 'id',
-  },
-  {
-    title: '账号',
-    dataIndex: 'username',
-    key: 'username',
-  },
-  {
-    title: '昵称',
-    dataIndex: 'nickname',
-    key: 'nickname',
-  },
-  {
-    title: '备注',
-    key: 'remark',
-    dataIndex: 'remark',
-  },
-  {
-    title: '状态',
-    key: 'enable',
-    dataIndex: 'enable',
-    render: (_, d) => (
-      d.enable === 1 ? '启动' : '禁用'
-    )
-  },
-  {
-    title: '操作',
-    key: 'action',
-    render: () => (
-      <Space size="middle">
-        <Button disabled type="primary" size='small'>修改</Button>
-        <Button disabled type="primary" size='small' danger >删除</Button>
-      </Space>
-    ),
-  },
-];
+
 
 function Admin() {
   const [list, setList] = useState<DataType[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messageApi, _] = message.useMessage();
+
+  const columns: TableProps<DataType>['columns'] = [
+    {
+      title: 'ID',
+      dataIndex: 'id',
+      key: 'id',
+    },
+    {
+      title: '账号',
+      dataIndex: 'username',
+      key: 'username',
+    },
+    {
+      title: '昵称',
+      dataIndex: 'nickname',
+      key: 'nickname',
+    },
+    {
+      title: '备注',
+      key: 'remark',
+      dataIndex: 'remark',
+    },
+    {
+      title: '状态',
+      key: 'enable',
+      dataIndex: 'enable',
+      render: (_, d) => (
+        d.enable === 1 ? '启动' : '禁用'
+      )
+    },
+    {
+      title: '操作',
+      key: 'action',
+      render: (_, d) => (
+        <Space size="middle">
+          <Button type="primary" size='small'>修改</Button>
+          <Button type="primary" size='small' danger >删除</Button>
+          <Button type="primary" size='small' danger onClick={() => resetPassword(d.username)}>重置密码</Button>
+        </Space>
+      ),
+    },
+  ];
 
   useEffect(() => {
     fetchListAdmin();
@@ -118,7 +121,26 @@ function Admin() {
         });
       }
     }
-  }
+  };
+
+  const resetPassword = async (username: string) => {
+    try {
+      console.log(username);
+      let { data } = await adminResetPassword({username})
+      console.log(data)
+      // fetchListAdmin()
+      success(data.password);
+      // setIsModalOpen(false);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        let msg = e.response?.data?.message
+        msg && messageApi.open({
+          type: 'error',
+          content: msg,
+        });
+      }
+    }
+  };
 
   return (
     <>

@@ -32,6 +32,30 @@ type ListAdminResp struct {
 	List []*Admin `json:"list"`
 }
 
+// 密码修改
+type AdminSetPasswordReq struct {
+	Username string `json:"username" binding:"required"`
+	OldPassword string `json:"oldpassword" binding:"required"`
+	NewPassword string `json:"newpassword" binding:"required"`
+}
+
+// 密码修改
+type AdminSetPasswordResp struct {
+
+}
+
+// 密码重置
+type AdminResetPasswordReq struct {
+	Username string `json:"username" binding:"required"`
+	OldPassword string `json:"oldpassword" binding:"required"`
+	NewPassword string `json:"newpassword" binding:"required"`
+}
+
+// 密码重置
+type AdminResetPasswordResp struct {
+	Password string `json:"password"`
+}
+
 type Admin struct {
 	Id       uint   `json:"id"`
 	Username string `json:"username"`

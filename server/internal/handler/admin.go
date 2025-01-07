@@ -58,3 +58,31 @@ func (h *AdminHandler) List(c echo.Context) error {
 
 	return response.ResponseSuccess(c, resp)
 }
+
+func (h *AdminHandler) SetPassword(c echo.Context) error {
+	req := new(v1.AdminSetPasswordReq)
+	if err := c.Bind(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	resp, err := service.Admin.SetPassword(c, req)
+	if err != nil {
+		return err
+	}
+
+	return response.ResponseSuccess(c, resp)
+}
+
+func (h *AdminHandler) ResetPassword(c echo.Context) error {
+	req := new(v1.AdminResetPasswordReq)
+	if err := c.Bind(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	resp, err := service.Admin.ResetPassword(c, req)
+	if err != nil {
+		return err
+	}
+
+	return response.ResponseSuccess(c, resp)
+}

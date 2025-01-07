@@ -32,7 +32,7 @@ interface AdminLoginResp {
   nickname: string
 }
 
-export function adminLogin(data: AdminLoginReq): Promise<IResponseBody<AdminLoginResp>>{
+export function adminLogin(data: AdminLoginReq): Promise<IResponseBody<AdminLoginResp>> {
   return post("/admin/login", data).then((res) => {
     return res.data
   })
@@ -74,16 +74,30 @@ export function listAdmin(): Promise<IResponseBody<ListAdminResp>> {
   })
 }
 
+export interface AdminResetPasswordReq {
+  username: string
+}
+
+interface AdminResetPasswordResp {
+  password: string
+}
+
+export function adminResetPassword(data: AdminResetPasswordReq): Promise<IResponseBody<AdminResetPasswordResp>> {
+  return post("/admin/resetPassword", data).then((res) => {
+    return res.data
+  })
+}
+
 interface ListRealNameAccountResp {
   list: Array<IRealNameAccount>
 }
 
 export interface IRealNameAccount {
   idNumber: string
-	name: string
+  name: string
   realNameCount: number
-	enable: number
-	remark: string
+  enable: number
+  remark: string
 }
 
 export function listRealNameAccount(): Promise<IResponseBody<ListRealNameAccountResp>> {
@@ -98,15 +112,15 @@ interface ListJDAccountResp {
 
 export interface IJDAccount {
   id: string
-	account: string
-	realNameStatus: number
-	totalOrderCount: number
-	todayOrderCount: number
-	totalSuccessOrderCount: number
-	loginStatus: number
-	enable: number
-	remark: number
-	createAt: number
+  account: string
+  realNameStatus: number
+  totalOrderCount: number
+  todayOrderCount: number
+  totalSuccessOrderCount: number
+  loginStatus: number
+  enable: number
+  remark: number
+  createAt: number
 }
 
 export function listJDAccount(): Promise<IResponseBody<ListJDAccountResp>> {
@@ -121,15 +135,15 @@ interface ListPartnerResp {
 
 export interface IPartner {
   id: number
-	name: string
-	creditAmount: number
-	dailyLimit: number
-	priority: number
-	superiorAgent: number
-	level: number
-	stockAmount: number
-	enable: number
-	remark: string
+  name: string
+  creditAmount: number
+  dailyLimit: number
+  priority: number
+  superiorAgent: number
+  level: number
+  stockAmount: number
+  enable: number
+  remark: string
 }
 
 
@@ -181,11 +195,11 @@ interface ListPartnerBillResp {
 
 export interface IPartnerBill {
   partnerId: number
-	type: number
-	changeMoney: number
-	money: number
-	remark: string
-	createAt: number
+  type: number
+  changeMoney: number
+  money: number
+  remark: string
+  createAt: number
 }
 
 export function listPartnerBill(): Promise<IResponseBody<ListPartnerBillResp>> {
@@ -200,14 +214,14 @@ interface ListGoodsResp {
 
 export interface IGoods {
   id: number
-	partnerId: number
-	rechargeType: number
-	skuId: string
-	brandId: string
-	price: number
-	realPrice: number
-	shopName: string
-	createAt: number
+  partnerId: number
+  rechargeType: number
+  skuId: string
+  brandId: string
+  price: number
+  realPrice: number
+  shopName: string
+  createAt: number
 }
 
 
@@ -219,16 +233,16 @@ export function listGoods(): Promise<IResponseBody<ListGoodsResp>> {
 
 export interface GoodsCreateReq {
   partnerId: number
-	rechargeType: number
-	skuId: string
-	brandId: string
-	price: number
-	realPrice: number
-	shopName: string
+  rechargeType: number
+  skuId: string
+  brandId: string
+  price: number
+  realPrice: number
+  shopName: string
 }
 
 interface GoodsCreateResp {
-  
+
 }
 
 export function createGoods(data: GoodsCreateReq): Promise<IResponseBody<GoodsCreateResp>> {
@@ -296,11 +310,11 @@ interface ListStatisticsResp {
 
 export interface IStatistics {
   date: string
-	totalMoney: number
-	wxFee: number
-	wxManualFee: number
-	aliFee: number
-	aliManualFee: number
+  totalMoney: number
+  wxFee: number
+  wxManualFee: number
+  aliFee: number
+  aliManualFee: number
 }
 
 export function listStatisticsBill(): Promise<IResponseBody<ListStatisticsResp>> {
@@ -315,11 +329,11 @@ interface ListOrderResp {
 
 export interface IOrder {
   date: string
-	totalMoney: number
-	wxFee: number
-	wxManualFee: number
-	aliFee: number
-	aliManualFee: number
+  totalMoney: number
+  wxFee: number
+  wxManualFee: number
+  aliFee: number
+  aliManualFee: number
 }
 
 export function listOrder(): Promise<IResponseBody<ListOrderResp>> {

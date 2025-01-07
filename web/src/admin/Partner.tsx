@@ -62,8 +62,11 @@ const columns: TableProps<DataType>['columns'] = [
     key: 'action',
     render: () => (
       <Space size="middle">
+        <Button disabled type="primary" size='small'>开启派单</Button>
         <Button disabled type="primary" size='small'>修改</Button>
         <Button disabled type="primary" size='small' danger >删除</Button>
+        <Button disabled type="primary" size='small'>授信额度</Button>
+        <Button disabled type="primary" size='small'>重置密码</Button>
       </Space>
     ),
   },
@@ -137,7 +140,7 @@ function Partner() {
           <Button type="primary" onClick={showModal}>新增</Button>
         </div>
         <Divider />
-        <Table<DataType> bordered columns={columns} dataSource={list} />
+        <Table<DataType> bordered columns={columns} dataSource={list} scroll={{ x: 'max-content' }} />
 
         <Modal title="新增" footer={null} onCancel={handleCancel} open={isModalOpen}>
           <Form

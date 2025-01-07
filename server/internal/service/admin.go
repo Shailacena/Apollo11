@@ -66,3 +66,26 @@ func (s *AdminService) List(c echo.Context, req *v1.ListAdminReq) (*v1.ListAdmin
 		List: list,
 	}, nil
 }
+
+func (s *AdminService) SetPassword(c echo.Context, req *v1.AdminSetPasswordReq) (*v1.AdminSetPasswordResp, error) {
+	_, err := repository.Admin.SetPassword(c, req.Username, req.OldPassword, req.NewPassword)
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.AdminSetPasswordResp{
+
+	}, nil
+}
+
+func (s *AdminService) ResetPassword(c echo.Context, req *v1.AdminResetPasswordReq) (*v1.AdminResetPasswordResp, error) {
+	user, err := repository.Admin.ResetPassword(c, req.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.AdminResetPasswordResp{
+		Password: user.Password,
+	}, nil
+}
+

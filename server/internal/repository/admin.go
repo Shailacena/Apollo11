@@ -94,3 +94,52 @@ func (r *AdminRepo) CheckToken(c echo.Context, token string) error {
 
 	return nil
 }
+
+
+func (r *AdminRepo) SetPassword(c echo.Context, username, password, newpassword string) (*model.SysUser, error) {
+	db := data.Instance()
+
+	var user model.SysUser
+	err := db.Where("username = ?", username).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("用户不存在")
+		}
+		return nil, err
+	}
+	if password != user.Password {
+		return nil, errors.New("密码错误")
+	}
+
+	user.Password = newpassword
+
+	err = db.Where("username = ?", username).Updates(model.SysUser{Password: user.Password}).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (r *AdminRepo) ResetPassword(c echo.Context, username string) (*model.SysUser, error) {
+	db := data.Instance()
+
+	var user model.SysUser
+	err := db.Where("username = ?", username).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("用户不存在")
+		}
+		return nil, err
+	}
+
+	user.Password = util.RandStringRunes(6)
+
+	err = db.Where("username = ?", username).Updates(model.SysUser{Password: user.Password}).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
