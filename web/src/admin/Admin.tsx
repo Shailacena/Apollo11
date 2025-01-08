@@ -1,7 +1,7 @@
 import { Space, Table, Button, Modal, Form, Input, message, Card, Divider } from 'antd';
 import type { FormProps, TableProps } from 'antd';
 import { useEffect, useState } from 'react';
-import { listAdmin, IAdmin, AdminRegisterReq, adminRegister } from '../api/api';
+import { IAdmin, AdminRegisterReq, useApis } from '../api/api';
 import TextArea from 'antd/es/input/TextArea';
 import axios from 'axios';
 
@@ -60,6 +60,7 @@ function Admin() {
   const [list, setList] = useState<DataType[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messageApi, _] = message.useMessage();
+  let { listAdmin, adminRegister } = useApis()
 
   useEffect(() => {
     fetchListAdmin();
@@ -103,9 +104,7 @@ function Admin() {
 
   const onFinish: FormProps<AdminRegisterReq>['onFinish'] = async (value) => {
     try {
-      console.log(value);
       let { data } = await adminRegister(value)
-      console.log(data)
       fetchListAdmin()
       success(data.password);
       setIsModalOpen(false);
@@ -123,7 +122,7 @@ function Admin() {
   return (
     <>
       <Card>
-        <Button  className='mr-10' type="primary" onClick={showModal}>新增管理员</Button>
+        <Button className='mr-10' type="primary" onClick={showModal}>新增管理员</Button>
         <Table<DataType> bordered columns={columns} dataSource={list} />
 
         <Modal title="新增管理员" footer={null} open={isModalOpen} onCancel={handleCancel} style={{ maxWidth: 480 }} destroyOnClose>

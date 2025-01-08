@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input, Flex, message } from 'antd';
+import { Button, Checkbox, Form, Input, Flex, message, FormProps } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../AppProvider';
 import { getRouteConfig } from './RouteConfigs';
 import axios from 'axios';
+import { PartnerLoginReq, useApis } from '../api/api';
 
 // const TAG = 'Partner Login';
 
@@ -14,6 +15,7 @@ const Login: React.FC = () => {
   let location = useLocation();
   let ctx = useAppContext();
   let from = location.state?.from?.pathname || '/';
+  let { partnerLogin } = useApis()
 
   const [messageApi, _] = message.useMessage();
 
@@ -25,17 +27,18 @@ const Login: React.FC = () => {
     }
   }, [ctx.auth]);
 
-  const onFinish = (value: any) => {
+  const onFinish: FormProps<PartnerLoginReq>['onFinish'] = async (value) => {
     try {
       value.id = value.id && Number(value.id)
-      ctx.auth.partnerSignin(value, () => {
+      const { data } = await partnerLogin(value)
+      ctx.auth.partnerSignin(data, () => {
         console.log('from: ', from);
-        if (value.remember) {
-          console.log('用户选择了记住我');
-          localStorage.setItem('login_id', value.id)
-        } else {
-          localStorage.removeItem('login_id')
-        }
+        // if (value.remember) {
+        //   console.log('用户选择了记住我');
+        //   localStorage.setItem('login_id', value.id)
+        // } else {
+        //   localStorage.removeItem('login_id')
+        // }
         setTimeout(() => {
           navigate(getRouteConfig()[0].path, { replace: true });
           // 送用户回去他们试图访问的页面

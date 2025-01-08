@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Card, Divider, Form, Input, message, Modal, Select, Space, Table } from 'antd';
 import type { FormProps, TableProps } from 'antd';
-import { createGoods, GoodsCreateReq, listGoods, listPartner } from '../api/api';
+import { GoodsCreateReq, useApis } from '../api/api';
 import axios from 'axios';
 import { useAppContext } from '../AppProvider';
 
@@ -141,6 +141,7 @@ function Goods() {
   const [isShowAddGoodsModal, setIsAddGoodsModalOpen] = useState(false);
   const [messageApi, _] = message.useMessage();
   const ctx = useAppContext();
+  let { listPartner, listGoods, createGoods } = useApis()
 
   const fetchListGoods = async () => {
     const { data } = await listGoods()

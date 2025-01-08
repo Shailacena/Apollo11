@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Modal, Form, Table, Input, Button, message, Space } from 'antd';
 import type { FormProps, TableProps } from 'antd';
-import { IMerchant, listMerchant, merchantRegister, MerchantRegisterReq } from '../api/api';
+import { IMerchant, MerchantRegisterReq, useApis } from '../api/api';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
@@ -74,6 +74,7 @@ function Merchant() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [list, setList] = useState<DataType[]>([])
   const [messageApi, contextHolder] = message.useMessage();
+  let { listMerchant, merchantRegister } = useApis()
 
   const showModal = () => {
     setIsModalOpen(true);

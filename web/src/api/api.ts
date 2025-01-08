@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { request } from './request';
+import { useAxios } from './AxiosProvider';
 
 interface IResponseBody<T> {
   success: boolean;
@@ -8,34 +9,14 @@ interface IResponseBody<T> {
   data: T;
 }
 
-function get(url: string): Promise<AxiosResponse> {
-  return request.get(url).then((res) => {
-    console.log(res)
-    return res
-  })
-}
-
-function post(url: string, data: any): Promise<AxiosResponse> {
-  return request.post(url, data).then((res) => {
-    console.log(res)
-    return res
-  })
-}
-
 export interface AdminLoginReq {
   username: string
   password: string
 }
 
-interface AdminLoginResp {
+export interface AdminLoginResp {
   token: string
   nickname: string
-}
-
-export function adminLogin(data: AdminLoginReq): Promise<IResponseBody<AdminLoginResp>>{
-  return post("/admin/login", data).then((res) => {
-    return res.data
-  })
 }
 
 export interface AdminRegisterReq {
@@ -50,12 +31,6 @@ interface AdminRegisterResp {
   password: string
 }
 
-export function adminRegister(data: AdminRegisterReq): Promise<IResponseBody<AdminRegisterResp>> {
-  return post("/admin/register", data).then((res) => {
-    return res.data
-  })
-}
-
 interface ListAdminResp {
   list: Array<IAdmin>
 }
@@ -68,28 +43,16 @@ export interface IAdmin {
   enable: number
 }
 
-export function listAdmin(): Promise<IResponseBody<ListAdminResp>> {
-  return get("/admin/list").then((res) => {
-    return res.data
-  })
-}
-
 interface ListRealNameAccountResp {
   list: Array<IRealNameAccount>
 }
 
 export interface IRealNameAccount {
   idNumber: string
-	name: string
+  name: string
   realNameCount: number
-	enable: number
-	remark: string
-}
-
-export function listRealNameAccount(): Promise<IResponseBody<ListRealNameAccountResp>> {
-  return get("/realNameAccount/list").then((res) => {
-    return res.data
-  })
+  enable: number
+  remark: string
 }
 
 interface ListJDAccountResp {
@@ -98,21 +61,15 @@ interface ListJDAccountResp {
 
 export interface IJDAccount {
   id: string
-	account: string
-	realNameStatus: number
-	totalOrderCount: number
-	todayOrderCount: number
-	totalSuccessOrderCount: number
-	loginStatus: number
-	enable: number
-	remark: number
-	createAt: number
-}
-
-export function listJDAccount(): Promise<IResponseBody<ListJDAccountResp>> {
-  return get("/jdAccount/list").then((res) => {
-    return res.data
-  })
+  account: string
+  realNameStatus: number
+  totalOrderCount: number
+  todayOrderCount: number
+  totalSuccessOrderCount: number
+  loginStatus: number
+  enable: number
+  remark: number
+  createAt: number
 }
 
 interface ListPartnerResp {
@@ -121,22 +78,15 @@ interface ListPartnerResp {
 
 export interface IPartner {
   id: number
-	name: string
-	creditAmount: number
-	dailyLimit: number
-	priority: number
-	superiorAgent: number
-	level: number
-	stockAmount: number
-	enable: number
-	remark: string
-}
-
-
-export function listPartner(): Promise<IResponseBody<ListPartnerResp>> {
-  return get("/partner/list").then((res) => {
-    return res.data
-  })
+  name: string
+  creditAmount: number
+  dailyLimit: number
+  priority: number
+  superiorAgent: number
+  level: number
+  stockAmount: number
+  enable: number
+  remark: string
 }
 
 export interface PartnerRegisterReq {
@@ -153,26 +103,14 @@ interface PartnerRegisterResp {
   password: string
 }
 
-export function partnerRegister(data: PartnerRegisterReq): Promise<IResponseBody<PartnerRegisterResp>> {
-  return post("/partner/register", data).then((res) => {
-    return res.data
-  })
-}
-
 export interface PartnerLoginReq {
   id: number
   password: string
 }
 
-interface PartnerLoginResp {
+export interface PartnerLoginResp {
   token: string
   name: string
-}
-
-export function partnerLogin(data: PartnerLoginReq): Promise<IResponseBody<PartnerLoginResp>> {
-  return post("/partner/login", data).then((res) => {
-    return res.data
-  })
 }
 
 interface ListPartnerBillResp {
@@ -181,17 +119,11 @@ interface ListPartnerBillResp {
 
 export interface IPartnerBill {
   partnerId: number
-	type: number
-	changeMoney: number
-	money: number
-	remark: string
-	createAt: number
-}
-
-export function listPartnerBill(): Promise<IResponseBody<ListPartnerBillResp>> {
-  return get("/partner/listBill").then((res) => {
-    return res.data
-  })
+  type: number
+  changeMoney: number
+  money: number
+  remark: string
+  createAt: number
 }
 
 interface ListGoodsResp {
@@ -200,41 +132,28 @@ interface ListGoodsResp {
 
 export interface IGoods {
   id: number
-	partnerId: number
-	rechargeType: number
-	skuId: string
-	brandId: string
-	price: number
-	realPrice: number
-	shopName: string
-	createAt: number
-}
-
-
-export function listGoods(): Promise<IResponseBody<ListGoodsResp>> {
-  return get("/goods/list").then((res) => {
-    return res.data
-  })
+  partnerId: number
+  rechargeType: number
+  skuId: string
+  brandId: string
+  price: number
+  realPrice: number
+  shopName: string
+  createAt: number
 }
 
 export interface GoodsCreateReq {
   partnerId: number
-	rechargeType: number
-	skuId: string
-	brandId: string
-	price: number
-	realPrice: number
-	shopName: string
+  rechargeType: number
+  skuId: string
+  brandId: string
+  price: number
+  realPrice: number
+  shopName: string
 }
 
 interface GoodsCreateResp {
-  
-}
 
-export function createGoods(data: GoodsCreateReq): Promise<IResponseBody<GoodsCreateResp>> {
-  return post("/goods/create", data).then((res) => {
-    return res.data
-  })
 }
 
 interface ListMerchantResp {
@@ -252,12 +171,6 @@ export interface IMerchant {
   remark: string
 }
 
-export function listMerchant(): Promise<IResponseBody<ListMerchantResp>> {
-  return get("/merchant/list").then((res) => {
-    return res.data
-  })
-}
-
 export interface MerchantRegisterReq {
   name: string
   remark?: string
@@ -268,26 +181,14 @@ interface MerchantRegisterResp {
   password: string
 }
 
-export function merchantRegister(data: MerchantRegisterReq): Promise<IResponseBody<MerchantRegisterResp>> {
-  return post("/merchant/register", data).then((res) => {
-    return res.data
-  })
-}
-
 export interface MerchantLoginReq {
   id: string
   password: string
 }
 
-interface MerchantLoginResp {
+export interface MerchantLoginResp {
   token: string
   name: string
-}
-
-export function merchantLogin(data: MerchantLoginReq): Promise<IResponseBody<MerchantLoginResp>> {
-  return post("/merchant/login", data).then((res) => {
-    return res.data.data
-  })
 }
 
 interface ListStatisticsResp {
@@ -296,17 +197,11 @@ interface ListStatisticsResp {
 
 export interface IStatistics {
   date: string
-	totalMoney: number
-	wxFee: number
-	wxManualFee: number
-	aliFee: number
-	aliManualFee: number
-}
-
-export function listStatisticsBill(): Promise<IResponseBody<ListStatisticsResp>> {
-  return get("/statistics/listBill").then((res) => {
-    return res.data
-  })
+  totalMoney: number
+  wxFee: number
+  wxManualFee: number
+  aliFee: number
+  aliManualFee: number
 }
 
 interface ListOrderResp {
@@ -315,15 +210,95 @@ interface ListOrderResp {
 
 export interface IOrder {
   date: string
-	totalMoney: number
-	wxFee: number
-	wxManualFee: number
-	aliFee: number
-	aliManualFee: number
+  totalMoney: number
+  wxFee: number
+  wxManualFee: number
+  aliFee: number
+  aliManualFee: number
 }
 
-export function listOrder(): Promise<IResponseBody<ListOrderResp>> {
-  return get("/order/list").then((res) => {
-    return res.data
-  })
+export function useApis() {
+  const ax = useAxios()
+  return {
+    adminLogin(data: AdminLoginReq): Promise<IResponseBody<AdminLoginResp>> {
+      return ax.post("/admin/login", data).then((res) => {
+        return res?.data
+      })
+    },
+    listAdmin(): Promise<IResponseBody<ListAdminResp>> {
+      return ax.get("/admin/list").then((res) => {
+        return res?.data
+      })
+    },
+    adminRegister(data: AdminRegisterReq): Promise<IResponseBody<AdminRegisterResp>> {
+      return ax.post("/admin/register", data).then((res) => {
+        return res?.data
+      })
+    },
+    listRealNameAccount(): Promise<IResponseBody<ListRealNameAccountResp>> {
+      return ax.get("/realNameAccount/list").then((res) => {
+        return res?.data
+      })
+    },
+    listJDAccount(): Promise<IResponseBody<ListJDAccountResp>> {
+      return ax.get("/jdAccount/list").then((res) => {
+        return res?.data
+      })
+    },
+    listPartner(): Promise<IResponseBody<ListPartnerResp>> {
+      return ax.get("/partner/list").then((res) => {
+        return res?.data
+      })
+    },
+    partnerRegister(data: PartnerRegisterReq): Promise<IResponseBody<PartnerRegisterResp>> {
+      return ax.post("/partner/register", data).then((res) => {
+        return res?.data
+      })
+    },
+    partnerLogin(data: PartnerLoginReq): Promise<IResponseBody<PartnerLoginResp>> {
+      return ax.post("/partner/login", data).then((res) => {
+        return res?.data
+      })
+    },
+    listPartnerBill(): Promise<IResponseBody<ListPartnerBillResp>> {
+      return ax.get("/partner/listBill").then((res) => {
+        return res?.data
+      })
+    },
+    listGoods(): Promise<IResponseBody<ListGoodsResp>> {
+      return ax.get("/goods/list").then((res) => {
+        return res?.data
+      })
+    },
+    createGoods(data: GoodsCreateReq): Promise<IResponseBody<GoodsCreateResp>> {
+      return ax.post("/goods/create", data).then((res) => {
+        return res?.data
+      })
+    },
+    listMerchant(): Promise<IResponseBody<ListMerchantResp>> {
+      return ax.get("/merchant/list").then((res) => {
+        return res?.data
+      })
+    },
+    merchantRegister(data: MerchantRegisterReq): Promise<IResponseBody<MerchantRegisterResp>> {
+      return ax.post("/merchant/register", data).then((res) => {
+        return res?.data
+      })
+    },
+    merchantLogin(data: MerchantLoginReq): Promise<IResponseBody<MerchantLoginResp>> {
+      return ax.post("/merchant/login", data).then((res) => {
+        return res?.data
+      })
+    },
+    listStatisticsBill(): Promise<IResponseBody<ListStatisticsResp>> {
+      return ax.get("/statistics/listBill").then((res) => {
+        return res?.data
+      })
+    },
+    listOrder(): Promise<IResponseBody<ListOrderResp>> {
+      return ax.get("/order/list").then((res) => {
+        return res?.data
+      })
+    },
+  }
 }

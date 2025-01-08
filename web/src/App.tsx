@@ -12,6 +12,7 @@ import { getRouteConfig as getRouteConfigMerchant } from './merchant/RouteConfig
 import { IRoute, routes } from './admin/routes'
 import dayjs from 'dayjs'
 import 'dayjs/locale/zh-cn';
+import { AxiosProvider } from './api/AxiosProvider'
 
 
 // import MainLayout from './MainLayout'
@@ -24,61 +25,64 @@ function App() {
     // </>
 
     <AppProvider>
-      <Routes>
-        <Route path="/admin/login" element={<Login />} />
-        <Route path="/partner/login" element={<LoginPartner />} />
-        <Route path="/merchant/login" element={<LoginMerchant />} />
-        <Route
-          path="/admin"
-          element={
-            <RequireAuth>
-              <MainLayout />
-            </RequireAuth>
-          }
-        >
-          {routes.map((r: IRoute) => {
-            let route = r?.children ? r.children.map((childRoute: IRoute) => (
-              <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<childRoute.component />} />
-            )) : <Route key={r.path} path={r.path} element={<r.component />} />
-            // console.log('App routes', route)
-            return route
-          })}
-        </Route>
+      <AxiosProvider>
 
-        <Route
-          path="/partner"
-          element={
-            <RequireAuthPartner>
-              <MainLayoutPartner />
-            </RequireAuthPartner>
-          }
-        >
-          {getRouteConfigPartner().map((r: IRoute) => {
-            let route = r?.children ? r.children.map((childRoute: IRoute) => (
-              <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<childRoute.component />} />
-            )) : <Route key={r.path} path={r.path} element={<r.component />} />
-            // console.log('App routes', route)
-            return route
-          })}
-        </Route>
+        <Routes>
+          <Route path="/admin/login" element={<Login />} />
+          <Route path="/partner/login" element={<LoginPartner />} />
+          <Route path="/merchant/login" element={<LoginMerchant />} />
+          <Route
+            path="/admin"
+            element={
+              <RequireAuth>
+                <MainLayout />
+              </RequireAuth>
+            }
+          >
+            {routes.map((r: IRoute) => {
+              let route = r?.children ? r.children.map((childRoute: IRoute) => (
+                <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<childRoute.component />} />
+              )) : <Route key={r.path} path={r.path} element={<r.component />} />
+              // console.log('App routes', route)
+              return route
+            })}
+          </Route>
 
-        <Route
-          path="/merchant"
-          element={
-            <RequireAuthMerchant>
-              <MainLayoutMerchant />
-            </RequireAuthMerchant>
-          }
-        >
-          {getRouteConfigMerchant().map((r: IRoute) => {
-            let route = r?.children ? r.children.map((childRoute: IRoute) => (
-              <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<childRoute.component />} />
-            )) : <Route key={r.path} path={r.path} element={<r.component />} />
-            // console.log('App routes', route)
-            return route
-          })}
-        </Route>
-      </Routes>
+          <Route
+            path="/partner"
+            element={
+              <RequireAuthPartner>
+                <MainLayoutPartner />
+              </RequireAuthPartner>
+            }
+          >
+            {getRouteConfigPartner().map((r: IRoute) => {
+              let route = r?.children ? r.children.map((childRoute: IRoute) => (
+                <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<childRoute.component />} />
+              )) : <Route key={r.path} path={r.path} element={<r.component />} />
+              // console.log('App routes', route)
+              return route
+            })}
+          </Route>
+
+          <Route
+            path="/merchant"
+            element={
+              <RequireAuthMerchant>
+                <MainLayoutMerchant />
+              </RequireAuthMerchant>
+            }
+          >
+            {getRouteConfigMerchant().map((r: IRoute) => {
+              let route = r?.children ? r.children.map((childRoute: IRoute) => (
+                <Route key={r.path + childRoute.path} path={r.path + childRoute.path} element={<childRoute.component />} />
+              )) : <Route key={r.path} path={r.path} element={<r.component />} />
+              // console.log('App routes', route)
+              return route
+            })}
+          </Route>
+        </Routes>
+      </AxiosProvider>
     </AppProvider>
   )
 }

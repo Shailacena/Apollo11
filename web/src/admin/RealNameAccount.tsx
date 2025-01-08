@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Modal, Form, Table, Input, Button, Card, Divider } from 'antd';
 import type { TableProps } from 'antd';
-import { listRealNameAccount } from '../api/api';
+import { useApis } from '../api/api';
 
 const { TextArea } = Input;
 
@@ -44,6 +44,7 @@ const columns: TableProps<DataType>['columns'] = [
 function RealNameAccount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [list, setList] = useState<DataType[]>([])
+  let { listRealNameAccount } = useApis()
 
   const showModal = () => {
     setIsModalOpen(true);

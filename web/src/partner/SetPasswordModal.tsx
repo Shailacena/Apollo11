@@ -1,7 +1,7 @@
 import { Button, Divider, Form, FormProps, Input, message, Modal } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { adminRegister, AdminRegisterReq } from "../api/api";
+import { AdminRegisterReq, PartnerRegisterReq, useApis } from "../api/api";
 
 type FieldType = {
   oldpassowrd?: string;
@@ -12,6 +12,7 @@ function SetPasswordModal(props: any) {
   console.log(props)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [messageApi, _] = message.useMessage();
+  let { partnerRegister } = useApis()
 
   useEffect(() => {
     setIsModalOpen(props.isOpen);
@@ -32,13 +33,13 @@ function SetPasswordModal(props: any) {
     });
   };
 
-  const onFinish: FormProps<AdminRegisterReq>['onFinish'] = async (value) => {
+  const onFinish: FormProps<PartnerRegisterReq>['onFinish'] = async (value) => {
     try {
       console.log(value);
-      let resp = await adminRegister(value)
+      let resp = await partnerRegister(value)
       console.log(resp)
       if (resp.code == 0) {
-        success(resp.data.username);
+        success(resp.data.name);
         setIsModalOpen(false);
       }
     } catch (e) {

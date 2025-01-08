@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card, Table } from 'antd';
 import type { TableProps } from 'antd';
-import { listOrder } from '../api/api';
+import { useApis } from '../api/api';
 
 
 interface DataType {
@@ -83,6 +83,7 @@ const columns: TableProps<DataType>['columns'] = [
 function TradingRecord() {
 
   const [list, setList] = useState<DataType[]>([])
+  let { listOrder } = useApis()
 
   const fetchListOrder = async () => {
     const { data } = await listOrder()

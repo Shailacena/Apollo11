@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Modal, Form, Table, Select, Input, Button, Card, Divider } from 'antd';
 import type { TableProps } from 'antd';
-import { listJDAccount } from '../api/api';
+import { useApis } from '../api/api';
 
 const { TextArea } = Input;
 
@@ -72,6 +72,7 @@ const columns: TableProps<DataType>['columns'] = [
 function JDAccount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [list, setList] = useState<DataType[]>([])
+  let { listJDAccount } = useApis()
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -140,8 +141,8 @@ function JDAccount() {
             </Form.Item>
 
             <Form.Item>
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems:'center'}}>
-                <Button size="large" block type="primary" htmlType="submit" style={{ width: 100}}>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Button size="large" block type="primary" htmlType="submit" style={{ width: 100 }}>
                   提交
                 </Button>
               </div>

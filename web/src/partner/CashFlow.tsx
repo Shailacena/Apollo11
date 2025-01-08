@@ -5,7 +5,7 @@ import CurrentLocation from '../components/CurrentLocation';
 import { getRouteConfig } from './RouteConfigs';
 import { getDataFormat } from '../utils/Tool';
 import { useEffect, useState } from 'react';
-import { listPartnerBill } from '../api/api';
+import { useApis } from '../api/api';
 
 interface DataType {
   key: string;
@@ -31,6 +31,7 @@ const columns: TableProps<DataType>['columns'] = [
 
 function CashFlow() {
   const [list, setList] = useState<DataType[]>([])
+  let { listPartnerBill } = useApis()
 
   const fetchListPartnerBill = async () => {
     const { data } = await listPartnerBill()

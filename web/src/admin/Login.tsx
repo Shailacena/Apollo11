@@ -3,7 +3,7 @@ import bg from '../assets/bg.jpg';
 import { useAppContext } from '../AppProvider';
 import { useLocation, useNavigate } from 'react-router-dom';
 import type { FormProps } from 'antd';
-import { AdminLoginReq } from '../api/api';
+import { AdminLoginReq, useApis } from '../api/api';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { routes } from './routes';
@@ -13,6 +13,7 @@ function Login() {
   let location = useLocation();
   let ctx = useAppContext();
   let from = location.state?.from?.pathname || '/';
+  let { adminLogin } = useApis()
 
   const [messageApi, contextHolder] = message.useMessage();
 
@@ -27,7 +28,8 @@ function Login() {
 
   const onFinish: FormProps<AdminLoginReq>['onFinish'] = async (value) => {
     try {
-      ctx.auth.adminSignin(value, () => {
+      const { data } = await adminLogin(value)
+      ctx.auth.adminSignin(data, () => {
         console.log('from: ', from);
         setTimeout(() => {
           navigate('/admin/home', { replace: true });
@@ -47,7 +49,7 @@ function Login() {
 
   return (
     <>
-    {contextHolder}
+      {contextHolder}
       <Flex style={{ height: "100%", backgroundImage: `url(${bg})`, backgroundSize: "cover" }} >
         <Card className="login" title={<h2>管理后台</h2>}>
           {/* <h1>管理后台</h1> */}

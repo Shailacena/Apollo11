@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Modal, Space, Form, Table, Input, Button, message, Card } from 'antd';
 import type { FormProps, TableProps } from 'antd';
-import { IPartner, listPartner, partnerRegister, PartnerRegisterReq } from '../api/api';
+import { IPartner, PartnerRegisterReq, useApis } from '../api/api';
 import axios from 'axios';
 import { useAppContext } from '../AppProvider';
 
@@ -74,6 +74,7 @@ function Partner() {
   const [list, setList] = useState<DataType[]>([])
   const [messageApi, contextHolder] = message.useMessage();
   let ctx = useAppContext();
+  let { partnerRegister, listPartner } = useApis()
 
   const showModal = () => {
     setIsModalOpen(true);

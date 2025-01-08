@@ -6,7 +6,7 @@ import UploadDialog from '../components/UploadDialog';
 import CurrentLocation from '../components/CurrentLocation';
 import { getRouteConfig } from './RouteConfigs';
 import { useEffect, useState } from 'react';
-import { listGoods } from '../api/api';
+import { useApis } from '../api/api';
 
 interface DataType {
   key: string;
@@ -165,6 +165,7 @@ const SearchForm = () => {
 
 function Goods() {
   const [list, setList] = useState<DataType[]>([])
+  let { listGoods } = useApis()
 
   useEffect(() => {
     fetchListGoods()

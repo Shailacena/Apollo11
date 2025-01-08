@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import { adminLogin, AdminLoginReq, IPartner, merchantLogin, MerchantLoginReq, partnerLogin, PartnerLoginReq } from "./api/api";
+import { AdminLoginResp, IPartner, MerchantLoginResp, PartnerLoginResp } from "./api/api";
 import { getExpirationDate } from "./utils/Tool";
 
 const TAG = 'AppProvider';
@@ -15,13 +15,13 @@ interface AuthContextType {
     token: any;
     name: any;
 
-    adminSignin: (value: AdminLoginReq, callback: Function) => void;
+    adminSignin: (value: AdminLoginResp, callback: Function) => void;
     adminSignout: (callback: Function) => void;
 
-    partnerSignin: (value: PartnerLoginReq, callback: Function) => void;
+    partnerSignin: (value: PartnerLoginResp, callback: Function) => void;
     partnerSignout: (callback: Function) => void;
 
-    merchantSignin: (value: MerchantLoginReq, callback: Function) => void;
+    merchantSignin: (value: MerchantLoginResp, callback: Function) => void;
     merchantSignout: (callback: Function) => void;
   }
 
@@ -37,18 +37,15 @@ export function useAppContext() {
 function AppProvider({ children }: { children: React.ReactNode }) {
   let [token, setToken] = React.useState<any>(null);
   let [name, setName] = React.useState<any>(null);
-  let [partnerList, setPartnerList] = React.useState<any>(null);
+  let [partnerList] = React.useState<any>(null);
 
-  let [cookies, setCookie, removeCookie] = useCookies(['token', 'name']);
-
-  console.log(setPartnerList, cookies);
+  let [cookie, setCookie, removeCookie] = useCookies(['token', 'name']);
 
   useEffect(() => {
     console.log('icccc =====> AppProvider useEffect')
   }, []);
 
-  let adminSignin = async (value: AdminLoginReq, callback: Function) => {
-    const {data} = await adminLogin(value)
+  let adminSignin = async (data: AdminLoginResp, callback: Function) => {
     console.log(data);
     setToken(data.token)
     setName(data.nickname);
@@ -66,8 +63,8 @@ function AppProvider({ children }: { children: React.ReactNode }) {
     callback();
   };
 
-  let partnerSignin = async (value: PartnerLoginReq, callback: Function) => {
-    const {data} = await partnerLogin(value)
+  let partnerSignin = async (data: PartnerLoginResp, callback: Function) => {
+    // const { data } = await partnerLogin(value)
     console.log(data);
     setToken(data.token)
     setName(data.name);
@@ -84,8 +81,8 @@ function AppProvider({ children }: { children: React.ReactNode }) {
     callback();
   };
 
-  let merchantSignin = async (value: MerchantLoginReq, callback: Function) => {
-    const {data} = await merchantLogin(value)
+  let merchantSignin = async (data: MerchantLoginResp, callback: Function) => {
+    // const { data } = await merchantLogin(value)
     console.log(data);
     setToken(data.token)
     setName(data.name);
@@ -104,9 +101,9 @@ function AppProvider({ children }: { children: React.ReactNode }) {
 
   // let value = { token, name, adminSignin, adminSignout, partnerSignin, partnerSignout, merchantSignin, merchantSignout };
   let value = {
-      auth: { token, name, adminSignin, adminSignout, partnerSignin, partnerSignout, merchantSignin, merchantSignout },
-      partnerList,
-    }
+    auth: { token, name, adminSignin, adminSignout, partnerSignin, partnerSignout, merchantSignin, merchantSignout },
+    partnerList,
+  }
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 

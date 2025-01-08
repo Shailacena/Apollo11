@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card, Table } from 'antd';
 import type { TableProps } from 'antd';
-import { listPartnerBill } from '../api/api';
+import { useApis } from '../api/api';
 
 interface DataType {
   key: string;
@@ -40,6 +40,7 @@ const columns: TableProps<DataType>['columns'] = [
 
 function PartnerBill() {
   const [list, setList] = useState<DataType[]>([])
+  let { listPartnerBill } = useApis()
 
   const fetchListPartnerBill = async () => {
     const { data } = await listPartnerBill()

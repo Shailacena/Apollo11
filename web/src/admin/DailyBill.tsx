@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Card, Table } from 'antd';
 import type { TableProps } from 'antd';
-import { listStatisticsBill } from '../api/api';
+import { useApis } from '../api/api';
 
 
 interface DataType {
@@ -54,8 +54,8 @@ const columns: TableProps<DataType>['columns'] = [
 ];
 
 function DailyBill() {
-
   const [list, setList] = useState<DataType[]>([])
+  let { listStatisticsBill } = useApis()
 
   const fetchListStatisticsBill = async () => {
     const { data } = await listStatisticsBill()

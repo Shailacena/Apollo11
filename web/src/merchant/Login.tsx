@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
 import { LockOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input, Flex, message } from 'antd';
+import { Button, Checkbox, Form, Input, Flex, message, FormProps } from 'antd';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {  useAppContext } from '../AppProvider';
+import { useAppContext } from '../AppProvider';
 import { getRouteConfig } from './RouteConfigs';
 import axios from 'axios';
+import { MerchantLoginReq, useApis } from '../api/api';
 
 // const TAG = 'Merchant Login';
 
@@ -14,6 +15,7 @@ const Login: React.FC = () => {
   let location = useLocation();
   let ctx = useAppContext();
   let from = location.state?.from?.pathname || '/';
+  let { merchantLogin } = useApis()
 
   const [messageApi, _] = message.useMessage();
 
@@ -24,12 +26,13 @@ const Login: React.FC = () => {
     }
   }, [ctx.auth]);
 
-  const onFinish = (value: any) => {
+  const onFinish: FormProps<MerchantLoginReq>['onFinish'] = async (value) => {
     console.log('Received values of form: ', value);
     message.success('登陆成功!');
 
     try {
-      ctx.auth.merchantSignin(value, () => {
+      const { data } = await merchantLogin(value)
+      ctx.auth.merchantSignin(data, () => {
         console.log('from: ', from);
         setTimeout(() => {
           navigate(getRouteConfig()[0].path, { replace: true });
