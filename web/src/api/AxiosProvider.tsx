@@ -16,13 +16,14 @@ export function AxiosProvider({ children }: { children: React.ReactNode }) {
   let app = useAppContext()
   let headers: any = {}
 
-  if (app?.auth?.token) {
-    headers["Token"] = app.auth.token
+  console.log("app.cookie", app.cookie.token);
+
+  if (app?.cookie?.token) {
+    headers["Token"] = app.cookie.token
   }
 
   let get = (url: string): Promise<AxiosResponse | void> => {
     return request.get(url, { headers }).then((res) => {
-      console.log(res)
       return res
     }).catch((e) => {
       if (e.status == 401) {
@@ -33,7 +34,6 @@ export function AxiosProvider({ children }: { children: React.ReactNode }) {
 
   let post = (url: string, data: any): Promise<AxiosResponse | void> => {
     return request.post(url, data, { headers }).then((res) => {
-      console.log(res)
       return res
     }).catch((e: AxiosError) => {
       if (e.status == 401) {

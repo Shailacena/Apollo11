@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Divider, Form, FormProps, Input, message, Modal } from 'antd';
 import { AdminUpdateReq, useApis } from '../../api/api';
 import axios from 'axios';

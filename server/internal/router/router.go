@@ -25,8 +25,8 @@ func Init(e *echo.Echo) {
 		adminGroup.POST("/enable", handler.Admin.Enable)
 	}
 
-	partnerTokenChecker := middleware.GenAuthHandler(repository.Partner)
-	partnerGroup := apiGroup.Group("/partner", partnerTokenChecker())
+	// partnerTokenChecker := middleware.GenAuthHandler(repository.Partner)
+	partnerGroup := apiGroup.Group("/partner", adminTokenChecker())
 	partnerGroupWithoutAuth := apiGroup.Group("/partner")
 	{
 		partnerGroupWithoutAuth.POST("/login", handler.Partner.Login)
@@ -35,8 +35,8 @@ func Init(e *echo.Echo) {
 		partnerGroup.GET("/listBill", handler.Partner.ListBill)
 	}
 
-	merchantTokenChecker := middleware.GenAuthHandler(repository.Merchant)
-	merchantGroup := apiGroup.Group("/merchant", merchantTokenChecker())
+	// merchantTokenChecker := middleware.GenAuthHandler(repository.Merchant)
+	merchantGroup := apiGroup.Group("/merchant", adminTokenChecker())
 	merchantGroupWithoutAuth := apiGroup.Group("/merchant")
 	{
 		merchantGroupWithoutAuth.POST("/login", handler.Merchant.Login)

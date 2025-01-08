@@ -24,6 +24,7 @@ interface AuthContextType {
     merchantSignin: (value: MerchantLoginResp, callback: Function) => void;
     merchantSignout: (callback: Function) => void;
   }
+  cookie: any;
 
   partnerList: IPartner[];
 }
@@ -64,7 +65,6 @@ function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   let partnerSignin = async (data: PartnerLoginResp, callback: Function) => {
-    // const { data } = await partnerLogin(value)
     console.log(data);
     setToken(data.token)
     setName(data.name);
@@ -82,7 +82,6 @@ function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   let merchantSignin = async (data: MerchantLoginResp, callback: Function) => {
-    // const { data } = await merchantLogin(value)
     console.log(data);
     setToken(data.token)
     setName(data.name);
@@ -99,9 +98,9 @@ function AppProvider({ children }: { children: React.ReactNode }) {
     callback();
   };
 
-  // let value = { token, name, adminSignin, adminSignout, partnerSignin, partnerSignout, merchantSignin, merchantSignout };
   let value = {
     auth: { token, name, adminSignin, adminSignout, partnerSignin, partnerSignout, merchantSignin, merchantSignout },
+    cookie,
     partnerList,
   }
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

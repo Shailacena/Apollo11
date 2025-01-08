@@ -1,7 +1,7 @@
 import { Button, Divider, Form, FormProps, Input, message, Modal } from "antd";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { AdminRegisterReq, PartnerRegisterReq, useApis } from "../api/api";
+import { PartnerRegisterReq, useApis } from "../api/api";
 
 type FieldType = {
   oldpassowrd?: string;
