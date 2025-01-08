@@ -19,13 +19,11 @@ type FieldType = {
 };
 
 const AdminUpdateModal = (params: AdminUpdateDataType) => {
-  console.log('icccccccccccc', params)
   const [isModalOpen, setIsModalOpen] = useState(params.isUpdateModalOpen);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [messageApi, _] = message.useMessage();
   const [componentDisabled, setComponentDisabled] = useState<boolean>(false);
   const formRef = useRef<any>()
-  console.log('icccccccccccc componentDisabled', componentDisabled)
   if (isModalOpen != params.isUpdateModalOpen) {
     setIsModalOpen(params.isUpdateModalOpen)
   }
@@ -44,7 +42,6 @@ const AdminUpdateModal = (params: AdminUpdateDataType) => {
     setComponentDisabled(true)
     setConfirmLoading(true)
     try {
-      console.log('iccccccccccccccccccc', value)
       let { data } = await adminUpdate(value)
       console.log(data)
       if (params.callback) {

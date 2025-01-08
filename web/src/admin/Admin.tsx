@@ -61,7 +61,6 @@ function Admin() {
           <Button type="primary" size='small' danger={d.enable === 1} onClick={() => enableAdmin(d.username, d.enable)}>{d.enable === 1 ? '冻结' : '启用'}</Button>
           <Button type="primary" size='small' onClick={() => {
             setChooseData(d)
-            console.log('iccccccccccccc i come here')
             setIsUpdateModalOpen(true)
           }}>修改</Button>
           <Popconfirm title="警告" description="请确认是否删除该管理员"
@@ -118,7 +117,7 @@ function Admin() {
   const enableSuccess = (enable: number) => {
     if (enable === 1) {
       Modal.success({
-        content: `已删除`,
+        content: `已启用`,
       });
     } else if (enable === 2) {
       Modal.success({
@@ -134,7 +133,6 @@ function Admin() {
 
   const onFinish: FormProps<AdminRegisterReq>['onFinish'] = async (value) => {
     try {
-      console.log(value);
       let { data } = await adminRegister(value)
       console.log(data)
       fetchListAdmin()
@@ -188,12 +186,14 @@ function Admin() {
 
   const enableAdmin = async (username: string, enable: number) => {
     try {
-      console.log(username);
-      if (enable === 1) {
+      console.log(username, enable);
+      if (enable == 1) {
+        console.log(enable);
         enable = 2
       } else {
         enable = 1
       }
+      console.log(enable)
       let { data } = await adminEnable({ username, enable })
       console.log(data)
       fetchListAdmin()

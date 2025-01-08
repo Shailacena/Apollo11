@@ -64,7 +64,7 @@ func (r *AdminRepo) List(c echo.Context) ([]*model.SysUser, error) {
 	db := data.Instance()
 
 	var users []*model.SysUser
-	err := db.Where("enable = ?", model.Enabled).Find(&users).Error
+	err := db.Limit(20).Find(&users).Error
 	if err != nil {
 		return nil, err
 	}
@@ -173,8 +173,9 @@ func (r *AdminRepo) Update(c echo.Context, username, nickname, remark string) (*
 		}
 		return nil, err
 	}
-
-	err = db.Where("username = ?", username).Updates(model.SysUser{Nickname: nickname, Remark: remark}).Error
+	user.Nickname = nickname
+	user.Remark = remark
+	err = db.Where("username = ?", username).Updates(model.SysUser{Nickname: user.Nickname, Remark: user.Remark}).Error
 	if err != nil {
 		return nil, err
 	}
@@ -194,6 +195,7 @@ func (r *AdminRepo) Enable(c echo.Context, username string, enable int) (*model.
 		return nil, err
 	}
 
+	user.Enable = enable
 	err = db.Where("username = ?", username).Updates(model.SysUser{Enable: user.Enable}).Error
 	if err != nil {
 		return nil, err

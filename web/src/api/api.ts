@@ -128,6 +128,7 @@ interface AdminEnableResp {
 }
 
 export function adminEnable(data: AdminEnableReq): Promise<IResponseBody<AdminEnableResp>> {
+  console.log(data)
   return post("/admin/enable", data).then((res) => {
     return res.data
   })

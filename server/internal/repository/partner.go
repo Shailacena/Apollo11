@@ -58,7 +58,7 @@ func (r *PartnerRepo) List(c echo.Context) ([]*model.Partner, error) {
 	db := data.Instance()
 
 	var partners []*model.Partner
-	err := db.Where("enable = ?", model.Enabled).Find(&partners).Error
+	err := db.Limit(20).Find(&partners).Error
 	if err != nil {
 		return nil, err
 	}
