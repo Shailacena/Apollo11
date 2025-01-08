@@ -72,7 +72,7 @@ function MainLayout() {
   const [stateOpenKeys, setStateOpenKeys] = useState([routes[0].path, routes[0].path]);
 
   const onOpenChange: MenuProps['onOpenChange'] = (openKeys) => {
-    // console.log('icccc onOpenChange', openKeys)
+    console.log('icccc onOpenChange', openKeys)
     const currentOpenKey = openKeys.find((key) => stateOpenKeys.indexOf(key) === -1);
     // console.log('icccc onOpenChange', currentOpenKey)
     // open
@@ -88,11 +88,11 @@ function MainLayout() {
           return levelKeys[key] <= levelKeys[currentOpenKey]
         }))
       setStateOpenKeys(
-        openKeys
+        [openKeys
           // remove repeat key
           .filter((_, index) => index !== repeatIndex)
           // remove current level all child
-          .filter((key) => levelKeys[key] <= levelKeys[currentOpenKey]),
+          .filter((key) => levelKeys[key] <= levelKeys[currentOpenKey]).pop() || openKeys[0]],
       );
     } else {
       // close

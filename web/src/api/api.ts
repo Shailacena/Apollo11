@@ -1,5 +1,3 @@
-import { AxiosResponse } from 'axios';
-import { request } from './request';
 import { useAxios } from './AxiosProvider';
 
 interface IResponseBody<T> {
@@ -40,6 +38,41 @@ export interface IAdmin {
   username: string
   nickname: string
   remark: string
+  enable: number
+}
+
+export interface AdminResetPasswordReq {
+  username: string
+}
+
+interface AdminResetPasswordResp {
+  password: string
+}
+
+export interface AdminDeleteReq {
+  username: string
+}
+
+interface AdminDeleteResp {
+
+}
+
+export interface AdminUpdateReq {
+  username: string
+  nickname: string
+  remark: string
+}
+
+interface AdminUpdateResp {
+
+}
+
+export interface AdminEnableReq {
+  username: string
+  enable: number
+}
+
+interface AdminEnableResp {
   enable: number
 }
 
@@ -225,13 +258,33 @@ export function useApis() {
         return res?.data
       })
     },
+    adminRegister(data: AdminRegisterReq): Promise<IResponseBody<AdminRegisterResp>> {
+      return ax.post("/admin/register", data).then((res) => {
+        return res?.data
+      })
+    },
+    adminResetPassword(data: AdminResetPasswordReq): Promise<IResponseBody<AdminResetPasswordResp>> {
+      return ax.post("/admin/resetPassword", data).then((res) => {
+        return res?.data
+      })
+    },
     listAdmin(): Promise<IResponseBody<ListAdminResp>> {
       return ax.get("/admin/list").then((res) => {
         return res?.data
       })
     },
-    adminRegister(data: AdminRegisterReq): Promise<IResponseBody<AdminRegisterResp>> {
-      return ax.post("/admin/register", data).then((res) => {
+    adminDelete(data: AdminDeleteReq): Promise<IResponseBody<AdminDeleteResp>> {
+      return ax.post("/admin/delete", data).then((res) => {
+        return res?.data
+      })
+    },
+    adminUpdate(data: AdminUpdateReq): Promise<IResponseBody<AdminUpdateResp>> {
+      return ax.post("/admin/update", data).then((res) => {
+        return res?.data
+      })
+    },
+    adminEnable(data: AdminEnableReq): Promise<IResponseBody<AdminEnableResp>> {
+      return ax.post("/admin/enable", data).then((res) => {
         return res?.data
       })
     },

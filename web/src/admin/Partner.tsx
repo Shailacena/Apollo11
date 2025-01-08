@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Modal, Space, Form, Table, Input, Button, message, Card } from 'antd';
+import { Modal, Space, Form, Table, Input, Button, message, Card, Divider } from 'antd';
 import type { FormProps, TableProps } from 'antd';
 import { IPartner, PartnerRegisterReq, useApis } from '../api/api';
 import axios from 'axios';
@@ -62,8 +62,11 @@ const columns: TableProps<DataType>['columns'] = [
     key: 'action',
     render: () => (
       <Space size="middle">
+        <Button disabled type="primary" size='small'>开启派单</Button>
         <Button disabled type="primary" size='small'>修改</Button>
         <Button disabled type="primary" size='small' danger >删除</Button>
+        <Button disabled type="primary" size='small'>授信额度</Button>
+        <Button disabled type="primary" size='small'>重置密码</Button>
       </Space>
     ),
   },
@@ -134,10 +137,11 @@ function Partner() {
     <>
       {contextHolder}
       <Card>
-        <div className='mr-10'>
+        <div>
           <Button type="primary" onClick={showModal}>新增</Button>
         </div>
-        <Table<DataType> bordered columns={columns} dataSource={list} />
+        <Divider />
+        <Table<DataType> bordered columns={columns} dataSource={list} scroll={{ x: 'max-content' }} />
 
         <Modal title="新增" footer={null} onCancel={handleCancel} open={isModalOpen}>
           <Form
