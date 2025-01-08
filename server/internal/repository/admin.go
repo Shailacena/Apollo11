@@ -95,7 +95,6 @@ func (r *AdminRepo) CheckToken(c echo.Context, token string) error {
 	return nil
 }
 
-
 func (r *AdminRepo) SetPassword(c echo.Context, username, password, newpassword string) (*model.SysUser, error) {
 	db := data.Instance()
 
@@ -143,3 +142,62 @@ func (r *AdminRepo) ResetPassword(c echo.Context, username string) (*model.SysUs
 	return &user, nil
 }
 
+func (r *AdminRepo) Delete(c echo.Context, username string) (*model.SysUser, error) {
+	db := data.Instance()
+
+	var user model.SysUser
+	err := db.Where("username = ?", username).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("用户不存在")
+		}
+		return nil, err
+	}
+
+	err = db.Where("username = ?", username).Delete(&user).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (r *AdminRepo) Update(c echo.Context, username, nickname, remark string) (*model.SysUser, error) {
+	db := data.Instance()
+
+	var user model.SysUser
+	err := db.Where("username = ?", username).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("用户不存在")
+		}
+		return nil, err
+	}
+
+	err = db.Where("username = ?", username).Updates(model.SysUser{Nickname: nickname, Remark: remark}).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (r *AdminRepo) Enable(c echo.Context, username string, enable int) (*model.SysUser, error) {
+	db := data.Instance()
+
+	var user model.SysUser
+	err := db.Where("username = ?", username).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("用户不存在")
+		}
+		return nil, err
+	}
+
+	err = db.Where("username = ?", username).Updates(model.SysUser{Enable: user.Enable}).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}

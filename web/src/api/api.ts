@@ -88,6 +88,51 @@ export function adminResetPassword(data: AdminResetPasswordReq): Promise<IRespon
   })
 }
 
+export interface AdminDeleteReq {
+  username: string
+}
+
+interface AdminDeleteResp {
+
+}
+
+export function adminDelete(data: AdminDeleteReq): Promise<IResponseBody<AdminDeleteResp>> {
+  return post("/admin/delete", data).then((res) => {
+    return res.data
+  })
+}
+
+export interface AdminUpdateReq {
+  username: string
+  nickname: string
+  remark: string
+}
+
+interface AdminUpdateResp {
+
+}
+
+export function adminUpdate(data: AdminUpdateReq): Promise<IResponseBody<AdminUpdateResp>> {
+  return post("/admin/update", data).then((res) => {
+    return res.data
+  })
+}
+
+export interface AdminEnableReq {
+  username: string
+  enable: number
+}
+
+interface AdminEnableResp {
+  enable: number
+}
+
+export function adminEnable(data: AdminEnableReq): Promise<IResponseBody<AdminEnableResp>> {
+  return post("/admin/enable", data).then((res) => {
+    return res.data
+  })
+}
+
 interface ListRealNameAccountResp {
   list: Array<IRealNameAccount>
 }

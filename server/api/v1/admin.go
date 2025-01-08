@@ -34,19 +34,18 @@ type ListAdminResp struct {
 
 // 密码修改
 type AdminSetPasswordReq struct {
-	Username string `json:"username" binding:"required"`
+	Username    string `json:"username" binding:"required"`
 	OldPassword string `json:"oldpassword" binding:"required"`
 	NewPassword string `json:"newpassword" binding:"required"`
 }
 
 // 密码修改
 type AdminSetPasswordResp struct {
-
 }
 
 // 密码重置
 type AdminResetPasswordReq struct {
-	Username string `json:"username" binding:"required"`
+	Username    string `json:"username" binding:"required"`
 	OldPassword string `json:"oldpassword" binding:"required"`
 	NewPassword string `json:"newpassword" binding:"required"`
 }
@@ -54,6 +53,37 @@ type AdminResetPasswordReq struct {
 // 密码重置
 type AdminResetPasswordResp struct {
 	Password string `json:"password"`
+}
+
+// 删除管理员
+type AdminDeleteReq struct {
+	Username string `json:"username" binding:"required"`
+}
+
+// 删除管理员
+type AdminDeleteResp struct {
+}
+
+// 更新信息
+type AdminUpdateReq struct {
+	Username string `json:"username" binding:"required"`
+	Nickname string `json:"nickname"`
+	Remark   string `json:"remark"`
+}
+
+// 更新信息
+type AdminUpdateResp struct {
+}
+
+// 启用或禁用
+type AdminEnableReq struct {
+	Username string `json:"username" binding:"required"`
+	Enable   int    `json:"enable"`
+}
+
+// 更新信息
+type AdminEnableResp struct {
+	Enable int `json:"enable"`
 }
 
 type Admin struct {

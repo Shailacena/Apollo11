@@ -17,6 +17,9 @@ func Init(e *echo.Echo) {
 		adminGroup.GET("/list", handler.Admin.List)
 		adminGroup.GET("/setPassword", handler.Admin.SetPassword)
 		adminGroup.POST("/resetPassword", handler.Admin.ResetPassword)
+		adminGroup.POST("/delete", handler.Admin.Delete)
+		adminGroup.POST("/update", handler.Admin.Update)
+		adminGroup.POST("/enable", handler.Admin.Enable)
 	}
 
 	partnerGroup := apiGroup.Group("/partner")

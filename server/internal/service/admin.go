@@ -4,6 +4,7 @@ import (
 	v1 "apollo/server/api/v1"
 	"apollo/server/internal/model"
 	"apollo/server/internal/repository"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
@@ -68,14 +69,17 @@ func (s *AdminService) List(c echo.Context, req *v1.ListAdminReq) (*v1.ListAdmin
 }
 
 func (s *AdminService) SetPassword(c echo.Context, req *v1.AdminSetPasswordReq) (*v1.AdminSetPasswordResp, error) {
+
+	if len(req.NewPassword) < 6 {
+		return nil, echo.NewHTTPError(http.StatusBadRequest, "密码不符")
+	}
+
 	_, err := repository.Admin.SetPassword(c, req.Username, req.OldPassword, req.NewPassword)
 	if err != nil {
 		return nil, err
 	}
 
-	return &v1.AdminSetPasswordResp{
-
-	}, nil
+	return &v1.AdminSetPasswordResp{}, nil
 }
 
 func (s *AdminService) ResetPassword(c echo.Context, req *v1.AdminResetPasswordReq) (*v1.AdminResetPasswordResp, error) {
@@ -89,3 +93,31 @@ func (s *AdminService) ResetPassword(c echo.Context, req *v1.AdminResetPasswordR
 	}, nil
 }
 
+func (s *AdminService) Delete(c echo.Context, req *v1.AdminDeleteReq) (*v1.AdminDeleteResp, error) {
+	_, err := repository.Admin.Delete(c, req.Username)
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.AdminDeleteResp{}, nil
+}
+
+func (s *AdminService) Update(c echo.Context, req *v1.AdminUpdateReq) (*v1.AdminUpdateResp, error) {
+	_, err := repository.Admin.Update(c, req.Username, req.Nickname, req.Remark)
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.AdminUpdateResp{}, nil
+}
+
+func (s *AdminService) Enable(c echo.Context, req *v1.AdminEnableReq) (*v1.AdminEnableResp, error) {
+	user, err := repository.Admin.Enable(c, req.Username, req.Enable)
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.AdminEnableResp{
+		Enable: user.Enable,
+	}, nil
+}
