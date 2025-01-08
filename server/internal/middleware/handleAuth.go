@@ -1,24 +1,29 @@
 package middleware
 
 import (
-	"apollo/server/internal/repository"
 	"apollo/server/pkg/util"
 
 	"github.com/labstack/echo/v4"
 )
 
-func HandleAuth() echo.MiddlewareFunc {
-	return func(next echo.HandlerFunc) echo.HandlerFunc {
-		return func(c echo.Context) error {
-			token := GetToken(c)
+type TokenChecker interface {
+	CheckToken(echo.Context, string) error
+}
 
-			// 校验token
-			err := repository.Admin.CheckToken(c, token)
-			if err != nil {
-				return err
+func GenAuthHandler(checker TokenChecker) func() echo.MiddlewareFunc {
+	return func() echo.MiddlewareFunc {
+		return func(next echo.HandlerFunc) echo.HandlerFunc {
+			return func(c echo.Context) error {
+				token := GetToken(c)
+
+				// 校验token
+				err := checker.CheckToken(c, token)
+				if err != nil {
+					return err
+				}
+
+				return next(c)
 			}
-
-			return next(c)
 		}
 	}
 }

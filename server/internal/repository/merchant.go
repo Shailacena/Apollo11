@@ -5,6 +5,7 @@ import (
 	"apollo/server/pkg/data"
 	"apollo/server/pkg/util"
 	"errors"
+	"net/http"
 	"time"
 
 	"github.com/labstack/echo/v4"
@@ -64,4 +65,27 @@ func (r *MerchantRepo) List(c echo.Context) ([]*model.Merchant, error) {
 	}
 
 	return Merchants, err
+}
+
+func (r *MerchantRepo) CheckToken(c echo.Context, token string) error {
+	db := data.Instance()
+
+	var user model.Merchant
+	err := db.Where("token = ?", token).Find(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return echo.NewHTTPError(http.StatusUnauthorized, "无效token")
+		}
+		return err
+	}
+
+	if user.ID == 0 {
+		return echo.NewHTTPError(http.StatusUnauthorized, "无效token")
+	}
+
+	if time.Now().After(user.ExpireAt) {
+		return echo.NewHTTPError(http.StatusUnauthorized, "token已过期")
+	}
+
+	return nil
 }

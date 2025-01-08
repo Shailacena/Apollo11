@@ -2,6 +2,8 @@ package router
 
 import (
 	"apollo/server/internal/handler"
+	"apollo/server/internal/middleware"
+	"apollo/server/internal/repository"
 
 	"github.com/labstack/echo/v4"
 )
@@ -9,7 +11,8 @@ import (
 func Init(e *echo.Echo) {
 	apiGroup := e.Group("/api")
 
-	adminGroup := apiGroup.Group("/admin")
+	adminTokenChecker := middleware.GenAuthHandler(repository.Admin)
+	adminGroup := apiGroup.Group("/admin", adminTokenChecker())
 	adminGroupWithoutAuth := apiGroup.Group("/admin")
 	{
 		adminGroupWithoutAuth.POST("/login", handler.Admin.Login)
@@ -22,17 +25,21 @@ func Init(e *echo.Echo) {
 		adminGroup.POST("/enable", handler.Admin.Enable)
 	}
 
-	partnerGroup := apiGroup.Group("/partner")
+	partnerTokenChecker := middleware.GenAuthHandler(repository.Partner)
+	partnerGroup := apiGroup.Group("/partner", partnerTokenChecker())
+	partnerGroupWithoutAuth := apiGroup.Group("/partner")
 	{
-		partnerGroup.POST("/login", handler.Partner.Login)
+		partnerGroupWithoutAuth.POST("/login", handler.Partner.Login)
 		partnerGroup.POST("/register", handler.Partner.Register)
 		partnerGroup.GET("/list", handler.Partner.List)
 		partnerGroup.GET("/listBill", handler.Partner.ListBill)
 	}
 
-	merchantGroup := apiGroup.Group("/merchant")
+	merchantTokenChecker := middleware.GenAuthHandler(repository.Merchant)
+	merchantGroup := apiGroup.Group("/merchant", merchantTokenChecker())
+	merchantGroupWithoutAuth := apiGroup.Group("/merchant")
 	{
-		merchantGroup.POST("/login", handler.Merchant.Login)
+		merchantGroupWithoutAuth.POST("/login", handler.Merchant.Login)
 		merchantGroup.POST("/register", handler.Merchant.Register)
 		merchantGroup.GET("/list", handler.Merchant.List)
 	}
