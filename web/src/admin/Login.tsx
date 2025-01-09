@@ -29,7 +29,7 @@ function Login() {
   const onFinish: FormProps<AdminLoginReq>['onFinish'] = async (value) => {
     try {
       const { data } = await adminLogin(value)
-      ctx.auth.adminSignin(data, () => {
+      ctx.auth.adminSignin(data, value.username, () => {
         console.log('from: ', from);
         setTimeout(() => {
           navigate('/admin/home', { replace: true });

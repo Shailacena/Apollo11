@@ -31,7 +31,7 @@ const Login: React.FC = () => {
     try {
       value.id = value.id && Number(value.id)
       const { data } = await partnerLogin(value)
-      ctx.auth.partnerSignin(data, () => {
+      ctx.auth.partnerSignin(data, value.id, () => {
         console.log('from: ', from);
         // if (value.remember) {
         //   console.log('用户选择了记住我');

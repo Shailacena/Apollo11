@@ -16,13 +16,13 @@ interface AuthContextType {
     name: any;
     id: any;
 
-    adminSignin: (value: AdminLoginResp, callback: Function) => void;
+    adminSignin: (value: AdminLoginResp, id: string, callback: Function) => void;
     adminSignout: (callback: Function) => void;
 
-    partnerSignin: (value: PartnerLoginResp, callback: Function) => void;
+    partnerSignin: (value: PartnerLoginResp, id: number, callback: Function) => void;
     partnerSignout: (callback: Function) => void;
 
-    merchantSignin: (value: MerchantLoginResp, callback: Function) => void;
+    merchantSignin: (value: MerchantLoginResp, id: number, callback: Function) => void;
     merchantSignout: (callback: Function) => void;
   }
   cookie: any;
@@ -39,6 +39,7 @@ export function useAppContext() {
 function AppProvider({ children }: { children: React.ReactNode }) {
   let [token, setToken] = React.useState<any>(null);
   let [name, setName] = React.useState<any>(null);
+  let [id, setID] = React.useState<any>(null);
   let [partnerList] = React.useState<any>(null);
 
   let [cookie, setCookie, removeCookie] = useCookies(['token', 'name']);
@@ -47,11 +48,13 @@ function AppProvider({ children }: { children: React.ReactNode }) {
     console.log('icccc =====> AppProvider useEffect')
   }, []);
 
-  let adminSignin = async (data: AdminLoginResp, callback: Function) => {
+  let adminSignin = async (data: AdminLoginResp, id: string, callback: Function) => {
     console.log(data);
     setToken(data.token)
     setName(data.nickname);
+    setID(id);
     console.log(TAG, 'adminSignin iccccccccccccccccccc token', token)
+    console.log(TAG, 'adminSignin iccccccccccccccccccc id', id)
     setCookie('token', data.token, { path: '/admin', expires: getExpirationDate(7) });
     setCookie('name', data.nickname, { path: '/admin', expires: getExpirationDate(7) });
     callback()
@@ -65,10 +68,11 @@ function AppProvider({ children }: { children: React.ReactNode }) {
     callback();
   };
 
-  let partnerSignin = async (data: PartnerLoginResp, callback: Function) => {
+  let partnerSignin = async (data: PartnerLoginResp, id: number, callback: Function) => {
     console.log(data);
     setToken(data.token)
     setName(data.name);
+    setID(id);
     setCookie('token', data.token, { path: '/partner', expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
     setCookie('name', data.name, { path: '/partner', expires: getExpirationDate(7) });
     callback()
@@ -82,10 +86,11 @@ function AppProvider({ children }: { children: React.ReactNode }) {
     callback();
   };
 
-  let merchantSignin = async (data: MerchantLoginResp, callback: Function) => {
+  let merchantSignin = async (data: MerchantLoginResp, id: number, callback: Function) => {
     console.log(data);
     setToken(data.token)
     setName(data.name);
+    setID(id);
     setCookie('token', data.token, { path: '/merchant', expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
     setCookie('name', data.name, { path: '/merchant', expires: getExpirationDate(7) });
     callback()
@@ -100,7 +105,7 @@ function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   let value = {
-    auth: { token, name, adminSignin, adminSignout, partnerSignin, partnerSignout, merchantSignin, merchantSignout },
+    auth: { token, name, id, adminSignin, adminSignout, partnerSignin, partnerSignout, merchantSignin, merchantSignout },
     cookie,
     partnerList,
   }

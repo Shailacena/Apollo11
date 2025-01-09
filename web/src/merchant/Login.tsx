@@ -31,8 +31,9 @@ const Login: React.FC = () => {
     message.success('登陆成功!');
 
     try {
+      value.id = value.id && Number(value.id)
       const { data } = await merchantLogin(value)
-      ctx.auth.merchantSignin(data, () => {
+      ctx.auth.merchantSignin(data, value.id, () => {
         console.log('from: ', from);
         setTimeout(() => {
           navigate(getRouteConfig()[0].path, { replace: true });

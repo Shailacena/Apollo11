@@ -225,7 +225,7 @@ interface MerchantRegisterResp {
 }
 
 export interface MerchantLoginReq {
-  id: string
+  id: number
   password: string
 }
 
