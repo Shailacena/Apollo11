@@ -13,7 +13,8 @@ require dirname ( __FILE__ ).DIRECTORY_SEPARATOR.'./../../config.php';
 class AlipayTradeService {
 
 	//支付宝网关地址
-	public $gateway_url = "https://openapi-sandbox.dl.alipaydev.com/gateway.do";
+	public $gateway_url = "https://openapi.alipay.com/gateway.do";
+	// public $gateway_url = "https://openapi-sandbox.dl.alipaydev.com/gateway.do";
 
 	//支付宝公钥
 	public $alipay_public_key;

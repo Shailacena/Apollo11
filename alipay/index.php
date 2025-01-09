@@ -11,25 +11,25 @@
 header("Content-type: text/html; charset=utf-8");
 
 
-require_once dirname ( __FILE__ ).DIRECTORY_SEPARATOR.'service/AlipayTradeService.php';
-require_once dirname ( __FILE__ ).DIRECTORY_SEPARATOR.'buildermodel/AlipayTradeWapPayContentBuilder.php';
-require dirname ( __FILE__ ).DIRECTORY_SEPARATOR.'./../config.php';
-if (!empty($_POST['WIDout_trade_no'])&& trim($_POST['WIDout_trade_no'])!=""){
+require_once dirname ( __FILE__ ).DIRECTORY_SEPARATOR.'wappay/service/AlipayTradeService.php';
+require_once dirname ( __FILE__ ).DIRECTORY_SEPARATOR.'wappay/buildermodel/AlipayTradeWapPayContentBuilder.php';
+require dirname ( __FILE__ ).DIRECTORY_SEPARATOR.'./config.php';
+if (!empty($_POST['WIDtotal_amount'])&& trim($_POST['WIDtotal_amount'])!=""){
     //商户订单号，商户网站订单系统中唯一订单号，必填
-    $out_trade_no = $_POST['WIDout_trade_no'];
+    $out_trade_no = "123";
 
     //订单名称，必填
     $subject = "测试";
 
     //付款金额，必填
-    $total_amount = "0.01";
+    $total_amount = $_POST['WIDtotal_amount'];
 
     //商品描述，可空
     $body = "购买测试商品0.01元";
 
     //超时时间
     $timeout_express="1m";
-
+    echo $subject;
     $payRequestBuilder = new AlipayTradeWapPayContentBuilder();
     $payRequestBuilder->setBody($body);
     $payRequestBuilder->setSubject($subject);
@@ -40,13 +40,15 @@ if (!empty($_POST['WIDout_trade_no'])&& trim($_POST['WIDout_trade_no'])!=""){
     $payResponse = new AlipayTradeService($config);
     $result=$payResponse->wapPay($payRequestBuilder,$config['return_url'],$config['notify_url']);
 
+    echo $result;
     return ;
 }
 ?>
 <!DOCTYPE html>
 <html>
 	<head>
-	<title>支付宝手机网站支付接口</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>支付宝</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <style>
     *{
@@ -183,40 +185,23 @@ if (!empty($_POST['WIDout_trade_no'])&& trim($_POST['WIDout_trade_no'])!=""){
 </style>
 </head>
 <body text=#000000 bgColor="#ffffff" leftMargin=0 topMargin=4>
-<header class="am-header">
-        <h1>支付宝手机网站支付接口快速通道(接口名：alipay.trade.wap.pay)</h1>
+<header>
+        <h1 style="text-align:center;">支付宝支付2.0</h1>
 </header>
 <div id="main">
         <form name=alipayment action='' method=post target="_blank">
             <div id="body" style="clear:left">
                 <dl class="content">
-                    <dt>商户订单号
-：</dt>
-                    <dd>
-                        <input id="WIDout_trade_no" name="WIDout_trade_no" />
-                    </dd>
-                    <hr class="one_line">
-                    <dt>订单名称
-：</dt>
-                    <dd>
-                        <input id="WIDsubject" name="WIDsubject" />
-                    </dd>
-                    <hr class="one_line">
-                    <dt>付款金额
-：</dt>
+                    <hr class="one_line" style="text-align:center; margin-top:100px">
+                    <dt>付款金额：</dt>
                     <dd>
                         <input id="WIDtotal_amount" name="WIDtotal_amount" />
-                    </dd>
-                    <hr class="one_line">
-                    <dt>商品描述：</dt>
-                    <dd>
-                        <input id="WIDbody" name="WIDbody" />
                     </dd>
                     <hr class="one_line">
                     <dt></dt>
                     <dd id="btn-dd">
                         <span class="new-btn-login-sp">
-                            <button class="new-btn-login" type="submit" style="text-align:center;">确 认</button>
+                            <button class="new-btn-login" type="submit" style="text-align:center; margin-top:100px">确 认</button>
                         </span>
                         <span class="note-help">如果您点击“确认”按钮，即表示您同意该次的执行操作。</span>
                     </dd>
@@ -243,10 +228,7 @@ if (!empty($_POST['WIDout_trade_no'])&& trim($_POST['WIDout_trade_no'])!=""){
 		sNow += String(vNow.getMinutes());
 		sNow += String(vNow.getSeconds());
 		sNow += String(vNow.getMilliseconds());
-		document.getElementById("WIDout_trade_no").value =  sNow;
-		document.getElementById("WIDsubject").value = "测试";
-		document.getElementById("WIDtotal_amount").value = "0.01";
-        document.getElementById("WIDbody").value = "购买测试商品0.01元";
+		document.getElementById("WIDtotal_amount").value = "999";
 	}
 	GetDateNow();
 </script>
