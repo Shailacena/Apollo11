@@ -101,3 +101,28 @@ func (r *PartnerRepo) ListBill(c echo.Context) ([]*model.PartnerBill, error) {
 
 	return bills, err
 }
+
+func (r *PartnerRepo) SetPassword(c echo.Context, id uint, password, newpassword string) (*model.Partner, error) {
+	db := data.Instance()
+
+	var partner model.Partner
+	err := db.Where("id = ?", id).First(&partner).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("用户不存在")
+		}
+		return nil, err
+	}
+	if password != partner.Password {
+		return nil, errors.New("密码错误")
+	}
+
+	partner.Password = newpassword
+
+	err = db.Where("id = ?", id).Updates(model.Partner{Password: partner.Password}).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &partner, nil
+}

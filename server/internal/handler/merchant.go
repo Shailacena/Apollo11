@@ -58,3 +58,17 @@ func (h *MerchantHandler) List(c echo.Context) error {
 
 	return response.ResponseSuccess(c, resp)
 }
+
+func (h *MerchantHandler) SetPassword(c echo.Context) error {
+	req := new(v1.MerchantSetPasswordReq)
+	if err := c.Bind(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	resp, err := service.Merchant.SetPassword(c, req)
+	if err != nil {
+		return err
+	}
+
+	return response.ResponseSuccess(c, resp)
+}

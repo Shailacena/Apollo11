@@ -33,6 +33,7 @@ func Init(e *echo.Echo) {
 		partnerGroup.POST("/register", handler.Partner.Register)
 		partnerGroup.GET("/list", handler.Partner.List)
 		partnerGroup.GET("/listBill", handler.Partner.ListBill)
+		adminGroup.GET("/setPassword", handler.Partner.SetPassword)
 	}
 
 	// merchantTokenChecker := middleware.GenAuthHandler(repository.Merchant)
@@ -42,6 +43,7 @@ func Init(e *echo.Echo) {
 		merchantGroupWithoutAuth.POST("/login", handler.Merchant.Login)
 		merchantGroup.POST("/register", handler.Merchant.Register)
 		merchantGroup.GET("/list", handler.Merchant.List)
+		adminGroup.GET("/setPassword", handler.Merchant.SetPassword)
 	}
 
 	realNameAccountGroup := apiGroup.Group("/realNameAccount")

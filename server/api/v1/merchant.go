@@ -30,6 +30,18 @@ type ListMerchantResp struct {
 	List []*Merchant `json:"list"`
 }
 
+// 商户修改密码
+type MerchantSetPasswordReq struct {
+	Id          uint   `json:"id" binding:"required"`
+	OldPassword string `json:"oldpassword" binding:"required"`
+	NewPassword string `json:"newpassword" binding:"required"`
+}
+
+type MerchantSetPasswordResp struct {
+	Token string `json:"token"`
+	Name  string `json:"name"`
+}
+
 type Merchant struct {
 	Id          uint   `json:"id"`
 	Name        string `json:"name"`

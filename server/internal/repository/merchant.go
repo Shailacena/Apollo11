@@ -89,3 +89,28 @@ func (r *MerchantRepo) CheckToken(c echo.Context, token string) error {
 
 	return nil
 }
+
+func (r *MerchantRepo) SetPassword(c echo.Context, id uint, password, newpassword string) (*model.Merchant, error) {
+	db := data.Instance()
+
+	var Merchant model.Merchant
+	err := db.Where("id = ?", id).First(&Merchant).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("用户不存在")
+		}
+		return nil, err
+	}
+	if password != Merchant.Password {
+		return nil, errors.New("密码错误")
+	}
+
+	Merchant.Password = newpassword
+
+	err = db.Where("id = ?", id).Updates(model.Partner{Password: Merchant.Password}).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &Merchant, nil
+}

@@ -72,3 +72,17 @@ func (h *PartnerHandler) ListBill(c echo.Context) error {
 
 	return response.ResponseSuccess(c, resp)
 }
+
+func (h *PartnerHandler) SetPassword(c echo.Context) error {
+	req := new(v1.PartnerSetPasswordReq)
+	if err := c.Bind(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	resp, err := service.Partner.SetPassword(c, req)
+	if err != nil {
+		return err
+	}
+
+	return response.ResponseSuccess(c, resp)
+}

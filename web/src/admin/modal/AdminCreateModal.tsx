@@ -1,14 +1,11 @@
 import { useRef, useState } from 'react';
 import { Divider, Form, FormProps, Input, message, Modal } from 'antd';
-import { AdminUpdateReq, useApis } from '../../api/api';
+import { AdminRegisterReq, useApis } from '../../api/api';
 import axios from 'axios';
 import TextArea from 'antd/es/input/TextArea';
 
-interface AdminUpdateDataType {
+interface AdminAddDataType {
   callback?: Function;
-  username?: string;
-  nickname?: string;
-  remark?: string
   isModalOpen: boolean
 }
 
@@ -18,20 +15,20 @@ type FieldType = {
   remark?: string;
 };
 
-const AdminUpdateModal = (params: AdminUpdateDataType) => {
+const AdminCreateModal = (params: AdminAddDataType) => {
   const [isModalOpen, setIsModalOpen] = useState(params.isModalOpen);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [messageApi, _] = message.useMessage();
   const [componentDisabled, setComponentDisabled] = useState<boolean>(false);
   const formRef = useRef<any>()
-  let { adminUpdate } = useApis()
+  let { adminRegister } = useApis()
   if (isModalOpen != params.isModalOpen) {
     setIsModalOpen(params.isModalOpen)
   }
 
-  const success = () => {
+  const success = (password: string) => {
     Modal.success({
-      content: `修改成功`,
+      content: `添加成功, 密位为${password}`,
     });
   };
 
@@ -39,16 +36,16 @@ const AdminUpdateModal = (params: AdminUpdateDataType) => {
     formRef.current?.submit()
   };
 
-  const updateAdmin: FormProps<AdminUpdateReq>['onFinish'] = async (value) => {
+  const addAdmin: FormProps<AdminRegisterReq>['onFinish'] = async (value) => {
     setComponentDisabled(true)
     setConfirmLoading(true)
     try {
-      let { data } = await adminUpdate(value)
+      let { data } = await adminRegister(value)
       console.log(data)
       if (params.callback) {
         params.callback()
       }
-      success();
+      success(data.password);
     } catch (e) {
       if (axios.isAxiosError(e)) {
         let msg = e.response?.data?.message
@@ -62,12 +59,14 @@ const AdminUpdateModal = (params: AdminUpdateDataType) => {
 
   return (
     <>
-      <Modal
-        title="修改信息"
+      <Modal title="新增管理员"
+        footer={null}
+        confirmLoading={confirmLoading}
         open={isModalOpen}
         onOk={handleOk}
-        confirmLoading={confirmLoading}
         onCancel={() => { setIsModalOpen(false) }}
+        style={{ maxWidth: 480 }}
+        destroyOnClose
       >
         <Divider />
         <div style={{ display: 'flex', marginTop: 20, alignItems: 'center' }}>
@@ -76,16 +75,15 @@ const AdminUpdateModal = (params: AdminUpdateDataType) => {
             labelCol={{ span: 8 }}
             name="basic"
             autoComplete="off"
-            onFinish={updateAdmin}
             disabled={componentDisabled}
-            initialValues={{ username: params.username, nickname: params.nickname, remark: params.remark }}
+            onFinish={addAdmin}
           >
             <Form.Item<FieldType>
               name="username"
               label="帐号"
               required
             >
-              <Input style={{ width: 250 }} disabled />
+              <Input style={{ width: 250 }} />
             </Form.Item>
 
             <Form.Item<FieldType>
@@ -108,4 +106,4 @@ const AdminUpdateModal = (params: AdminUpdateDataType) => {
   );
 };
 
-export default AdminUpdateModal;
+export default AdminCreateModal;

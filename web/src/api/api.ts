@@ -146,6 +146,16 @@ export interface PartnerLoginResp {
   name: string
 }
 
+export interface PartnerSetPasswordReq {
+  id: number
+  oldpassword: string
+  newpassword: string
+}
+
+export interface PartnerSetPasswordResp {
+
+}
+
 interface ListPartnerBillResp {
   list: Array<IPartnerBill>
 }
@@ -222,6 +232,16 @@ export interface MerchantLoginReq {
 export interface MerchantLoginResp {
   token: string
   name: string
+}
+
+export interface MerchantSetPasswordReq {
+  id: number
+  oldpassword: string
+  newpassword: string
+}
+
+export interface MerchantSetPasswordResp {
+
 }
 
 interface ListStatisticsResp {
@@ -313,6 +333,11 @@ export function useApis() {
         return res?.data
       })
     },
+    partnerSetPassword(data: PartnerSetPasswordReq): Promise<IResponseBody<PartnerSetPasswordResp>> {
+      return ax.post("/partner/setPassword", data).then((res) => {
+        return res?.data
+      })
+    },
     listPartnerBill(): Promise<IResponseBody<ListPartnerBillResp>> {
       return ax.get("/partner/listBill").then((res) => {
         return res?.data
@@ -340,6 +365,11 @@ export function useApis() {
     },
     merchantLogin(data: MerchantLoginReq): Promise<IResponseBody<MerchantLoginResp>> {
       return ax.post("/merchant/login", data).then((res) => {
+        return res?.data
+      })
+    },
+    merchantSetPassword(data: MerchantSetPasswordReq): Promise<IResponseBody<MerchantSetPasswordResp>> {
+      return ax.post("/merchant/setPassword", data).then((res) => {
         return res?.data
       })
     },

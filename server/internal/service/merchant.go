@@ -4,6 +4,7 @@ import (
 	v1 "apollo/server/api/v1"
 	"apollo/server/internal/model"
 	"apollo/server/internal/repository"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
@@ -64,4 +65,17 @@ func (s *MerchantService) List(c echo.Context, req *v1.ListMerchantReq) (*v1.Lis
 	return &v1.ListMerchantResp{
 		List: list,
 	}, nil
+}
+
+func (s *MerchantService) SetPassword(c echo.Context, req *v1.MerchantSetPasswordReq) (*v1.MerchantSetPasswordResp, error) {
+	if len(req.NewPassword) < 6 {
+		return nil, echo.NewHTTPError(http.StatusBadRequest, "密码不符")
+	}
+
+	_, err := repository.Merchant.SetPassword(c, req.Id, req.OldPassword, req.NewPassword)
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.MerchantSetPasswordResp{}, nil
 }

@@ -106,6 +106,17 @@ type ListOrderResp struct {
 	List []*Order `json:"list"`
 }
 
+// 密码修改
+type PartnerSetPasswordReq struct {
+	Id          uint   `json:"id" binding:"required"`
+	OldPassword string `json:"oldpassword" binding:"required"`
+	NewPassword string `json:"newpassword" binding:"required"`
+}
+
+// 密码修改
+type PartnerSetPasswordResp struct {
+}
+
 type Order struct {
 	OrderId         string `json:"orderId"`
 	MerchantId      uint   `json:"merchantId"`

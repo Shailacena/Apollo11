@@ -1,11 +1,11 @@
-import { Layout, Menu, Dropdown, Space } from 'antd';
+import { Layout, Menu, Dropdown, Space, Modal } from 'antd';
 import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { getRouteConfig } from './RouteConfigs';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../AppProvider';
-import SetPasswordModal from './SetPasswordModal';
 import { useState } from 'react';
+import SetPasswordModal from './modal/SetPasswordModal';
 
 const TAG = 'PartnerMainLayout'
 
@@ -56,13 +56,16 @@ function MainLayout() {
     navigate(e.key)
   }
 
-  const updateIsSetpassowrdModalOpen = (isOpen: boolean) => {
-    setIsSetpassowrdModalOpen(isOpen);
+  const setPasswordSuccess = () => {
+    Modal.success({
+      content: `修改密码成功！`,
+    });
+    setIsSetpassowrdModalOpen(false)
   };
 
   return (
     <>
-      <SetPasswordModal isOpen={isSetpassowrdModalOpen} updateIsSetpassowrdModalOpen={updateIsSetpassowrdModalOpen} />
+      <SetPasswordModal isModalOpen={isSetpassowrdModalOpen} callback={setPasswordSuccess} />
       <Layout>
         <Header style={{ color: "#fff", height: 48 }}>
           <span>合作商管理后台</span>

@@ -4,6 +4,7 @@ import (
 	v1 "apollo/server/api/v1"
 	"apollo/server/internal/model"
 	"apollo/server/internal/repository"
+	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
@@ -91,4 +92,17 @@ func (s *PartnerService) ListBill(c echo.Context, req *v1.ListPartnerBillReq) (*
 	return &v1.ListPartnerBillResp{
 		List: list,
 	}, nil
+}
+
+func (s *PartnerService) SetPassword(c echo.Context, req *v1.PartnerSetPasswordReq) (*v1.PartnerSetPasswordResp, error) {
+	if len(req.NewPassword) < 6 {
+		return nil, echo.NewHTTPError(http.StatusBadRequest, "密码不符")
+	}
+
+	_, err := repository.Partner.SetPassword(c, req.Id, req.OldPassword, req.NewPassword)
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.PartnerSetPasswordResp{}, nil
 }

@@ -14,6 +14,7 @@ interface AuthContextType {
   auth: {
     token: any;
     name: any;
+    id: any;
 
     adminSignin: (value: AdminLoginResp, callback: Function) => void;
     adminSignout: (callback: Function) => void;

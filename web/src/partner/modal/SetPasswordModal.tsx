@@ -1,30 +1,28 @@
 import { useRef, useState } from 'react';
 import { Divider, Form, FormProps, Input, message, Modal } from 'antd';
-import { AdminUpdateReq, useApis } from '../../api/api';
+import { useApis } from '../../api/api';
 import axios from 'axios';
-import TextArea from 'antd/es/input/TextArea';
+import { useAppContext } from '../../AppProvider';
 
-interface AdminUpdateDataType {
+interface PartnerSetPasswordDataType {
   callback?: Function;
-  username?: string;
-  nickname?: string;
-  remark?: string
   isModalOpen: boolean
 }
 
 type FieldType = {
-  username?: string;
-  nickname?: string;
-  remark?: string;
+  oldpassword: string;
+  newpassword: string;
 };
 
-const AdminUpdateModal = (params: AdminUpdateDataType) => {
+const SetPasswordModal = (params: PartnerSetPasswordDataType) => {
   const [isModalOpen, setIsModalOpen] = useState(params.isModalOpen);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [messageApi, _] = message.useMessage();
   const [componentDisabled, setComponentDisabled] = useState<boolean>(false);
   const formRef = useRef<any>()
-  let { adminUpdate } = useApis()
+  let { partnerSetPassword } = useApis()
+  const ctx = useAppContext()
+
   if (isModalOpen != params.isModalOpen) {
     setIsModalOpen(params.isModalOpen)
   }
@@ -39,11 +37,11 @@ const AdminUpdateModal = (params: AdminUpdateDataType) => {
     formRef.current?.submit()
   };
 
-  const updateAdmin: FormProps<AdminUpdateReq>['onFinish'] = async (value) => {
+  const updatePassword: FormProps<FieldType>['onFinish'] = async (value) => {
     setComponentDisabled(true)
     setConfirmLoading(true)
     try {
-      let { data } = await adminUpdate(value)
+      let { data } = await partnerSetPassword({id: Number(ctx.auth.id), ...value})
       console.log(data)
       if (params.callback) {
         params.callback()
@@ -62,44 +60,37 @@ const AdminUpdateModal = (params: AdminUpdateDataType) => {
 
   return (
     <>
-      <Modal
-        title="修改信息"
+      <Modal title="修改密码"
+        footer={null}
         open={isModalOpen}
         onOk={handleOk}
         confirmLoading={confirmLoading}
         onCancel={() => { setIsModalOpen(false) }}
-      >
+        style={{ maxWidth: 480 }}
+        destroyOnClose>
         <Divider />
-        <div style={{ display: 'flex', marginTop: 20, alignItems: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', alignContent: 'center', marginTop: 20, alignItems: 'center' }}>
           <Form
-            ref={formRef}
             labelCol={{ span: 8 }}
             name="basic"
             autoComplete="off"
-            onFinish={updateAdmin}
+            onFinish={updatePassword}
             disabled={componentDisabled}
-            initialValues={{ username: params.username, nickname: params.nickname, remark: params.remark }}
           >
             <Form.Item<FieldType>
-              name="username"
-              label="帐号"
+              name="oldpassowrd"
+              label="原始密码"
               required
             >
-              <Input style={{ width: 250 }} disabled />
+              <Input style={{ width: 200 }} />
             </Form.Item>
 
             <Form.Item<FieldType>
-              name="nickname"
-              label="昵称"
+              name="newpassowrd"
+              label="新密码"
               required
             >
-              <Input style={{ width: 250 }} />
-            </Form.Item>
-            <Form.Item<FieldType>
-              name="remark"
-              label="备注"
-            >
-              <TextArea rows={4} style={{ width: 250 }} />
+              <Input style={{ width: 200 }} />
             </Form.Item>
           </Form >
         </div>
@@ -108,4 +99,4 @@ const AdminUpdateModal = (params: AdminUpdateDataType) => {
   );
 };
 
-export default AdminUpdateModal;
+export default SetPasswordModal;

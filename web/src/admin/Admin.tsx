@@ -1,10 +1,10 @@
 import { Space, Table, Button, Modal, Form, Input, message, Card, Divider, Popconfirm } from 'antd';
-import type { FormProps, TableProps } from 'antd';
+import type { TableProps } from 'antd';
 import { useEffect, useState } from 'react';
-import { IAdmin, AdminRegisterReq, useApis } from '../api/api';
-import TextArea from 'antd/es/input/TextArea';
+import { IAdmin, useApis } from '../api/api';
 import axios from 'axios';
 import AdminUpdateModal from './modal/AdminUpdateModal';
+import AdminCreateModal from './modal/AdminCreateModal';
 
 interface DataType extends IAdmin {
   key: number;
@@ -21,7 +21,7 @@ function Admin() {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [messageApi, _] = message.useMessage();
-  let { listAdmin, adminRegister, adminResetPassword, adminDelete, adminEnable } = useApis()
+  let { listAdmin, adminResetPassword, adminDelete, adminEnable } = useApis()
   const [chooseData, setChooseData] = useState<FieldType>({});
 
   const columns: TableProps<DataType>['columns'] = [
@@ -103,9 +103,14 @@ function Admin() {
     }
   }
 
-  const addSuccess = (password: string) => {
+  const addSuccess = () => {
+    fetchListAdmin()
+    setIsAddModalOpen(false)
+  };
+
+  const resetPasswordSuccess = (password: string) => {
     Modal.success({
-      content: `添加成功, 密位为${password}`,
+      content: `重置成功, 密位为${password}`,
     });
   };
 
@@ -128,25 +133,11 @@ function Admin() {
   };
 
   const updateSuccess = () => {
+    Modal.success({
+      content: `修改成功`,
+    });
     fetchListAdmin()
     setIsUpdateModalOpen(false)
-  };
-
-  const onFinish: FormProps<AdminRegisterReq>['onFinish'] = async (value) => {
-    try {
-      let { data } = await adminRegister(value)
-      fetchListAdmin()
-      addSuccess(data.password);
-      setIsAddModalOpen(false);
-    } catch (e) {
-      if (axios.isAxiosError(e)) {
-        let msg = e.response?.data?.message
-        msg && messageApi.open({
-          type: 'error',
-          content: msg,
-        });
-      }
-    }
   };
 
   const resetPassword = async (username: string) => {
@@ -154,7 +145,7 @@ function Admin() {
       console.log(username);
       let { data } = await adminResetPassword({ username })
       console.log(data)
-      addSuccess(data.password);
+      resetPasswordSuccess(data.password);
     } catch (e) {
       if (axios.isAxiosError(e)) {
         let msg = e.response?.data?.message
@@ -216,7 +207,7 @@ function Admin() {
         <Divider />
         <Table<DataType> bordered columns={columns} dataSource={list} />
 
-        <Modal title="新增管理员" footer={null} open={isAddModalOpen} onCancel={() => { setIsAddModalOpen(false) }} style={{ maxWidth: 480 }} destroyOnClose>
+        {/* <Modal title="新增管理员" footer={null} open={isAddModalOpen} onCancel={() => { setIsAddModalOpen(false) }} style={{ maxWidth: 480 }} destroyOnClose>
           <Divider />
           <div style={{ display: 'flex', marginTop: 20, alignItems: 'center' }}>
             <Form
@@ -254,9 +245,10 @@ function Admin() {
               </Form.Item>
             </Form >
           </div>
-        </Modal>
+        </Modal> */}
 
-        <AdminUpdateModal isUpdateModalOpen={isUpdateModalOpen} callback={updateSuccess} username={chooseData.username} nickname={chooseData.nickname} remark={chooseData.remark} />
+        <AdminCreateModal isModalOpen={isAddModalOpen} callback={addSuccess} />
+        <AdminUpdateModal isModalOpen={isUpdateModalOpen} callback={updateSuccess} username={chooseData.username} nickname={chooseData.nickname} remark={chooseData.remark} />
       </Card>
     </>
   )
