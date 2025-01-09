@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Modal, Form, Table, Input, Button, Card, Divider } from 'antd';
-import type { TableProps } from 'antd';
-import { useApis } from '../api/api';
+import { Modal, Form, Table, Input, Button, Card, Divider, message } from 'antd';
+import type { FormProps, TableProps } from 'antd';
+import { BaseRealNameAccount, IRealNameAccount, RealNameAccountCreateReq, useApis } from '../api/api';
+import axios from 'axios';
 
 const { TextArea } = Input;
 
-interface DataType {
+interface DataType extends IRealNameAccount {
   key: string
 }
 
@@ -15,36 +16,37 @@ type FieldType = {
 
 const columns: TableProps<DataType>['columns'] = [
   {
-    title: 'id',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text) => <a>{text}</a>,
+    title: 'ID',
+    dataIndex: 'idNumber',
+    key: 'idNumber',
   },
   {
     title: '名称',
-    dataIndex: 'age',
-    key: 'age',
+    dataIndex: 'name',
+    key: 'name',
   },
   {
     title: '实名次数',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'realNameCount',
+    key: 'realNameCount',
   },
   {
     title: '状态',
-    key: 'tags',
-    dataIndex: 'tags',
+    key: 'enable',
+    dataIndex: 'enable',
   },
   {
     title: '备注',
-    key: 'action',
+    key: 'remark',
+    dataIndex: 'remark',
   },
 ];
 
 function RealNameAccount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [list, setList] = useState<DataType[]>([])
-  let { listRealNameAccount } = useApis()
+  let { listRealNameAccount, realNameAccountCreate } = useApis()
+  const [messageApi, contextHolder] = message.useMessage();
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -56,6 +58,44 @@ function RealNameAccount() {
 
   const handleCancel = () => {
     setIsModalOpen(false);
+  };
+
+  const onFinish: FormProps<FieldType>['onFinish'] = async (value) => {
+    try {
+      let accountList: BaseRealNameAccount[] = []
+      if (value.accounts) {
+        let list = value.accounts.split(/[(\r\n)\r\n]+/)
+
+        list?.forEach((line: string) => {
+          line = line.trim().replace(/\s+/, ",")
+          let accounts = line.split(",")
+          if (accounts.length > 1) {
+            accountList.push({
+              idNumber: accounts[0],
+              name: accounts[accounts.length - 1],
+            })
+          }
+        })
+      }
+
+      let data: RealNameAccountCreateReq = {
+        accountList: accountList,
+        remark: ""
+      }
+
+      await realNameAccountCreate(data)
+
+      fetchListRealNameAccount()
+      setIsModalOpen(false);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        let msg = e.response?.data?.message
+        msg && messageApi.open({
+          type: 'error',
+          content: msg,
+        });
+      }
+    }
   };
 
   const fetchListRealNameAccount = async () => {
@@ -76,6 +116,7 @@ function RealNameAccount() {
 
   return (
     <>
+      {contextHolder}
       <Card>
         <div>
           <Button type="primary" onClick={showModal}>批量导入实名资料</Button>
@@ -83,11 +124,12 @@ function RealNameAccount() {
         <Divider />
         <Table<DataType> bordered columns={columns} dataSource={list} />
 
-        <Modal title="导入实名资料" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
+        <Modal title="导入实名资料" destroyOnClose open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
           <Divider />
           <Form
             name="basic"
             autoComplete="off"
+            onFinish={onFinish}
           >
             <Form.Item<FieldType>
               name="accounts"

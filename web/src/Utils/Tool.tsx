@@ -1,7 +1,7 @@
 
 /**
  * 获取随机数
- * @param start: number 随机区间头 
+ * @param start: number 随机区间头
  * @param end: number 随机区间尾
  * @returns value: number
  */
@@ -56,8 +56,8 @@ export const getExpirationDate = (days = 1) => {
 
 /**
  * 获取cookies路径
- * @param name 
- * @returns 
+ * @param name
+ * @returns
  */
 export const getCookiePath = (name: string) => {
   const cookiePattern = new RegExp(`(^|;\\s*)${name}=([^;]*)`);
@@ -90,7 +90,7 @@ export const getRandomPath = (index: number) => {
   const charactersLength = characters.length;
   // 一次生成10个
   for (let i = 0; i < 10; i++) {
-    // 随机路由4-8个字符 
+    // 随机路由4-8个字符
     let length = getRandomNumber(4, 8);
     let result = '';
     if (window.crypto && window.crypto.getRandomValues) {
@@ -117,8 +117,8 @@ export const getRandomPath = (index: number) => {
 }
 
 /**
- * 根据时间问候 
- * @returns 
+ * 根据时间问候
+ * @returns
  */
 export function greet(): string {
   const hours = new Date().getHours();

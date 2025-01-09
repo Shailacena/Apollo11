@@ -1,78 +1,91 @@
 import { useEffect, useState } from 'react';
-import { Modal, Form, Table, Select, Input, Button, Card, Divider } from 'antd';
-import type { TableProps } from 'antd';
-import { useApis } from '../api/api';
+import { Modal, Form, Table, Select, Input, Button, Card, Divider, message } from 'antd';
+import type { FormProps, TableProps } from 'antd';
+import { IJDAccount, IJDAccountCreate, JDAccountCreateReq, useApis } from '../api/api';
+import axios from 'axios';
+import { getDataFormat } from '../utils/Tool';
 
 const { TextArea } = Input;
 
-interface DataType {
+interface DataType extends IJDAccount {
   key: string;
 }
 
 type FieldType = {
-  username?: string;
-  password?: string;
-  googleCode?: string;
+  accounts: string;
 };
 
 const columns: TableProps<DataType>['columns'] = [
   {
     title: 'ID',
-    dataIndex: 'name',
-    key: 'name',
-    render: (text) => <a>{text}</a>,
+    dataIndex: 'id',
+    key: 'id',
   },
   {
     title: '账号',
-    dataIndex: 'age',
-    key: 'age',
+    dataIndex: 'account',
+    key: 'account',
   },
   {
     title: '实名状态',
-    dataIndex: 'address',
-    key: 'address',
+    dataIndex: 'realNameStatus',
+    key: 'realNameStatus',
   },
   {
     title: '总下单数',
-    key: 'tags',
-    dataIndex: 'tags',
+    key: 'totalOrderCount',
+    dataIndex: 'totalOrderCount',
   },
   {
     title: '总成功数',
-    key: 'action',
+    key: 'totalSuccessOrderCount',
+    dataIndex: 'totalSuccessOrderCount',
   },
   {
     title: '当日下单数',
-    key: 'action',
+    key: 'todayOrderCount',
+    dataIndex: 'todayOrderCount',
   },
 
   {
     title: '备注',
-    key: 'action',
+    key: 'remark',
+    dataIndex: 'remark',
   },
   {
     title: '登录状态',
-    key: 'action',
+    key: 'loginStatus',
+    dataIndex: 'loginStatus',
   },
   {
     title: '禁用状态',
-    key: 'action',
+    key: 'enable',
+    dataIndex: 'enable',
   },
   {
     title: '创建时间',
-    key: 'action',
+    key: 'createAt',
+    dataIndex: 'createAt',
+    render: (ts: number) => {
+      return getDataFormat(new Date(ts * 1000))
+    }
   },
 
   {
     title: '修改时间',
-    key: 'action',
+    key: 'updateAt',
+    dataIndex: 'updateAt',
+    render: (ts: number) => {
+      return getDataFormat(new Date(ts * 1000))
+    }
   },
 ];
 
 function JDAccount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [list, setList] = useState<DataType[]>([])
-  let { listJDAccount } = useApis()
+  let { listJDAccount, jdAccountCreate } = useApis()
+  const [messageApi, contextHolder] = message.useMessage();
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -86,8 +99,42 @@ function JDAccount() {
     setIsModalOpen(false);
   };
 
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
+  const onFinish: FormProps<FieldType>['onFinish'] = async (value) => {
+    try {
+      let accountList: IJDAccountCreate[] = []
+      if (value.accounts) {
+        let list = value.accounts.split(/[(\r\n)\r\n]+/)
+
+        list?.forEach((line: string) => {
+          line = line.trim().replace(/\s+/, ",")
+          let accounts = line.split(",")
+          if (accounts.length > 1) {
+            accountList.push({
+              account: accounts[0],
+              wsKey: accounts[accounts.length - 1],
+            })
+          }
+        })
+      }
+
+      let data: JDAccountCreateReq = {
+        accountList: accountList,
+        remark: ""
+      }
+
+      await jdAccountCreate(data)
+
+      fetchListJDAccount()
+      setIsModalOpen(false);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        let msg = e.response?.data?.message
+        msg && messageApi.open({
+          type: 'error',
+          content: msg,
+        });
+      }
+    }
   };
 
   const fetchListJDAccount = async () => {
@@ -108,6 +155,7 @@ function JDAccount() {
 
   return (
     <>
+      {contextHolder}
       <Card>
         <div>
           <Button type="primary" onClick={showModal}>批量导入京东账号</Button>
@@ -115,13 +163,14 @@ function JDAccount() {
         <Divider />
         <Table<DataType> bordered columns={columns} dataSource={list} />
 
-        <Modal title="导入京东账号" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
+        <Modal title="导入京东账号" destroyOnClose open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
           <Divider />
           <Form
             name="basic"
             autoComplete="off"
+            onFinish={onFinish}
           >
-            <Form.Item<FieldType>
+            {/* <Form.Item<FieldType>
               name="username"
               label="类型"
             >
@@ -132,10 +181,10 @@ function JDAccount() {
                 { value: 'disabled', label: 'Disabled', disabled: true },
               ]} style={{ width: 200 }}>
               </Select>
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item<FieldType>
-              name="username"
+              name="accounts"
               label="账号"
             >
               <TextArea rows={8} />

@@ -2,8 +2,13 @@ package v1
 
 // jd账号创建
 type JDAccountCreateReq struct {
-	AccountList []string `json:"accountList" binding:"required"`
-	Remark      string           `json:"remark"`
+	AccountList []BaseJDAccount `json:"accountList" binding:"required"`
+	Remark      string          `json:"remark"`
+}
+
+type BaseJDAccount struct {
+	Account string `json:"account"`
+	WsKey   string `json:"wsKey"`
 }
 
 type JDAccountCreateResp struct {
@@ -28,4 +33,5 @@ type JDAccount struct {
 	Enable                 int    `json:"enable"`
 	Remark                 string `json:"remark"`
 	CreateAt               int64  `json:"createAt"`
+	UpdateAt               int64  `json:"updateAt"`
 }

@@ -80,9 +80,7 @@ interface ListRealNameAccountResp {
   list: Array<IRealNameAccount>
 }
 
-export interface IRealNameAccount {
-  idNumber: string
-  name: string
+export interface IRealNameAccount extends BaseRealNameAccount {
   realNameCount: number
   enable: number
   remark: string
@@ -270,6 +268,35 @@ export interface IOrder {
   aliManualFee: number
 }
 
+export interface JDAccountCreateReq {
+  accountList: Array<IJDAccountCreate>
+  remark: string
+}
+
+export interface IJDAccountCreate {
+  account: string
+  wsKey: string
+}
+
+interface JDAccountCreateResp {
+
+}
+
+export interface RealNameAccountCreateReq {
+  accountList: Array<BaseRealNameAccount>
+  remark: string
+}
+
+export interface BaseRealNameAccount {
+  idNumber: string
+  name: string
+}
+
+interface RealNameAccountCreateResp {
+
+}
+
+
 export function useApis() {
   const ax = useAxios()
   return {
@@ -313,8 +340,18 @@ export function useApis() {
         return res?.data
       })
     },
+    realNameAccountCreate(data: RealNameAccountCreateReq): Promise<IResponseBody<RealNameAccountCreateResp>> {
+      return ax.post("/realNameAccount/create", data).then((res) => {
+        return res?.data
+      })
+    },
     listJDAccount(): Promise<IResponseBody<ListJDAccountResp>> {
       return ax.get("/jdAccount/list").then((res) => {
+        return res?.data
+      })
+    },
+    jdAccountCreate(data: JDAccountCreateReq): Promise<IResponseBody<JDAccountCreateResp>> {
+      return ax.post("/jdAccount/create", data).then((res) => {
         return res?.data
       })
     },

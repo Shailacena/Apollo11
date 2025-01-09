@@ -16,8 +16,6 @@ export function AxiosProvider({ children }: { children: React.ReactNode }) {
   let app = useAppContext()
   let headers: any = {}
 
-  console.log("app.cookie", app.cookie.token);
-
   if (app?.cookie?.token) {
     headers["Token"] = app.cookie.token
   }

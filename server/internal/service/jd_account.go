@@ -4,7 +4,6 @@ import (
 	v1 "apollo/server/api/v1"
 	"apollo/server/internal/model"
 	"apollo/server/internal/repository"
-	"strings"
 
 	"github.com/labstack/echo/v4"
 )
@@ -19,19 +18,13 @@ type JDAccountService struct {
 func (s *JDAccountService) Create(c echo.Context, req *v1.JDAccountCreateReq) (*v1.JDAccountCreateResp, error) {
 	list := make([]*model.JDAccount, 0, len(req.AccountList))
 	for _, a := range req.AccountList {
-		if len(a) == 0 {
-			continue
-		}
-
-		str := strings.Split(a, ";")
-
-		if len(str) <= 1 {
+		if len(a.Account) == 0 || len(a.WsKey) == 0 {
 			continue
 		}
 
 		list = append(list, &model.JDAccount{
-			Account: strings.Replace(str[0], "pin=", "", 1),
-			WsKey:   strings.Replace(str[1], "wskey=", "", 1),
+			Account: a.Account,
+			WsKey:   a.WsKey,
 			Remark:  req.Remark,
 		})
 	}
@@ -62,6 +55,7 @@ func (s *JDAccountService) List(c echo.Context, req *v1.ListJDAccountReq) (*v1.L
 			Enable:                 a.Enable,
 			Remark:                 a.Remark,
 			CreateAt:               a.CreatedAt.Unix(),
+			UpdateAt:               a.UpdatedAt.Unix(),
 		})
 	}
 
