@@ -82,28 +82,29 @@ const columns: TableProps<DataType>['columns'] = [
   },
 ];
 
-const goods_state_options: SelectProps['options'] = [
-  { value: 0, label: '正常' },
-  { value: 1, label: '冻结' }
-];
-
-const pay_state_options: SelectProps['options'] = [
-  { value: 0, label: '未充值' },
-  { value: 1, label: '部分充值' },
-  { value: 2, label: '全部充值' }
-];
-
-const callback_state_options: SelectProps['options'] = [
-  { value: 0, label: '正常回调' },
-  { value: 1, label: '未回调' }
-];
-
-const handleChange = (value: string | string[]) => {
-  console.log(`Selected: ${value}`);
-};
-
 const SearchForm = () => {
+  
+  const goods_state_options: SelectProps['options'] = [
+    { value: 0, label: '正常' },
+    { value: 1, label: '冻结' }
+  ];
+  
+  const pay_state_options: SelectProps['options'] = [
+    { value: 0, label: '未充值' },
+    { value: 1, label: '部分充值' },
+    { value: 2, label: '全部充值' }
+  ];
+  
+  const callback_state_options: SelectProps['options'] = [
+    { value: 0, label: '正常回调' },
+    { value: 1, label: '未回调' }
+  ];
+
   const [form] = Form.useForm();
+
+  const handleChange = (value: string | string[]) => {
+    console.log(`Selected: ${value}`);
+  };
 
   const onFinish = (values: any) => {
     console.log('Search values:', values);
