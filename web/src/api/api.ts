@@ -17,7 +17,10 @@ export interface AdminLoginResp {
   nickname: string
 }
 
-export interface AdminRegisterReq {
+export interface AdminRegisterReq extends AdminBaseInfoReq {
+}
+
+export interface AdminBaseInfoReq {
   username: string
   nickname: string
   remark: string
@@ -57,10 +60,7 @@ interface AdminDeleteResp {
 
 }
 
-export interface AdminUpdateReq {
-  username: string
-  nickname: string
-  remark: string
+export interface AdminUpdateReq extends AdminBaseInfoReq {
 }
 
 interface AdminUpdateResp {

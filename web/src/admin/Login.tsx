@@ -1,47 +1,39 @@
 import { Flex, Button, Card, Form, Input, message } from 'antd';
 import bg from '../assets/bg.jpg';
 import { useAppContext } from '../AppProvider';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import type { FormProps } from 'antd';
 import { AdminLoginReq, useApis } from '../api/api';
 import axios from 'axios';
 import { useEffect } from 'react';
-import { routes } from './routes';
 
 function Login() {
   let navigate = useNavigate();
-  let location = useLocation();
   let ctx = useAppContext();
-  let from = location.state?.from?.pathname || '/';
   let { adminLogin } = useApis()
 
-  const [messageApi, contextHolder] = message.useMessage();
-
   useEffect(() => {
-    // 异步操作或其他需要在渲染之外进行的操作
-    console.log('icccc =====> admin useEffect')
-    if (ctx.auth.token) {
-      navigate(routes[0].path, { replace: true });
-      return;
+    if (ctx.cookie.token) {
+      goHome();
     }
-  }, [ctx.auth]);
+  }, []);
+
+  const goHome = () => {
+    navigate('/admin/home', { replace: true });
+  }
 
   const onFinish: FormProps<AdminLoginReq>['onFinish'] = async (value) => {
     try {
       const { data } = await adminLogin(value)
       ctx.auth.adminSignin(data, value.username, () => {
-        console.log('from: ', from);
         setTimeout(() => {
-          navigate('/admin/home', { replace: true });
+          goHome();
         }, 500);
       });
     } catch (e) {
       if (axios.isAxiosError(e)) {
         let msg = e.response?.data?.message
-        msg && messageApi.open({
-          type: 'error',
-          content: msg,
-        });
+        msg && message.error(msg)
       }
     }
   };
@@ -49,7 +41,6 @@ function Login() {
 
   return (
     <>
-      {contextHolder}
       <Flex style={{ height: "100%", backgroundImage: `url(${bg})`, backgroundSize: "cover" }} >
         <Card className="login" title={<h2>管理后台</h2>}>
           {/* <h1>管理后台</h1> */}

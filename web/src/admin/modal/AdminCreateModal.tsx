@@ -1,12 +1,14 @@
-import { useRef, useState } from 'react';
-import { Divider, Form, FormProps, Input, message, Modal } from 'antd';
-import { AdminRegisterReq, useApis } from '../../api/api';
+import { useEffect, useState } from 'react';
+import { Button, Divider, Flex, Form, FormProps, Input, message, Modal } from 'antd';
+import { AdminBaseInfoReq, AdminRegisterReq, useApis } from '../../api/api';
 import axios from 'axios';
 import TextArea from 'antd/es/input/TextArea';
 
 interface AdminAddDataType {
-  callback?: Function;
   isModalOpen: boolean
+  onOk: Function;
+  onCancel: Function;
+  info?: FieldType
 }
 
 type FieldType = {
@@ -15,92 +17,113 @@ type FieldType = {
   remark?: string;
 };
 
+enum Title {
+  CreateTxt = '新增管理员',
+  EditTxt = '修改管理员'
+}
+
 const AdminCreateModal = (params: AdminAddDataType) => {
+  const [info, setInfo] = useState(params.info)
+  const [isEdit, setIsEdit] = useState(!!params.info)
+  const [title, setTitle] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(params.isModalOpen);
   const [confirmLoading, setConfirmLoading] = useState(false);
-  const [messageApi, _] = message.useMessage();
-  const [componentDisabled, setComponentDisabled] = useState<boolean>(false);
-  const formRef = useRef<any>()
-  let { adminRegister } = useApis()
-  if (isModalOpen != params.isModalOpen) {
+  const [formDisabled, setFormDisabled] = useState<boolean>(false);
+  let { adminRegister, adminUpdate } = useApis()
+
+  useEffect(() => {
     setIsModalOpen(params.isModalOpen)
-  }
+  }, [params.isModalOpen])
 
-  const success = (password: string) => {
-    Modal.success({
-      content: `添加成功, 密位为${password}`,
-    });
-  };
+  useEffect(() => {
+    setIsEdit(!!params.info)
+    setInfo(params.info)
+  }, [params.info])
 
-  const handleOk = () => {
-    formRef.current?.submit()
-  };
+  useEffect(() => {
+    setTitle(isEdit ? Title.EditTxt : Title.CreateTxt)
+  }, [isEdit])
 
-  const addAdmin: FormProps<AdminRegisterReq>['onFinish'] = async (value) => {
-    setComponentDisabled(true)
+  const addAdmin: FormProps<AdminBaseInfoReq>['onFinish'] = async (value) => {
+    setFormDisabled(true)
     setConfirmLoading(true)
     try {
-      let { data } = await adminRegister(value)
-      console.log(data)
-      if (params.callback) {
-        params.callback()
-      }
-      success(data.password);
+      isEdit ? handleEdit(value) : handleRegister(value)
     } catch (e) {
       if (axios.isAxiosError(e)) {
         let msg = e.response?.data?.message
-        msg && messageApi.open({
-          type: 'error',
-          content: msg,
-        });
+        msg && message.error(msg)
       }
+    } finally {
+      setFormDisabled(false)
+      setConfirmLoading(false)
     }
   };
 
+  const handleRegister = async (value: AdminBaseInfoReq) => {
+    let { data } = await adminRegister(value)
+    params?.onOk?.();
+    message.success(`添加成功, 密位为${data.password}`, 3)
+  }
+
+  const handleEdit = async (value: AdminBaseInfoReq) => {
+    await adminUpdate(value)
+    params?.onOk?.();
+    message.success(`修改成功`)
+  }
+
   return (
     <>
-      <Modal title="新增管理员"
+      <Modal
+        title={title}
         footer={null}
         confirmLoading={confirmLoading}
         open={isModalOpen}
-        onOk={handleOk}
-        onCancel={() => { setIsModalOpen(false) }}
-        style={{ maxWidth: 480 }}
+        onCancel={() => { params?.onCancel?.() }}
         destroyOnClose
       >
         <Divider />
-        <div style={{ display: 'flex', marginTop: 20, alignItems: 'center' }}>
-          <Form
-            ref={formRef}
-            labelCol={{ span: 8 }}
-            name="basic"
-            autoComplete="off"
-            disabled={componentDisabled}
-            onFinish={addAdmin}
+        <Form
+          labelCol={{ span: 3 }}
+          name="basic"
+          autoComplete="off"
+          disabled={formDisabled}
+          onFinish={addAdmin}
+          initialValues={{ username: info?.username, nickname: info?.nickname, remark: info?.remark }}
+        >
+          <Form.Item<FieldType>
+            name="username"
+            label="帐号"
+            required
+            rules={[{ required: true, message: '请输入帐号' }]}
           >
-            <Form.Item<FieldType>
-              name="username"
-              label="帐号"
-              required
-            >
-              <Input style={{ width: 250 }} />
-            </Form.Item>
+            <Input disabled={isEdit} />
+          </Form.Item>
 
-            <Form.Item<FieldType>
-              name="nickname"
-              label="昵称"
-              required
-            >
-              <Input style={{ width: 250 }} />
-            </Form.Item>
-            <Form.Item<FieldType>
-              name="remark"
-              label="备注"
-            >
-              <TextArea rows={4} style={{ width: 250 }} />
-            </Form.Item>
-          </Form >
-        </div>
+          <Form.Item<FieldType>
+            name="nickname"
+            label="昵称"
+            required
+            rules={[{ required: true, message: '请输入昵称' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item<FieldType>
+            name="remark"
+            label="备注"
+          >
+            <TextArea rows={4} />
+          </Form.Item>
+
+          <Form.Item>
+            <Flex justify="center" align="center">
+              <Button size="large" type="primary" htmlType="submit">
+                确定
+              </Button>
+            </Flex>
+          </Form.Item>
+        </Form >
       </Modal>
     </>
   );
