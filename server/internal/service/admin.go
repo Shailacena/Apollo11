@@ -35,7 +35,7 @@ func (s *AdminService) Register(c echo.Context, req *v1.AdminRegisterReq) (*v1.A
 }
 
 func (s *AdminService) Login(c echo.Context, req *v1.AdminLoginReq) (*v1.AdminLoginResp, error) {
-	user, err := repository.Admin.Login(c, req.Username, req.Password)
+	user, err := repository.Admin.Login(c, req.Username, req.Password, req.Verificode)
 	if err != nil {
 		return nil, err
 	}

@@ -10,6 +10,7 @@ interface IResponseBody<T> {
 export interface AdminLoginReq {
   username: string
   password: string
+  verificode: string
 }
 
 export interface AdminLoginResp {

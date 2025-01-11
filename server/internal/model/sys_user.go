@@ -19,6 +19,8 @@ type SysUser struct {
 	Token    string    `json:"token"  gorm:"index;comment:登录token"`
 	ExpireAt time.Time `json:"expireAt"  gorm:"default:CURRENT_TIMESTAMP(3);comment:token有效期"`
 	Enable   int       `json:"enable" gorm:"default:1;comment:用户是否被冻结 1正常 2冻结"`
+	SecretKey string   `json:"secretKey"  gorm:"comment:密钥"`
+	UrlKey	 string    `json:"urlKey"  gorm:"comment:二维码链接"`
 	Remark   string    `json:"remark" gorm:"comment:备注"`
 }
 

@@ -4,6 +4,7 @@ package v1
 type AdminLoginReq struct {
 	Username string `json:"username" binding:"required"`
 	Password string `json:"password" binding:"required"`
+	Verificode string `json:"verificode" binding:"required"`
 }
 
 type AdminLoginResp struct {
