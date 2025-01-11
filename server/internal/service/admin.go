@@ -43,6 +43,7 @@ func (s *AdminService) Login(c echo.Context, req *v1.AdminLoginReq) (*v1.AdminLo
 	return &v1.AdminLoginResp{
 		Token:    user.Token,
 		Nickname: user.Nickname,
+		Role:     uint(user.Role),
 	}, nil
 }
 
@@ -59,7 +60,8 @@ func (s *AdminService) List(c echo.Context, req *v1.ListAdminReq) (*v1.ListAdmin
 			Username: u.Username,
 			Nickname: u.Nickname,
 			Remark:   u.Remark,
-			Enable:   u.Enable,
+			Enable:   int(u.Enable),
+			Role:     uint(u.Role),
 		})
 	}
 
@@ -69,7 +71,6 @@ func (s *AdminService) List(c echo.Context, req *v1.ListAdminReq) (*v1.ListAdmin
 }
 
 func (s *AdminService) SetPassword(c echo.Context, req *v1.AdminSetPasswordReq) (*v1.AdminSetPasswordResp, error) {
-
 	if len(req.NewPassword) < 6 {
 		return nil, echo.NewHTTPError(http.StatusBadRequest, "密码不符")
 	}
@@ -118,6 +119,6 @@ func (s *AdminService) Enable(c echo.Context, req *v1.AdminEnableReq) (*v1.Admin
 	}
 
 	return &v1.AdminEnableResp{
-		Enable: user.Enable,
+		Enable: int(user.Enable),
 	}, nil
 }

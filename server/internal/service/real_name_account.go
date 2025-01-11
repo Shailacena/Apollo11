@@ -50,7 +50,7 @@ func (s *RealNameAccountService) List(c echo.Context, req *v1.ListRealNameAccoun
 				Name:     a.Name,
 			},
 			RealNameCount: a.RealNameCount,
-			Enable:        a.Enable,
+			Enable:        int(a.Enable),
 			Remark:        a.Remark,
 		})
 	}

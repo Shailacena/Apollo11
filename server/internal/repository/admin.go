@@ -195,7 +195,7 @@ func (r *AdminRepo) Enable(c echo.Context, username string, enable int) (*model.
 		return nil, err
 	}
 
-	user.Enable = enable
+	user.Enable = model.EnableStatus(enable)
 	err = db.Where("username = ?", username).Updates(model.SysUser{Enable: user.Enable}).Error
 	if err != nil {
 		return nil, err

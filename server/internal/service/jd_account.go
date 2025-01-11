@@ -52,7 +52,7 @@ func (s *JDAccountService) List(c echo.Context, req *v1.ListJDAccountReq) (*v1.L
 			TodayOrderCount:        a.TodayOrderCount,
 			TotalSuccessOrderCount: a.TotalSuccessOrderCount,
 			LoginStatus:            a.LoginStatus,
-			Enable:                 a.Enable,
+			Enable:                 int(a.Enable),
 			Remark:                 a.Remark,
 			CreateAt:               a.CreatedAt.Unix(),
 			UpdateAt:               a.UpdatedAt.Unix(),

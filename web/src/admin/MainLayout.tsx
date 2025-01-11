@@ -4,29 +4,13 @@ import { DownOutlined } from '@ant-design/icons';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { routes } from './routes';
 import { useAppContext } from '../AppProvider';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CurrentLocation from '../components/CurrentLocation';
 
 const { Header, Content, Sider, Footer } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
 
-const menuItems: MenuItem[] = routes.map(
-  (menu) => {
-    return {
-      key: menu.path,
-      icon: menu.icon ? <menu.icon /> : null,
-      label: menu.name,
-
-      children: menu.children?.map((sub) => {
-        return {
-          key: menu.path + sub.path,
-          label: sub.name,
-        };
-      }),
-    };
-  },
-);
 
 interface LevelKeysProps {
   key?: string;
@@ -57,9 +41,45 @@ const items: MenuProps['items'] = [
 ]
 
 function MainLayout() {
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([])
   const navigate = useNavigate()
   const loc = useLocation()
   const ctx = useAppContext()
+
+  const nickname = ctx?.cookie?.nickname
+
+  useEffect(() => {
+    let all = routes.filter((route) => {
+      let isShow = route.permission ? route.permission == ctx.cookie.role : true
+      if (!isShow) {
+        return false
+      }
+
+      route.children = route.children?.filter((subRoute) => {
+        return subRoute.permission ? subRoute.permission == ctx.cookie.role : true
+      })
+      return true
+    })
+
+    let menu = all.map(
+      (menu) => {
+        return {
+          key: menu.path,
+          icon: menu.icon ? <menu.icon /> : null,
+          label: menu.name,
+
+          children: menu.children?.map((sub) => {
+            return {
+              key: menu.path + sub.path,
+              label: sub.name,
+            };
+          }),
+        };
+      },
+    );
+
+    setMenuItems(menu)
+  }, [ctx.cookie])
 
   const onClickMenu: MenuProps['onClick'] = (e) => {
     if (loc.pathname == e.key) {
@@ -115,7 +135,7 @@ function MainLayout() {
             }} trigger={['click']}>
               <a style={{ color: "#fff" }} onClick={(e) => e.preventDefault()}>
                 <Space>
-                  超级管理员
+                  {nickname}
                   <DownOutlined />
                 </Space>
               </a>

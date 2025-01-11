@@ -62,7 +62,7 @@ func (s *PartnerService) List(c echo.Context, req *v1.ListPartnerReq) (*v1.ListP
 			SuperiorAgent: u.SuperiorAgent,
 			Level:         u.Level,
 			StockAmount:   u.StockAmount,
-			Enable:        u.Enable,
+			Enable:        int(u.Enable),
 		})
 	}
 

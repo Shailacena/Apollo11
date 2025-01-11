@@ -103,15 +103,27 @@ function JDAccount() {
     try {
       let accountList: IJDAccountCreate[] = []
       if (value.accounts) {
+        let pinReg = /pin=([\s\S]*?);/
+        let keyReg = /wskey=([\s\S]*?);/
+
         let list = value.accounts.split(/[(\r\n)\r\n]+/)
 
         list?.forEach((line: string) => {
-          line = line.trim().replace(/\s+/, ",")
-          let accounts = line.split(",")
-          if (accounts.length > 1) {
+          let pinMatch = line.trim().match(pinReg)
+          let pin = ''
+          if (pinMatch && pinMatch.length > 1) {
+            pin = pinMatch[1]
+          }
+          let keyMatch = line.trim().match(keyReg)
+          let wsKey = ''
+          if (keyMatch && keyMatch.length > 1) {
+            wsKey = keyMatch[1]
+          }
+
+          if (pin && wsKey) {
             accountList.push({
-              account: accounts[0],
-              wsKey: accounts[accounts.length - 1],
+              account: pin,
+              wsKey: wsKey,
             })
           }
         })
@@ -126,13 +138,11 @@ function JDAccount() {
 
       fetchListJDAccount()
       setIsModalOpen(false);
+      message.success('导入成功')
     } catch (e) {
       if (axios.isAxiosError(e)) {
         let msg = e.response?.data?.message
-        msg && messageApi.open({
-          type: 'error',
-          content: msg,
-        });
+        msg && message.error(msg)
       }
     }
   };

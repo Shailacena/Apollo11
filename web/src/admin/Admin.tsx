@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { IAdmin, useApis } from '../api/api';
 import axios from 'axios';
 import AdminCreateModal from './modal/AdminCreateModal';
+import { getRoleName, isSuperAdmin, RoleType } from './role';
 
 interface DataType extends IAdmin {
   key: number;
@@ -38,6 +39,14 @@ function Admin() {
       key: 'nickname',
     },
     {
+      title: '角色',
+      key: 'role',
+      dataIndex: 'role',
+      render: (_, d) => (
+        getRoleName(d.role)
+      )
+    },
+    {
       title: '备注',
       key: 'remark',
       dataIndex: 'remark',
@@ -54,21 +63,29 @@ function Admin() {
       title: '操作',
       key: 'action',
       fixed: 'right',
-      render: (_, d) => (
-        <Space size="middle">
-          <Button type="primary" size='small' danger={d.enable === 1} onClick={() => enableAdmin(d.username, d.enable)}>{d.enable === 1 ? '冻结' : '启用'}</Button>
-          <Button type="primary" size='small' onClick={() => {
-            openModal(d, true)
-          }}>修改</Button>
-          <Popconfirm title="警告" description="请确认是否删除该管理员"
-            onConfirm={() => deleteAdmin(d.username)}
-          >
-            <Button type="primary" size='small' danger >删除</Button>
-          </Popconfirm>
+      render: (_, d) => {
+        let isSuper = isSuperAdmin(d.role)
+        return (
+          <Space size="middle">
+            {
+              !isSuper && <Button type="primary" size='small' danger={d.enable === 1} onClick={() => enableAdmin(d.username, d.enable)}>{d.enable === 1 ? '冻结' : '启用'}</Button>
+            }
+            <Button type="primary" size='small' onClick={() => {
+              openModal(d, true)
+            }}>修改</Button>
+            {
+              !isSuper &&
+              <Popconfirm title="警告" description="请确认是否删除该管理员"
+                onConfirm={() => deleteAdmin(d.username)}
+              >
+                <Button type="primary" size='small' danger >删除</Button>
+              </Popconfirm>
+            }
 
-          <Button type="primary" size='small' danger onClick={() => resetPassword(d.username)}>重置密码</Button>
-        </Space>
-      ),
+            <Button type="primary" size='small' danger onClick={() => resetPassword(d.username)}>重置密码</Button>
+          </Space>
+        )
+      }
     },
   ];
 

@@ -15,6 +15,7 @@ export interface AdminLoginReq {
 export interface AdminLoginResp {
   token: string
   nickname: string
+  role: number
 }
 
 export interface AdminRegisterReq extends AdminBaseInfoReq {
@@ -42,6 +43,7 @@ export interface IAdmin {
   nickname: string
   remark: string
   enable: number
+  role: number
 }
 
 export interface AdminResetPasswordReq {

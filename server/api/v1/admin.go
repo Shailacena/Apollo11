@@ -9,6 +9,7 @@ type AdminLoginReq struct {
 type AdminLoginResp struct {
 	Token    string `json:"token"`
 	Nickname string `json:"nickname"`
+	Role     uint   `json:"role"`
 }
 
 // 管理员注册
@@ -92,4 +93,5 @@ type Admin struct {
 	Nickname string `json:"nickname"`
 	Remark   string `json:"remark"`
 	Enable   int    `json:"enable"`
+	Role     uint   `json:"role"`
 }

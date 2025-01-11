@@ -10,6 +10,7 @@ import Merchant from './Merchant';
 import DailyBill from './DailyBill';
 import TradingRecord from './TradingRecord';
 import SystemConfig from './SystemConfig';
+import { RoleType } from './role';
 
 
 export interface IRoute {
@@ -18,6 +19,7 @@ export interface IRoute {
   component: any,
   icon?: any,
   children?: Array<IRoute>
+  permission?: RoleType
 }
 
 export const routes: Array<IRoute> = [
@@ -37,6 +39,7 @@ export const routes: Array<IRoute> = [
         path: '/list',
         name: '管理员列表',
         component: Admin,
+        permission: RoleType.SuperAdmin
       },
       {
         path: '/OperationLog',

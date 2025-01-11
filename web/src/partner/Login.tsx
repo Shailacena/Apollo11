@@ -21,11 +21,11 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     // 异步操作或其他需要在渲染之外进行的操作
-    if (ctx.auth.token) {
+    if (ctx.cookie.token) {
       navigate(getRouteConfig()[0].path, { replace: true });
       return;
     }
-  }, [ctx.auth]);
+  }, [ctx.cookie]);
 
   const onFinish: FormProps<PartnerLoginReq>['onFinish'] = async (value) => {
     try {

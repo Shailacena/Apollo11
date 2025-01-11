@@ -56,7 +56,7 @@ func (s *MerchantService) List(c echo.Context, req *v1.ListMerchantReq) (*v1.Lis
 			Id:         m.ID,
 			Name:       m.Name,
 			PrivateKey: m.PrivateKey,
-			Enable:     m.Enable,
+			Enable:     int(m.Enable),
 			Remark:     m.Remark,
 			CreateAt:   m.CreatedAt.Unix(),
 		})

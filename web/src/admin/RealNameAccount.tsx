@@ -87,13 +87,11 @@ function RealNameAccount() {
 
       fetchListRealNameAccount()
       setIsModalOpen(false);
+      message.success('导入成功')
     } catch (e) {
       if (axios.isAxiosError(e)) {
         let msg = e.response?.data?.message
-        msg && messageApi.open({
-          type: 'error',
-          content: msg,
-        });
+        msg && message.error(msg)
       }
     }
   };

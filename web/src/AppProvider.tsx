@@ -10,10 +10,22 @@ export enum AUTH_TYPE {
   ADMIN, PARTNER, MERCHANT
 }
 
+enum CookieFiled {
+  Token = 'token',
+  Nickname = 'nickname',
+  Role = 'role'
+}
+
+interface Cookie {
+  token?: string
+  nickname?: string
+  role?: number
+}
+
 interface AuthContextType {
   auth: {
-    token: any;
-    name: any;
+    // token: any;
+    // name: any;
     id: any;
 
     adminSignin: (value: AdminLoginResp, id: string, callback: Function) => void;
@@ -25,7 +37,7 @@ interface AuthContextType {
     merchantSignin: (value: MerchantLoginResp, id: number, callback: Function) => void;
     merchantSignout: (callback: Function) => void;
   }
-  cookie: any;
+  cookie: Cookie;
 
   partnerList: IPartner[];
 }
@@ -37,12 +49,16 @@ export function useAppContext() {
 }
 
 function AppProvider({ children }: { children: React.ReactNode }) {
-  let [token, setToken] = React.useState<any>(null);
-  let [name, setName] = React.useState<any>(null);
+  // let [token, setToken] = React.useState<any>(null);
+  // let [name, setName] = React.useState<any>(null);
   let [id, setID] = React.useState<any>(null);
   let [partnerList] = React.useState<any>(null);
 
-  let [cookie, setCookie, removeCookie] = useCookies(['token', 'name']);
+  let [cookie, setCookie, removeCookie] = useCookies([CookieFiled.Token, CookieFiled.Nickname, CookieFiled.Role]);
+
+  const adminPath = '/admin'
+  const partnerPath = '/partner'
+  const merchantPath = '/merchant'
 
   useEffect(() => {
     console.log('icccc =====> AppProvider useEffect')
@@ -50,62 +66,65 @@ function AppProvider({ children }: { children: React.ReactNode }) {
 
   let adminSignin = async (data: AdminLoginResp, id: string, callback: Function) => {
     console.log(data);
-    setToken(data.token)
-    setName(data.nickname);
+    // setToken(data.token)
+    // setName(data.nickname);
     setID(id);
-    console.log(TAG, 'adminSignin iccccccccccccccccccc token', token)
+    // console.log(TAG, 'adminSignin iccccccccccccccccccc token', token)
     console.log(TAG, 'adminSignin iccccccccccccccccccc id', id)
-    setCookie('token', data.token, { path: '/admin', expires: getExpirationDate(7) });
-    setCookie('name', data.nickname, { path: '/admin', expires: getExpirationDate(7) });
+    let exp = getExpirationDate(7)
+    setCookie(CookieFiled.Token, data.token, { path: adminPath, expires: exp });
+    setCookie(CookieFiled.Nickname, data.nickname, { path: adminPath, expires: exp });
+    setCookie(CookieFiled.Role, data.role, { path: adminPath, expires: exp });
     callback()
   };
 
   let adminSignout = (callback: Function) => {
-    removeCookie('token', { path: '/admin' })
-    removeCookie('name', { path: '/admin' })
-    setToken(null)
-    setName(null);
+    removeCookie(CookieFiled.Token, { path: adminPath })
+    removeCookie(CookieFiled.Nickname, { path: adminPath })
+    removeCookie(CookieFiled.Role, { path: adminPath })
+    // setToken(null)
+    // setName(null);
     callback();
   };
 
   let partnerSignin = async (data: PartnerLoginResp, id: number, callback: Function) => {
     console.log(data);
-    setToken(data.token)
-    setName(data.name);
+    // setToken(data.token)
+    // setName(data.name);
     setID(id);
-    setCookie('token', data.token, { path: '/partner', expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
-    setCookie('name', data.name, { path: '/partner', expires: getExpirationDate(7) });
+    setCookie(CookieFiled.Token, data.token, { path: partnerPath, expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
+    setCookie(CookieFiled.Nickname, data.name, { path: partnerPath, expires: getExpirationDate(7) });
     callback()
   };
 
   let partnerSignout = (callback: Function) => {
-    removeCookie('token', { path: '/partner' })
-    removeCookie('name', { path: '/partner' })
-    setToken(null)
-    setName(null);
+    removeCookie(CookieFiled.Token, { path: partnerPath })
+    removeCookie(CookieFiled.Nickname, { path: partnerPath })
+    // setToken(null)
+    // setName(null);
     callback();
   };
 
   let merchantSignin = async (data: MerchantLoginResp, id: number, callback: Function) => {
     console.log(data);
-    setToken(data.token)
-    setName(data.name);
+    // setToken(data.token)
+    // setName(data.name);
     setID(id);
-    setCookie('token', data.token, { path: '/merchant', expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
-    setCookie('name', data.name, { path: '/merchant', expires: getExpirationDate(7) });
+    setCookie(CookieFiled.Token, data.token, { path: merchantPath, expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
+    setCookie(CookieFiled.Nickname, data.name, { path: merchantPath, expires: getExpirationDate(7) });
     callback()
   };
 
   let merchantSignout = (callback: Function) => {
-    removeCookie('token', { path: '/merchant' })
-    removeCookie('name', { path: '/merchant' })
-    setToken(null)
-    setName(null);
+    removeCookie(CookieFiled.Token, { path: merchantPath })
+    removeCookie(CookieFiled.Nickname, { path: merchantPath })
+    // setToken(null)
+    // setName(null);
     callback();
   };
 
   let value = {
-    auth: { token, name, id, adminSignin, adminSignout, partnerSignin, partnerSignout, merchantSignin, merchantSignout },
+    auth: { id, adminSignin, adminSignout, partnerSignin, partnerSignout, merchantSignin, merchantSignout },
     cookie,
     partnerList,
   }
@@ -113,20 +132,18 @@ function AppProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function RequireAuth({ children }: { children: JSX.Element }) {
-  let ctx = useAppContext();
+  // let ctx = useAppContext();
 
   let location = useLocation();
-  let [cookies] = useCookies(['token']);
+  let [cookies] = useCookies([CookieFiled.Token]);
 
-  console.log(TAG, 'RequireAuth iccccccccccccccccccc auth', ctx)
-  console.log(TAG, 'RequireAuth iccccccccccccccccccc auth.token', ctx.auth.token)
+  // console.log(TAG, 'RequireAuth iccccccccccccccccccc auth', ctx)
+  // console.log(TAG, 'RequireAuth iccccccccccccccccccc auth.token', ctx.auth.token)
   console.log(TAG, 'RequireAuth iccccccccccccccccccc cookies token ', cookies.token)
 
   // 已登陆
-  if (ctx.auth.token) {
-    return children;
-  } else if (cookies.token) {
-    ctx.auth.token = cookies.token
+  if (cookies.token) {
+    // ctx.auth.token = cookies.token
     return children;
   }
 
@@ -135,19 +152,17 @@ export function RequireAuth({ children }: { children: JSX.Element }) {
 }
 
 export function RequireAuthPartner({ children }: { children: JSX.Element }) {
-  let ctx = useAppContext();
+  // let ctx = useAppContext();
   let location = useLocation();
-  let [cookies] = useCookies(['token']);
+  let [cookies] = useCookies([CookieFiled.Token]);
 
   console.log(TAG, location.pathname)
-  console.log(TAG, 'RequireAuthPartner iccccccccccccccccccc auth.token', ctx.auth.token)
+  // console.log(TAG, 'RequireAuthPartner iccccccccccccccccccc auth.token', ctx.auth.token)
   console.log(TAG, 'RequireAuthPartner iccccccccccccccccccc cookies token ', cookies.token)
 
   // 已登陆
-  if (ctx.auth.token) {
-    return children;
-  } else if (cookies.token) {
-    ctx.auth.token = cookies.token
+  if (cookies.token) {
+    // ctx.auth.token = cookies.token
     return children;
   }
 
@@ -156,19 +171,16 @@ export function RequireAuthPartner({ children }: { children: JSX.Element }) {
 }
 
 export function RequireAuthMerchant({ children }: { children: JSX.Element }) {
-  let ctx = useAppContext();
+  // let ctx = useAppContext();
   let location = useLocation();
-  let [cookies] = useCookies(['token']);
+  let [cookies] = useCookies([CookieFiled.Token]);
 
   console.log(TAG, location.pathname)
-  console.log(TAG, 'RequireAuthMerchant iccccccccccccccccccc auth.token', ctx.auth.token)
+  // console.log(TAG, 'RequireAuthMerchant iccccccccccccccccccc auth.token', ctx.auth.token)
   console.log(TAG, 'RequireAuthMerchant iccccccccccccccccccc cookies token ', cookies.token)
 
   // 已登陆
-  if (ctx.auth.token) {
-    return children;
-  } else if (cookies.token) {
-    ctx.auth.token = cookies.token
+  if (cookies.token) {
     return children;
   }
 

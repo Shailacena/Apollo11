@@ -20,11 +20,11 @@ const Login: React.FC = () => {
   const [messageApi, _] = message.useMessage();
 
   useEffect(() => {
-    if (ctx.auth.token) {
+    if (ctx.cookie.token) {
       navigate(getRouteConfig()[0].path, { replace: true });
       return;
     }
-  }, [ctx.auth]);
+  }, [ctx.cookie]);
 
   const onFinish: FormProps<MerchantLoginReq>['onFinish'] = async (value) => {
     console.log('Received values of form: ', value);

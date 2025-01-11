@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Button, Divider, Flex, Form, FormProps, Input, message, Modal } from 'antd';
-import { AdminBaseInfoReq, AdminRegisterReq, useApis } from '../../api/api';
+import { AdminBaseInfoReq, useApis } from '../../api/api';
 import axios from 'axios';
 import TextArea from 'antd/es/input/TextArea';
 
