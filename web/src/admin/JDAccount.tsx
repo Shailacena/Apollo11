@@ -85,7 +85,6 @@ function JDAccount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [list, setList] = useState<DataType[]>([])
   let { listJDAccount, jdAccountCreate } = useApis()
-  const [messageApi, contextHolder] = message.useMessage();
 
   const showModal = () => {
     setIsModalOpen(true);
@@ -165,7 +164,6 @@ function JDAccount() {
 
   return (
     <>
-      {contextHolder}
       <Card>
         <div>
           <Button type="primary" onClick={showModal}>批量导入京东账号</Button>

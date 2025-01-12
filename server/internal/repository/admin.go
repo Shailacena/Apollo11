@@ -29,10 +29,10 @@ func (r *AdminRepo) Register(c echo.Context, u *model.SysUser) (*model.SysUser, 
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errors.New("用户名已注册")
 	}
- 
+
 	// 生成一个随机的密钥
 	key, err2 := totp.Generate(totp.GenerateOpts{
-		Issuer:      "Apollo11", 
+		Issuer:      "Apollo11",
 		AccountName: u.Username,
 	})
 
@@ -64,7 +64,7 @@ func (r *AdminRepo) Login(c echo.Context, username, password, verificode string)
 	if user.SecretKey == "" {
 		// 生成一个随机的密钥
 		key, err2 := totp.Generate(totp.GenerateOpts{
-			Issuer:      "Apollo11", 
+			Issuer:      "Apollo11",
 			AccountName: user.Username,
 		})
 		if err2 != nil {
@@ -80,10 +80,10 @@ func (r *AdminRepo) Login(c echo.Context, username, password, verificode string)
 		}
 	}
 	// 验证OTP码
-    valid := totp.Validate(verificode, user.SecretKey)
-    if !valid {
+	valid := totp.Validate(verificode, user.SecretKey)
+	if !valid {
 		return nil, errors.New("验证失败")
-    }
+	}
 
 	if password != user.Password {
 		return nil, errors.New("密码错误")
