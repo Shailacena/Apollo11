@@ -2,8 +2,8 @@ package v1
 
 // 管理员登录
 type AdminLoginReq struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Username   string `json:"username" binding:"required"`
+	Password   string `json:"password" binding:"required"`
 	Verificode string `json:"verificode" binding:"required"`
 }
 
@@ -89,10 +89,12 @@ type AdminEnableResp struct {
 }
 
 type Admin struct {
-	Id       uint   `json:"id"`
-	Username string `json:"username"`
-	Nickname string `json:"nickname"`
-	Remark   string `json:"remark"`
-	Enable   int    `json:"enable"`
-	Role     uint   `json:"role"`
+	Id        uint   `json:"id"`
+	Username  string `json:"username"`
+	Nickname  string `json:"nickname"`
+	Remark    string `json:"remark"`
+	Enable    int    `json:"enable"`
+	Role      uint   `json:"role"`
+	SecretKey string `json:"secretKey"`
+	UrlKey    string `json:"urlKey"`
 }

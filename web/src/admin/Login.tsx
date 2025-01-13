@@ -63,12 +63,12 @@ function Login() {
               <Input.Password placeholder="密码" />
             </Form.Item>
 
-            <Form.Item<AdminLoginReq>
+            {/* <Form.Item<AdminLoginReq>
               name="verificode"
               rules={[{ required: true, message: '请输入谷歌验证码' }]}
             >
               <Input placeholder="谷歌验证码" />
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item>
               <Button size="large" block type="primary" htmlType="submit">

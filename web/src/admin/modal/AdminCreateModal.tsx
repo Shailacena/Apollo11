@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Divider, Flex, Form, FormProps, Input, message, Modal } from 'antd';
+import { Button, Divider, Flex, Form, FormProps, Input, message, Modal, Popconfirm, QRCode, Space } from 'antd';
 import { AdminBaseInfoReq, useApis } from '../../api/api';
 import axios from 'axios';
 import TextArea from 'antd/es/input/TextArea';
@@ -11,9 +11,11 @@ interface AdminAddDataType {
   info?: FieldType
 }
 
-type FieldType = {
+export type FieldType = {
   username?: string;
   nickname?: string;
+  secretKey?: string;
+  urlKey?: string;
   remark?: string;
 };
 
@@ -86,17 +88,16 @@ const AdminCreateModal = (params: AdminAddDataType) => {
       >
         <Divider />
         <Form
-          labelCol={{ span: 3 }}
+          labelCol={{ span: 4 }}
           name="basic"
           autoComplete="off"
           disabled={formDisabled}
           onFinish={addAdmin}
-          initialValues={{ username: info?.username, nickname: info?.nickname, remark: info?.remark }}
+          initialValues={{ ...info }}
         >
           <Form.Item<FieldType>
             name="username"
             label="帐号"
-            required
             rules={[{ required: true, message: '请输入帐号' }]}
           >
             <Input disabled={isEdit} />
@@ -105,11 +106,43 @@ const AdminCreateModal = (params: AdminAddDataType) => {
           <Form.Item<FieldType>
             name="nickname"
             label="昵称"
-            required
             rules={[{ required: true, message: '请输入昵称' }]}
           >
             <Input />
           </Form.Item>
+
+
+          {
+            isEdit &&
+            <Form.Item<FieldType>
+              name="secretKey"
+              label="验证码"
+              required
+            >
+              <Space.Compact style={{ width: '100%' }}>
+                <Input
+                  disabled
+                  defaultValue={info?.secretKey}
+                />
+                <Button type="primary">
+                  重新生成
+                </Button>
+                <Popconfirm
+                  title="验证码"
+                  icon={null}
+                  description={
+                    info?.urlKey ? <QRCode value={info?.urlKey} size={320} /> : '无二维码，点击重新生成'
+                  }
+                  showCancel={false}
+                  okText="关闭"
+                >
+                <Button type="primary">
+                  二维码
+                </Button>
+                </Popconfirm>
+              </Space.Compact>
+            </Form.Item>
+          }
 
           <Form.Item<FieldType>
             name="remark"

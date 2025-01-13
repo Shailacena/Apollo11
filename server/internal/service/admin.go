@@ -56,12 +56,14 @@ func (s *AdminService) List(c echo.Context, req *v1.ListAdminReq) (*v1.ListAdmin
 	list := make([]*v1.Admin, 0, len(users))
 	for _, u := range users {
 		list = append(list, &v1.Admin{
-			Id:       u.ID,
-			Username: u.Username,
-			Nickname: u.Nickname,
-			Remark:   u.Remark,
-			Enable:   int(u.Enable),
-			Role:     uint(u.Role),
+			Id:        u.ID,
+			Username:  u.Username,
+			Nickname:  u.Nickname,
+			Remark:    u.Remark,
+			Enable:    int(u.Enable),
+			Role:      uint(u.Role),
+			SecretKey: u.SecretKey,
+			UrlKey:    u.UrlKey,
 		})
 	}
 

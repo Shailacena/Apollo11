@@ -3,18 +3,12 @@ import type { TableProps } from 'antd';
 import { useEffect, useState } from 'react';
 import { IAdmin, useApis } from '../api/api';
 import axios from 'axios';
-import AdminCreateModal from './modal/AdminCreateModal';
-import { getRoleName, isSuperAdmin, RoleType } from './role';
+import AdminCreateModal, { FieldType } from './modal/AdminCreateModal';
+import { getRoleName, isSuperAdmin } from './role';
 
 interface DataType extends IAdmin {
   key: number;
 }
-
-type FieldType = {
-  username?: string;
-  nickname?: string;
-  remark?: string;
-};
 
 function Admin() {
   const [list, setList] = useState<DataType[]>([])
@@ -190,7 +184,10 @@ function Admin() {
         <Divider />
         <Table<DataType> bordered columns={columns} dataSource={list} />
 
-        <AdminCreateModal info={selectedData} isModalOpen={isModalOpen} onOk={onSuccess} onCancel={() => openModal()} />
+        {
+          isModalOpen &&
+          <AdminCreateModal info={selectedData} isModalOpen={isModalOpen} onOk={onSuccess} onCancel={() => openModal()} />
+        }
       </Card>
     </>
   )
