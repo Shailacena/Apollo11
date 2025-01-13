@@ -78,7 +78,7 @@ const SetPasswordModal = (params: PartnerSetPasswordDataType) => {
             disabled={componentDisabled}
           >
             <Form.Item<FieldType>
-              name="oldpassowrd"
+              name="oldpassword"
               label="原始密码"
               required
             >
@@ -86,7 +86,7 @@ const SetPasswordModal = (params: PartnerSetPasswordDataType) => {
             </Form.Item>
 
             <Form.Item<FieldType>
-              name="newpassowrd"
+              name="newpassword"
               label="新密码"
               required
             >

@@ -18,7 +18,7 @@ type FieldType = {
 
 function Admin() {
   const [list, setList] = useState<DataType[]>([])
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   let { listAdmin, adminResetPassword, adminDelete, adminEnable } = useApis()
   const [selectedData, setSelectedData] = useState<FieldType>(null!);
 
@@ -70,18 +70,13 @@ function Admin() {
             {
               !isSuper && <Button type="primary" size='small' danger={d.enable === 1} onClick={() => enableAdmin(d.username, d.enable)}>{d.enable === 1 ? '冻结' : '启用'}</Button>
             }
-            <Button type="primary" size='small' onClick={() => {
-              openModal(d, true)
-            }}>修改</Button>
+            <Button type="primary" size='small' onClick={() => { openModal(d, true) }}>修改</Button>
             {
               !isSuper &&
-              <Popconfirm title="警告" description="请确认是否删除该管理员"
-                onConfirm={() => deleteAdmin(d.username)}
-              >
+              <Popconfirm title="警告" description="请确认是否删除该管理员" onConfirm={() => deleteAdmin(d.username)} >
                 <Button type="primary" size='small' danger >删除</Button>
               </Popconfirm>
             }
-
             <Button type="primary" size='small' danger onClick={() => resetPassword(d.username)}>重置密码</Button>
           </Space>
         )
@@ -112,15 +107,15 @@ function Admin() {
     }
   }
 
-  const addSuccess = () => {
+  const onSuccess = () => {
     fetchListAdmin()
-    setIsAddModalOpen(false)
+    setIsModalOpen(false)
   };
 
   const openModal = (selectedData: DataType | null = null, isOpen: boolean = false) => {
     console.log("selectedData", selectedData);
     setSelectedData(selectedData!)
-    setIsAddModalOpen(isOpen)
+    setIsModalOpen(isOpen)
   }
 
   const showSuccessMsg = (text: string) => {
@@ -191,11 +186,11 @@ function Admin() {
   return (
     <>
       <Card>
-        <Button type="primary" onClick={() => { setIsAddModalOpen(true) }}>新增管理员</Button>
+        <Button type="primary" onClick={() => { setIsModalOpen(true) }}>新增管理员</Button>
         <Divider />
         <Table<DataType> bordered columns={columns} dataSource={list} />
 
-        <AdminCreateModal info={selectedData} isModalOpen={isAddModalOpen} onOk={addSuccess} onCancel={() => openModal()} />
+        <AdminCreateModal info={selectedData} isModalOpen={isModalOpen} onOk={onSuccess} onCancel={() => openModal()} />
       </Card>
     </>
   )

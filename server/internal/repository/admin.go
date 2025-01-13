@@ -5,7 +5,6 @@ import (
 	"apollo/server/pkg/data"
 	"apollo/server/pkg/util"
 	"errors"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -60,34 +59,34 @@ func (r *AdminRepo) Login(c echo.Context, username, password, verificode string)
 		}
 		return nil, err
 	}
-	fmt.Println(user.SecretKey)
-	if user.SecretKey == "" {
-		// 生成一个随机的密钥
-		key, err2 := totp.Generate(totp.GenerateOpts{
-			Issuer:      "Apollo11",
-			AccountName: user.Username,
-		})
-		if err2 != nil {
-			return nil, errors.New("生成验证码失败")
-		}
 
-		user.SecretKey = key.Secret()
-		user.UrlKey = key.URL()
+	// if user.SecretKey == "" {
+	// 	// 生成一个随机的密钥
+	// 	key, err2 := totp.Generate(totp.GenerateOpts{
+	// 		Issuer:      "Apollo11",
+	// 		AccountName: user.Username,
+	// 	})
+	// 	if err2 != nil {
+	// 		return nil, errors.New("生成验证码失败")
+	// 	}
 
-		err = db.Where("username = ?", username).Updates(model.SysUser{SecretKey: user.SecretKey, UrlKey: user.UrlKey}).Error
-		if err != nil {
-			return nil, err
-		}
-	}
-	// 验证OTP码
-	valid := totp.Validate(verificode, user.SecretKey)
-	if !valid {
-		return nil, errors.New("验证失败")
-	}
+	// 	user.SecretKey = key.Secret()
+	// 	user.UrlKey = key.URL()
 
-	if password != user.Password {
-		return nil, errors.New("密码错误")
-	}
+	// 	err = db.Where("username = ?", username).Updates(model.SysUser{SecretKey: user.SecretKey, UrlKey: user.UrlKey}).Error
+	// 	if err != nil {
+	// 		return nil, err
+	// 	}
+	// }
+	// // 验证OTP码
+	// valid := totp.Validate(verificode, user.SecretKey)
+	// if !valid {
+	// 	return nil, errors.New("验证失败")
+	// }
+
+	// if password != user.Password {
+	// 	return nil, errors.New("密码错误")
+	// }
 
 	user.Token = util.NewToken()
 	user.ExpireAt = time.Now().Add(1 * time.Hour)

@@ -1,15 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Modal, Space, Form, Table, Input, Button, message, Card, Divider } from 'antd';
-import type { FormProps, TableProps } from 'antd';
-import { IPartner, PartnerRegisterReq, useApis } from '../api/api';
-import axios from 'axios';
+import { Space, Table, Button, message, Card, Divider } from 'antd';
+import type { TableProps } from 'antd';
+import { IPartner, useApis } from '../api/api';
 import { useAppContext } from '../AppProvider';
-
-const { TextArea } = Input;
+import PartnerSearchForm from './searchform/PartnerSearchForm';
+import PartnerCreateModal from './modal/PartnerCreateModal';
 
 interface DataType extends IPartner {
   key: number;
 }
+
+type FieldType = {
+  username?: string;
+  nickname?: string;
+  remark?: string;
+};
 
 const columns: TableProps<DataType>['columns'] = [
   {
@@ -62,11 +67,11 @@ const columns: TableProps<DataType>['columns'] = [
     key: 'action',
     render: () => (
       <Space size="middle">
-        <Button disabled type="primary" size='small'>开启派单</Button>
-        <Button disabled type="primary" size='small'>修改</Button>
-        <Button disabled type="primary" size='small' danger >删除</Button>
-        <Button disabled type="primary" size='small'>授信额度</Button>
-        <Button disabled type="primary" size='small'>重置密码</Button>
+        <Button type="primary" size='small'>开启派单</Button>
+        <Button type="primary" size='small'>修改</Button>
+        <Button type="primary" size='small' danger >删除</Button>
+        <Button type="primary" size='small'>授信额度</Button>
+        <Button type="primary" size='small' danger >重置密码</Button>
       </Space>
     ),
   },
@@ -77,42 +82,19 @@ function Partner() {
   const [list, setList] = useState<DataType[]>([])
   const [messageApi, contextHolder] = message.useMessage();
   let ctx = useAppContext();
-  let { partnerRegister, listPartner } = useApis()
+  let { partnerRegister, listPartner } = useApis();
+  const [selectedData, setSelectedData] = useState<FieldType>(null!);
 
-  const showModal = () => {
-    setIsModalOpen(true);
+  const onSuccess = () => {
+    fetchListPartner()
+    setIsModalOpen(false)
   };
 
-  const success = (password: string) => {
-    Modal.success({
-      content: `添加成功, 密位为${password}`,
-    });
-  };
-
-  const onFinish: FormProps<PartnerRegisterReq>['onFinish'] = async (value) => {
-    try {
-      value.priority = value.priority && Number(value.priority)
-      value.dailyLimit = value.dailyLimit && Number(value.dailyLimit)
-      value.rechargeTime = value.rechargeTime && Number(value.rechargeTime)
-      console.log(value);
-      let { data } = await partnerRegister(value)
-      fetchListPartner()
-      success(data.password);
-      setIsModalOpen(false);
-    } catch (e) {
-      if (axios.isAxiosError(e)) {
-        let msg = e.response?.data?.message
-        msg && messageApi.open({
-          type: 'error',
-          content: msg,
-        });
-      }
-    }
+  const openModal = (selectedData: DataType | null = null, isOpen: boolean = false) => {
+    console.log("selectedData", selectedData);
+    setSelectedData(selectedData!)
+    setIsModalOpen(isOpen)
   }
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
 
   const fetchListPartner = async () => {
     const { data } = await listPartner()
@@ -137,71 +119,15 @@ function Partner() {
     <>
       {contextHolder}
       <Card>
-        <div>
-          <Button type="primary" onClick={showModal}>新增</Button>
+        <div style={{display: 'flex'}}>
+          <Button type="primary" onClick={() => { setIsModalOpen(true) }} >新增</Button>
+          <Divider type="vertical" style={{height: '32px', textAlign: 'center', alignContent: 'center', marginLeft: '20px', marginRight: '20px'}} />
+          <PartnerSearchForm />
         </div>
+        
         <Divider />
         <Table<DataType> bordered columns={columns} dataSource={list} scroll={{ x: 'max-content' }} />
-
-        <Modal title="新增" footer={null} onCancel={handleCancel} open={isModalOpen}>
-          <Form
-            preserve={false}
-            labelCol={{ span: 4 }}
-            name="basic"
-            autoComplete="off"
-            onFinish={onFinish}
-          >
-            <Form.Item<PartnerRegisterReq>
-              name="name"
-              label="名称"
-              required
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item<PartnerRegisterReq>
-              name="priority"
-              label="优先级"
-              required
-            >
-              <Input type='number' />
-            </Form.Item>
-
-            <Form.Item<PartnerRegisterReq>
-              name="dailyLimit"
-              label="每日限额"
-            >
-              <Input type='number' />
-            </Form.Item>
-
-            <Form.Item<PartnerRegisterReq>
-              name="rechargeTime"
-              label="充值时间"
-            >
-              <Input type='number' />
-            </Form.Item>
-
-            <Form.Item<PartnerRegisterReq>
-              name="privateKey"
-              label="私钥"
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item<PartnerRegisterReq>
-              name="remark"
-              label="备注"
-            >
-              <TextArea rows={4} />
-            </Form.Item>
-
-            <Form.Item>
-              <Button size="large" block type="primary" htmlType="submit">
-                确定
-              </Button>
-            </Form.Item>
-          </Form >
-        </Modal>
+        <PartnerCreateModal info={selectedData} isModalOpen={isModalOpen} onOk={onSuccess} onCancel={() => openModal()} />
       </Card>
     </>
   )

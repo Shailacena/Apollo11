@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Button, Divider, Flex, Form, FormProps, Input, message, Modal } from 'antd';
-import { AdminBaseInfoReq, useApis } from '../../api/api';
+import { AdminBaseInfoReq, PartnerRegisterReq, useApis } from '../../api/api';
 import axios from 'axios';
 import TextArea from 'antd/es/input/TextArea';
 
-interface AdminAddDataType {
+interface PartnerAddDataType {
   isModalOpen: boolean
   onOk: Function;
   onCancel: Function;
@@ -18,18 +18,19 @@ type FieldType = {
 };
 
 enum Title {
-  CreateTxt = '新增管理员',
-  EditTxt = '修改管理员'
+  CreateTxt = '新增合作商',
+  EditTxt = '修改合作商信息'
 }
 
-const AdminCreateModal = (params: AdminAddDataType) => {
+const PartnerCreateModal = (params: PartnerAddDataType) => {
+
   const [info, setInfo] = useState(params.info)
   const [isEdit, setIsEdit] = useState(!!params.info)
   const [title, setTitle] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(params.isModalOpen);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [formDisabled, setFormDisabled] = useState<boolean>(false);
-  let { adminRegister, adminUpdate } = useApis()
+  let { partnerRegister, partnerUpdate } = useApis()
 
   useEffect(() => {
     setIsModalOpen(params.isModalOpen)
@@ -44,10 +45,13 @@ const AdminCreateModal = (params: AdminAddDataType) => {
     setTitle(isEdit ? Title.EditTxt : Title.CreateTxt)
   }, [isEdit])
 
-  const addAdmin: FormProps<AdminBaseInfoReq>['onFinish'] = async (value) => {
+  const onFinish: FormProps<PartnerRegisterReq>['onFinish'] = async (value) => {
     setFormDisabled(true)
     setConfirmLoading(true)
     try {
+      value.priority = value.priority && Number(value.priority)
+      value.dailyLimit = value.dailyLimit && Number(value.dailyLimit)
+      value.rechargeTime = value.rechargeTime && Number(value.rechargeTime)
       isEdit ? handleEdit(value) : handleRegister(value)
     } catch (e) {
       if (axios.isAxiosError(e)) {
@@ -60,58 +64,68 @@ const AdminCreateModal = (params: AdminAddDataType) => {
     }
   };
 
-  const handleRegister = async (value: AdminBaseInfoReq) => {
-    let { data } = await adminRegister(value)
+  const handleRegister = async (value: PartnerRegisterReq) => {
+    let { data } = await partnerRegister(value)
     params?.onOk?.();
     Modal.success({
       content: `添加成功, 密位为${data.password}`,
     });
   }
 
-  const handleEdit = async (value: AdminBaseInfoReq) => {
-    await adminUpdate(value)
+  const handleEdit = async (value: PartnerRegisterReq) => {
+    await partnerUpdate(value)
     params?.onOk?.();
     message.success(`修改成功`)
   }
 
   return (
     <>
-      <Modal
-        title={title}
-        footer={null}
-        confirmLoading={confirmLoading}
-        open={isModalOpen}
-        onCancel={() => { params?.onCancel?.() }}
-        destroyOnClose
-      >
-        <Divider />
+      <Modal title="新增" footer={null} onCancel={params?.onCancel?.()} open={isModalOpen}>
         <Form
-          labelCol={{ span: 3 }}
+          preserve={false}
+          labelCol={{ span: 4 }}
           name="basic"
           autoComplete="off"
-          disabled={formDisabled}
-          onFinish={addAdmin}
-          initialValues={{ username: info?.username, nickname: info?.nickname, remark: info?.remark }}
+          onFinish={onFinish}
         >
-          <Form.Item<FieldType>
-            name="username"
-            label="帐号"
+          <Form.Item<PartnerRegisterReq>
+            name="name"
+            label="名称"
             required
-            rules={[{ required: true, message: '请输入帐号' }]}
-          >
-            <Input disabled={isEdit} />
-          </Form.Item>
-
-          <Form.Item<FieldType>
-            name="nickname"
-            label="昵称"
-            required
-            rules={[{ required: true, message: '请输入昵称' }]}
           >
             <Input />
           </Form.Item>
 
-          <Form.Item<FieldType>
+          <Form.Item<PartnerRegisterReq>
+            name="priority"
+            label="优先级"
+            required
+          >
+            <Input type='number' />
+          </Form.Item>
+
+          <Form.Item<PartnerRegisterReq>
+            name="dailyLimit"
+            label="每日限额"
+          >
+            <Input type='number' />
+          </Form.Item>
+
+          <Form.Item<PartnerRegisterReq>
+            name="rechargeTime"
+            label="充值时间"
+          >
+            <Input type='number' />
+          </Form.Item>
+
+          <Form.Item<PartnerRegisterReq>
+            name="privateKey"
+            label="私钥"
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item<PartnerRegisterReq>
             name="remark"
             label="备注"
           >
@@ -119,16 +133,14 @@ const AdminCreateModal = (params: AdminAddDataType) => {
           </Form.Item>
 
           <Form.Item>
-            <Flex justify="center" align="center">
-              <Button size="large" type="primary" htmlType="submit">
-                确定
-              </Button>
-            </Flex>
+            <Button size="large" block type="primary" htmlType="submit">
+              确定
+            </Button>
           </Form.Item>
         </Form >
       </Modal>
     </>
-  );
-};
+  )
+}
 
-export default AdminCreateModal;
+export default PartnerCreateModal

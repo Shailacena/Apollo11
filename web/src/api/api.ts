@@ -157,6 +157,16 @@ export interface PartnerSetPasswordResp {
 
 }
 
+export interface PartnerUpdateReq {
+  id: number
+  oldpassword: string
+  newpassword: string
+}
+
+export interface PartnerUpdateResp {
+
+}
+
 interface ListPartnerBillResp {
   list: Array<IPartnerBill>
 }
@@ -375,6 +385,12 @@ export function useApis() {
     },
     partnerSetPassword(data: PartnerSetPasswordReq): Promise<IResponseBody<PartnerSetPasswordResp>> {
       return ax.post("/partner/setPassword", data).then((res) => {
+        return res?.data
+      })
+    },
+
+    partnerUpdate(data: PartnerSetPasswordReq): Promise<IResponseBody<PartnerSetPasswordResp>> {
+      return ax.post("/partner/update", data).then((res) => {
         return res?.data
       })
     },

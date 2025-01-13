@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Card, Table } from 'antd';
 import type { TableProps } from 'antd';
 import { useApis } from '../api/api';
-import TradingRecordSearchForm from './modal/TradingRecordSearchForm';
+import TradingRecordSearchForm from './searchform/TradingRecordSearchForm';
 
 
 interface DataType {

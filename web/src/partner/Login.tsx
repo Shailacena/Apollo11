@@ -20,7 +20,6 @@ const Login: React.FC = () => {
   const [messageApi, _] = message.useMessage();
 
   useEffect(() => {
-    // 异步操作或其他需要在渲染之外进行的操作
     if (ctx.cookie.token) {
       navigate(getRouteConfig()[0].path, { replace: true });
       return;
