@@ -4,7 +4,7 @@ import { PartnerBaseInfoReq, useApis } from '../../api/api';
 import axios from 'axios';
 import TextArea from 'antd/es/input/TextArea';
 
-interface PartnerAddDataType {
+interface ModalDataType {
   isModalOpen: boolean
   onOk: Function;
   onCancel: Function;
@@ -18,11 +18,10 @@ type FieldType = {
 };
 
 enum Title {
-  CreateTxt = '新增合作商',
-  EditTxt = '修改合作商信息'
+  EditTxt = '修改授信额度'
 }
 
-const PartnerSetCreditModal = (params: PartnerAddDataType) => {
+const PartnerSetCreditModal = (params: ModalDataType) => {
 
   const [info, setInfo] = useState(params.info)
   const [isEdit, setIsEdit] = useState(!!params.info)
@@ -42,7 +41,7 @@ const PartnerSetCreditModal = (params: PartnerAddDataType) => {
   }, [params.info])
 
   useEffect(() => {
-    setTitle(isEdit ? Title.EditTxt : Title.CreateTxt)
+    setTitle(isEdit ? Title.EditTxt : Title.EditTxt)
   }, [isEdit])
 
   const onFinish: FormProps<PartnerBaseInfoReq>['onFinish'] = async (value) => {

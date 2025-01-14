@@ -4,7 +4,7 @@ import { AdminBaseInfoReq, useApis } from '../../api/api';
 import axios from 'axios';
 import TextArea from 'antd/es/input/TextArea';
 
-interface AdminAddDataType {
+interface ModalDataType {
   isModalOpen: boolean
   onOk: Function;
   onCancel: Function;
@@ -24,7 +24,7 @@ enum Title {
   EditTxt = '修改管理员'
 }
 
-const AdminCreateModal = (params: AdminAddDataType) => {
+const AdminCreateModal = (params: ModalDataType) => {
   const [info, setInfo] = useState(params.info)
   const [isEdit, setIsEdit] = useState(!!params.info)
   const [title, setTitle] = useState('')

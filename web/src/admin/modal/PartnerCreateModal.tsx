@@ -4,7 +4,7 @@ import { PartnerBaseInfoReq, useApis } from '../../api/api';
 import axios from 'axios';
 import TextArea from 'antd/es/input/TextArea';
 
-interface PartnerAddDataType {
+interface ModalDataType {
   isModalOpen: boolean
   onOk: Function;
   onCancel: Function;
@@ -22,7 +22,7 @@ enum Title {
   EditTxt = '修改合作商信息'
 }
 
-const PartnerCreateModal = (params: PartnerAddDataType) => {
+const PartnerCreateModal = (params: ModalDataType) => {
 
   const [info, setInfo] = useState(params.info)
   const [isEdit, setIsEdit] = useState(!!params.info)
