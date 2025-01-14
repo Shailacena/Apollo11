@@ -22,7 +22,7 @@ enum Title {
   EditTxt = '修改合作商信息'
 }
 
-const PartnerCreateModal = (params: PartnerAddDataType) => {
+const PartnerSetCreditModal = (params: PartnerAddDataType) => {
 
   const [info, setInfo] = useState(params.info)
   const [isEdit, setIsEdit] = useState(!!params.info)
@@ -145,4 +145,4 @@ const PartnerCreateModal = (params: PartnerAddDataType) => {
   )
 }
 
-export default PartnerCreateModal
+export default PartnerSetCreditModal

@@ -13,12 +13,16 @@ type PartnerLoginResp struct {
 
 // 合作商注册
 type PartnerRegisterReq struct {
-	Name         string `json:"name" binding:"required"`
-	Priority     int    `json:"priority" binding:"required"`
-	DailyLimit   int    `json:"dailyLimit"`
-	RechargeTime int64  `json:"rechargeTime"`
-	PrivateKey   string `json:"privateKey"`
-	Remark       string `json:"remark"`
+	Name          string `json:"name" binding:"required"`
+	DailyLimit    int    `json:"dailyLimit"`
+	CreditAmount  int64  `json:"creditAmount"`
+	Priority      int    `json:"priority" binding:"required"`
+	SuperiorAgent int    `json:"superiorAgent"`
+	Level         int    `json:"level"`
+	StockAmount   int64  `json:"stockAmount"`
+	RechargeTime  int64  `json:"rechargeTime"`
+	PrivateKey    string `json:"privateKey"`
+	Remark        string `json:"remark"`
 }
 
 type PartnerRegisterResp struct {
@@ -43,6 +47,8 @@ type Partner struct {
 	SuperiorAgent int    `json:"superiorAgent"`
 	Level         int    `json:"level"`
 	StockAmount   int64  `json:"stockAmount"`
+	RechargeTime  int64  `json:"rechargeTime"`
+	PrivateKey    string `json:"privateKey"`
 	Enable        int    `json:"enable"`
 	Remark        string `json:"remark"`
 }

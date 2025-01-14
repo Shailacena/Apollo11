@@ -18,9 +18,16 @@ type PartnerService struct {
 
 func (s *PartnerService) Register(c echo.Context, req *v1.PartnerRegisterReq) (*v1.PartnerRegisterResp, error) {
 	p := model.Partner{
-		Name:       req.Name,
-		Priority:   req.Priority,
-		DailyLimit: req.DailyLimit,
+		Name:          req.Name,
+		DailyLimit:    req.DailyLimit,
+		CreditAmount:  req.CreditAmount,
+		Priority:      req.Priority,
+		SuperiorAgent: req.SuperiorAgent,
+		Level:         req.Level,
+		StockAmount:   req.StockAmount,
+		RechargeTime:  req.RechargeTime,
+		PrivateKey:    req.PrivateKey,
+		Remark:        req.Remark,
 	}
 	partner, err := repository.Partner.Register(c, &p)
 	if err != nil {

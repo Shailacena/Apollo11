@@ -18,7 +18,10 @@ type Partner struct {
 	StockAmount   int64        `json:"stockAmount"  gorm:"default:0;comment:剩余库存金额"`
 	Enable        EnableStatus `json:"enable" gorm:"default:1;comment:用户是否被冻结 1正常 2冻结"`
 	Token         string       `json:"token"  gorm:"index;comment:登录token"`
+	RechargeTime  int64        `json:"rechargeTime" gorm:"default:0;comment:充值时间"`
+	PrivateKey    string       `json:"privateKey" gorm:"comment:私钥"`
 	ExpireAt      time.Time    `json:"expireAt"  gorm:"default:CURRENT_TIMESTAMP(3);comment:token有效期"`
+	Remark        string       `json:"remark" gorm:"comment:备注"`
 }
 
 func (Partner) TableName() string {

@@ -123,13 +123,22 @@ export interface IPartner {
   remark: string
 }
 
-export interface PartnerRegisterReq {
-  name: string
-  priority: number
+export interface PartnerBaseInfoReq{
+  name?: string
+  creditAmount?: number
   dailyLimit?: number
+  priority?: number
+  superiorAgent?: number
   rechargeTime?: number
+  level?: number
+  stockAmount?: number
   privateKey?: string
+  enable?: number
   remark?: string
+}
+
+export interface PartnerRegisterReq extends PartnerBaseInfoReq {
+
 }
 
 interface PartnerRegisterResp {
@@ -157,13 +166,27 @@ export interface PartnerSetPasswordResp {
 
 }
 
-export interface PartnerUpdateReq {
-  id: number
-  oldpassword: string
-  newpassword: string
+export interface PartnerUpdateReq extends PartnerBaseInfoReq {
+
 }
 
 export interface PartnerUpdateResp {
+
+}
+
+export interface PartnerResetPasswordReq {
+  name: string
+}
+
+interface PartnerResetPasswordResp {
+  password: string
+}
+
+export interface PartnerDeleteReq {
+  name: string
+}
+
+interface PartnerDeleteResp {
 
 }
 
@@ -388,8 +411,17 @@ export function useApis() {
         return res?.data
       })
     },
-
-    partnerUpdate(data: PartnerSetPasswordReq): Promise<IResponseBody<PartnerSetPasswordResp>> {
+    partnerResetPassword(data: PartnerResetPasswordReq): Promise<IResponseBody<PartnerResetPasswordResp>> {
+      return ax.post("/partner/resetPassword", data).then((res) => {
+        return res?.data
+      })
+    },
+    partnerDelete(data: PartnerDeleteReq): Promise<IResponseBody<PartnerDeleteResp>> {
+      return ax.post("/partner/delete", data).then((res) => {
+        return res?.data
+      })
+    },
+    partnerUpdate(data: PartnerUpdateReq): Promise<IResponseBody<PartnerUpdateResp>> {
       return ax.post("/partner/update", data).then((res) => {
         return res?.data
       })

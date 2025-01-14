@@ -46,7 +46,7 @@ const AdminCreateModal = (params: AdminAddDataType) => {
     setTitle(isEdit ? Title.EditTxt : Title.CreateTxt)
   }, [isEdit])
 
-  const addAdmin: FormProps<AdminBaseInfoReq>['onFinish'] = async (value) => {
+  const onFinish: FormProps<AdminBaseInfoReq>['onFinish'] = async (value) => {
     setFormDisabled(true)
     setConfirmLoading(true)
     try {
@@ -92,7 +92,7 @@ const AdminCreateModal = (params: AdminAddDataType) => {
           name="basic"
           autoComplete="off"
           disabled={formDisabled}
-          onFinish={addAdmin}
+          onFinish={onFinish}
           initialValues={{ ...info }}
         >
           <Form.Item<FieldType>

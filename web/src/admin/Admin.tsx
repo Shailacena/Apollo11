@@ -147,34 +147,15 @@ function Admin() {
 
   const enableAdmin = async (username: string, enable: number) => {
     try {
-      if (enable == 1) {
-        enable = 2
-      } else {
-        enable = 1
-      }
       await adminEnable({ username, enable })
       fetchListAdmin()
-      enableSuccess(enable);
+      showSuccessMsg(enable == 1 ? '启用成功' : '冻结成功')
     } catch (e) {
       if (axios.isAxiosError(e)) {
         let msg = e.response?.data?.message
         msg && showErrorMsg(msg);
       }
     }
-  };
-
-  const enableSuccess = (enable: number) => {
-    let content = '';
-    switch (enable) {
-      case 1:
-        content = '启用成功';
-        break;
-
-      case 2:
-        content = '冻结成功';
-        break;
-    }
-    content && showSuccessMsg(content)
   };
 
   return (
