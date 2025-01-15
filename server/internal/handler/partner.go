@@ -86,3 +86,18 @@ func (h *PartnerHandler) SetPassword(c echo.Context) error {
 
 	return response.ResponseSuccess(c, resp)
 }
+
+func (h *PartnerHandler) Update(c echo.Context) error {
+	req := new(v1.PartnerUpdateReq)
+	err := c.Bind(req)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	resp, err := service.Partner.Update(c, req)
+	if err != nil {
+		return err
+	}
+
+	return response.ResponseSuccess(c, resp)
+}

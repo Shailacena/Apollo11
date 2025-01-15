@@ -8,26 +8,34 @@ type PartnerLoginReq struct {
 
 type PartnerLoginResp struct {
 	Token string `json:"token"`
+	Level int    `json:"id"`
 	Name  string `json:"name"`
 }
 
 // 合作商注册
 type PartnerRegisterReq struct {
 	Name          string `json:"name" binding:"required"`
-	DailyLimit    int    `json:"dailyLimit"`
-	CreditAmount  int64  `json:"creditAmount"`
-	Priority      int    `json:"priority" binding:"required"`
-	SuperiorAgent int    `json:"superiorAgent"`
-	Level         int    `json:"level"`
-	StockAmount   int64  `json:"stockAmount"`
-	RechargeTime  int64  `json:"rechargeTime"`
-	PrivateKey    string `json:"privateKey"`
+	SuperiorAgent string `json:"superiorAgent" binding:"required"`
+	Level         int    `json:"level" binding:"required"`
 	Remark        string `json:"remark"`
 }
 
 type PartnerRegisterResp struct {
 	Name     string `json:"name"`
 	Password string `json:"password"`
+}
+
+// 合作商更新
+type PartnerUpdateReq struct {
+	Id                 uint   `json:"id" binding:"required"`
+	Priority           int    `json:"priority"`
+	DailyLimit         int    `json:"dailyLimit"`
+	ChangeCreditAmount int64  `json:"changeCreditAmount"`
+	RechargeTime       int64  `json:"rechargeTime"`
+	Remark             string `json:"remark"`
+}
+
+type PartnerUpdateResp struct {
 }
 
 // 合作商列表
@@ -44,7 +52,7 @@ type Partner struct {
 	CreditAmount  int64  `json:"creditAmount"`
 	DailyLimit    int    `json:"dailyLimit"`
 	Priority      int    `json:"priority"`
-	SuperiorAgent int    `json:"superiorAgent"`
+	SuperiorAgent string `json:"superiorAgent"`
 	Level         int    `json:"level"`
 	StockAmount   int64  `json:"stockAmount"`
 	RechargeTime  int64  `json:"rechargeTime"`

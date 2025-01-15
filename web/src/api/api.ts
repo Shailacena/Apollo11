@@ -116,7 +116,7 @@ export interface IPartner {
   creditAmount: number
   dailyLimit: number
   priority: number
-  superiorAgent: number
+  superiorAgent: string
   level: number
   stockAmount: number
   enable: number
@@ -125,15 +125,8 @@ export interface IPartner {
 
 export interface PartnerBaseInfoReq{
   name?: string
-  creditAmount?: number
-  dailyLimit?: number
-  priority?: number
-  superiorAgent?: number
-  rechargeTime?: number
+  superiorAgent?: string
   level?: number
-  stockAmount?: number
-  privateKey?: string
-  enable?: number
   remark?: string
 }
 
@@ -153,6 +146,7 @@ export interface PartnerLoginReq {
 
 export interface PartnerLoginResp {
   token: string
+  level: number
   name: string
 }
 
@@ -167,7 +161,14 @@ export interface PartnerSetPasswordResp {
 }
 
 export interface PartnerUpdateReq extends PartnerBaseInfoReq {
-
+  id: number
+  changeCreditAmount?: number
+  dailyLimit?: number
+  priority?: number
+  rechargeTime?: number
+  stockAmount?: number
+  privateKey?: string
+  enable?: number
 }
 
 export interface PartnerUpdateResp {

@@ -33,7 +33,8 @@ func Init(e *echo.Echo) {
 		partnerGroup.POST("/register", handler.Partner.Register)
 		partnerGroup.GET("/list", handler.Partner.List)
 		partnerGroup.GET("/listBill", handler.Partner.ListBill)
-		adminGroup.GET("/setPassword", handler.Partner.SetPassword)
+		partnerGroup.POST("/setPassword", handler.Partner.SetPassword)
+		partnerGroup.POST("/update", handler.Partner.Update)
 	}
 
 	// merchantTokenChecker := middleware.GenAuthHandler(repository.Merchant)

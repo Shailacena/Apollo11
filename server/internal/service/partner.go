@@ -4,6 +4,7 @@ import (
 	v1 "apollo/server/api/v1"
 	"apollo/server/internal/model"
 	"apollo/server/internal/repository"
+	"apollo/server/pkg/util"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
@@ -19,14 +20,14 @@ type PartnerService struct {
 func (s *PartnerService) Register(c echo.Context, req *v1.PartnerRegisterReq) (*v1.PartnerRegisterResp, error) {
 	p := model.Partner{
 		Name:          req.Name,
-		DailyLimit:    req.DailyLimit,
-		CreditAmount:  req.CreditAmount,
-		Priority:      req.Priority,
+		DailyLimit:    -1,
+		CreditAmount:  0,
+		Priority:      10,
 		SuperiorAgent: req.SuperiorAgent,
 		Level:         req.Level,
-		StockAmount:   req.StockAmount,
-		RechargeTime:  req.RechargeTime,
-		PrivateKey:    req.PrivateKey,
+		StockAmount:   0,
+		RechargeTime:  999999,
+		PrivateKey:    util.RandStringRunes(16),
 		Remark:        req.Remark,
 	}
 	partner, err := repository.Partner.Register(c, &p)
@@ -49,6 +50,7 @@ func (s *PartnerService) Login(c echo.Context, req *v1.PartnerLoginReq) (*v1.Par
 	return &v1.PartnerLoginResp{
 		Token: partner.Token,
 		Name:  partner.Name,
+		Level: partner.Level,
 	}, nil
 }
 
@@ -69,7 +71,10 @@ func (s *PartnerService) List(c echo.Context, req *v1.ListPartnerReq) (*v1.ListP
 			SuperiorAgent: u.SuperiorAgent,
 			Level:         u.Level,
 			StockAmount:   u.StockAmount,
+			RechargeTime:  u.RechargeTime,
+			PrivateKey:    u.PrivateKey,
 			Enable:        int(u.Enable),
+			Remark:        u.Remark,
 		})
 	}
 
@@ -112,4 +117,13 @@ func (s *PartnerService) SetPassword(c echo.Context, req *v1.PartnerSetPasswordR
 	}
 
 	return &v1.PartnerSetPasswordResp{}, nil
+}
+
+func (s *PartnerService) Update(c echo.Context, req *v1.PartnerUpdateReq) (*v1.PartnerUpdateResp, error) {
+	_, err := repository.Partner.Update(c, req.Id, req.Priority, req.DailyLimit, req.ChangeCreditAmount, req.RechargeTime, req.Remark)
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.PartnerUpdateResp{}, nil
 }

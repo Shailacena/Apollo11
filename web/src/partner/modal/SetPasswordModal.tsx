@@ -41,7 +41,7 @@ const SetPasswordModal = (params: PartnerSetPasswordDataType) => {
     setComponentDisabled(true)
     setConfirmLoading(true)
     try {
-      let { data } = await partnerSetPassword({id: Number(ctx.auth.id), ...value})
+      let { data } = await partnerSetPassword({id: Number(ctx.cookie.id), ...value})
       console.log(data)
       if (params.callback) {
         params.callback()

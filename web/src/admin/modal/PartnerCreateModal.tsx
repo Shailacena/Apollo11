@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button, Form, FormProps, Input, message, Modal } from 'antd';
-import { PartnerBaseInfoReq, useApis } from '../../api/api';
+import { PartnerBaseInfoReq, PartnerUpdateReq, useApis } from '../../api/api';
 import axios from 'axios';
 import TextArea from 'antd/es/input/TextArea';
+import { useAppContext } from '../../AppProvider';
 
 interface ModalDataType {
   isModalOpen: boolean
@@ -12,9 +13,9 @@ interface ModalDataType {
 }
 
 type FieldType = {
-  username?: string;
-  nickname?: string;
-  remark?: string;
+  id: number
+  name: string;
+  remark: string;
 };
 
 enum Title {
@@ -23,13 +24,13 @@ enum Title {
 }
 
 const PartnerCreateModal = (params: ModalDataType) => {
-
   const [info, setInfo] = useState(params.info)
   const [isEdit, setIsEdit] = useState(!!params.info)
   const [title, setTitle] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(params.isModalOpen);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [formDisabled, setFormDisabled] = useState<boolean>(false);
+  let app = useAppContext()
   let apis = useApis()
 
   useEffect(() => {
@@ -49,10 +50,7 @@ const PartnerCreateModal = (params: ModalDataType) => {
     setFormDisabled(true)
     setConfirmLoading(true)
     try {
-      value.priority = value.priority && Number(value.priority)
-      value.dailyLimit = value.dailyLimit && Number(value.dailyLimit)
-      value.rechargeTime = value.rechargeTime && Number(value.rechargeTime)
-      isEdit ? handleEdit(value) : handleRegister(value)
+      isEdit ? handleEdit({id: info!.id, ...value}) : handleRegister(value)
     } catch (e) {
       if (axios.isAxiosError(e)) {
         let msg = e.response?.data?.message
@@ -65,6 +63,8 @@ const PartnerCreateModal = (params: ModalDataType) => {
   };
 
   const handleRegister = async (value: PartnerBaseInfoReq) => {
+    value.superiorAgent = app.cookie.id
+    value.level = app.cookie.level == 0 ? 1 : (app.cookie.level ?? 0) + 1
     let { data } = await apis.partnerRegister(value)
     params?.onOk?.();
     Modal.success({
@@ -72,7 +72,10 @@ const PartnerCreateModal = (params: ModalDataType) => {
     });
   }
 
-  const handleEdit = async (value: PartnerBaseInfoReq) => {
+  const handleEdit = async (value: PartnerUpdateReq) => {
+    value.priority = value.priority && Number(value.priority)
+    value.dailyLimit = value.dailyLimit && Number(value.dailyLimit)
+    value.rechargeTime = value.rechargeTime && Number(value.rechargeTime)
     await apis.partnerUpdate(value)
     params?.onOk?.();
     message.success(`修改成功`)
@@ -80,7 +83,7 @@ const PartnerCreateModal = (params: ModalDataType) => {
 
   return (
     <>
-      <Modal title={title} footer={null} confirmLoading={confirmLoading} onCancel={params?.onCancel?.()} open={isModalOpen}>
+      <Modal title={title} footer={null} confirmLoading={confirmLoading} onCancel={()=>{params?.onCancel?.()}} open={isModalOpen}>
         <Form
           preserve={false}
           disabled={formDisabled}
@@ -90,7 +93,7 @@ const PartnerCreateModal = (params: ModalDataType) => {
           onFinish={onFinish}
           initialValues={{ ...info }}
         >
-          <Form.Item<PartnerBaseInfoReq>
+          <Form.Item<PartnerUpdateReq>
             name="name"
             label="名称"
             required
@@ -98,35 +101,40 @@ const PartnerCreateModal = (params: ModalDataType) => {
             <Input />
           </Form.Item>
 
-          <Form.Item<PartnerBaseInfoReq>
-            name="priority"
-            label="优先级"
-            required
-          >
-            <Input type='number' />
-          </Form.Item>
+          {
+            isEdit && <Form.Item<PartnerUpdateReq>
+              name="priority"
+              label="优先级"
+              required
+            >
+              <Input type='number' min='0' />
+            </Form.Item>
+          }
 
-          <Form.Item<PartnerBaseInfoReq>
-            name="dailyLimit"
-            label="每日限额"
-          >
-            <Input type='number' />
-          </Form.Item>
+          {
+            isEdit && <Form.Item<PartnerUpdateReq>
+              name="dailyLimit"
+              label="每日限额"
+            >
+              <Input type='number' min='-1' />
+            </Form.Item>
+          }
 
-          <Form.Item<PartnerBaseInfoReq>
+          {isEdit && <Form.Item<PartnerUpdateReq>
             name="rechargeTime"
             label="充值时间"
           >
             <Input type='number' />
           </Form.Item>
-
-          <Form.Item<PartnerBaseInfoReq>
-            name="privateKey"
-            label="私钥"
-          >
-            <Input />
-          </Form.Item>
-
+          }
+          {
+            isEdit && <Form.Item<PartnerUpdateReq>
+              name="privateKey"
+              label="私钥"
+            >
+              <Input disabled />
+            </Form.Item>
+          }
           <Form.Item<PartnerBaseInfoReq>
             name="remark"
             label="备注"

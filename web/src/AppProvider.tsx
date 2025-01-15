@@ -13,21 +13,21 @@ export enum AUTH_TYPE {
 enum CookieFiled {
   Token = 'token',
   Nickname = 'nickname',
-  Role = 'role'
+  Role = 'role',
+  ID = 'id',
+  LEVEL = 'level'
 }
 
 interface Cookie {
   token?: string
   nickname?: string
   role?: number
+  id?: any;
+  level?: number;
 }
 
 interface AuthContextType {
   auth: {
-    // token: any;
-    // name: any;
-    id: any;
-
     adminSignin: (value: AdminLoginResp, id: string, callback: Function) => void;
     adminSignout: (callback: Function) => void;
 
@@ -52,9 +52,10 @@ function AppProvider({ children }: { children: React.ReactNode }) {
   // let [token, setToken] = React.useState<any>(null);
   // let [name, setName] = React.useState<any>(null);
   let [id, setID] = React.useState<any>(null);
+  let [level, setLevel] = React.useState(0);
   let [partnerList] = React.useState<any>(null);
 
-  let [cookie, setCookie, removeCookie] = useCookies([CookieFiled.Token, CookieFiled.Nickname, CookieFiled.Role]);
+  let [cookie, setCookie, removeCookie] = useCookies([CookieFiled.Token, CookieFiled.Nickname, CookieFiled.Role, CookieFiled.ID, CookieFiled.LEVEL]);
 
   const adminPath = '/admin'
   const partnerPath = '/partner'
@@ -66,15 +67,12 @@ function AppProvider({ children }: { children: React.ReactNode }) {
 
   let adminSignin = async (data: AdminLoginResp, id: string, callback: Function) => {
     console.log(data);
-    // setToken(data.token)
-    // setName(data.nickname);
-    setID(id);
-    // console.log(TAG, 'adminSignin iccccccccccccccccccc token', token)
-    console.log(TAG, 'adminSignin iccccccccccccccccccc id', id)
     let exp = getExpirationDate(7)
     setCookie(CookieFiled.Token, data.token, { path: adminPath, expires: exp });
     setCookie(CookieFiled.Nickname, data.nickname, { path: adminPath, expires: exp });
     setCookie(CookieFiled.Role, data.role, { path: adminPath, expires: exp });
+    setCookie(CookieFiled.ID, id, { path: adminPath, expires: exp });
+    setCookie(CookieFiled.LEVEL, 0, { path: adminPath, expires: exp });
     callback()
   };
 
@@ -82,49 +80,50 @@ function AppProvider({ children }: { children: React.ReactNode }) {
     removeCookie(CookieFiled.Token, { path: adminPath })
     removeCookie(CookieFiled.Nickname, { path: adminPath })
     removeCookie(CookieFiled.Role, { path: adminPath })
-    // setToken(null)
-    // setName(null);
+    removeCookie(CookieFiled.ID, { path: adminPath })
+    removeCookie(CookieFiled.LEVEL, { path: adminPath })
+
     callback();
   };
 
   let partnerSignin = async (data: PartnerLoginResp, id: number, callback: Function) => {
     console.log(data);
-    // setToken(data.token)
-    // setName(data.name);
-    setID(id);
-    setCookie(CookieFiled.Token, data.token, { path: partnerPath, expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
-    setCookie(CookieFiled.Nickname, data.name, { path: partnerPath, expires: getExpirationDate(7) });
+    let exp = getExpirationDate(7)
+    setCookie(CookieFiled.Token, data.token, { path: partnerPath, expires: exp });
+    setCookie(CookieFiled.Nickname, data.name, { path: partnerPath, expires: exp });
+    setCookie(CookieFiled.ID, id, { path: partnerPath, expires: exp });
+    setCookie(CookieFiled.LEVEL, 0, { path: partnerPath, expires: exp });
     callback()
   };
 
   let partnerSignout = (callback: Function) => {
     removeCookie(CookieFiled.Token, { path: partnerPath })
     removeCookie(CookieFiled.Nickname, { path: partnerPath })
-    // setToken(null)
-    // setName(null);
+    removeCookie(CookieFiled.ID, { path: partnerPath })
+    removeCookie(CookieFiled.LEVEL, { path: partnerPath })
     callback();
   };
 
   let merchantSignin = async (data: MerchantLoginResp, id: number, callback: Function) => {
     console.log(data);
-    // setToken(data.token)
-    // setName(data.name);
-    setID(id);
-    setCookie(CookieFiled.Token, data.token, { path: merchantPath, expires: new Date(new Date().getTime() + 24 * 60 * 60 * 1000) });
-    setCookie(CookieFiled.Nickname, data.name, { path: merchantPath, expires: getExpirationDate(7) });
+    let exp = getExpirationDate(7)
+    setCookie(CookieFiled.Token, data.token, { path: merchantPath, expires: exp });
+    setCookie(CookieFiled.Nickname, data.name, { path: merchantPath, expires: exp });
+    setCookie(CookieFiled.ID, id, { path: merchantPath, expires: exp });
+    setCookie(CookieFiled.LEVEL, 0, { path: merchantPath, expires: exp });
     callback()
   };
 
   let merchantSignout = (callback: Function) => {
     removeCookie(CookieFiled.Token, { path: merchantPath })
     removeCookie(CookieFiled.Nickname, { path: merchantPath })
-    // setToken(null)
-    // setName(null);
+    removeCookie(CookieFiled.ID, { path: merchantPath })
+    removeCookie(CookieFiled.LEVEL, { path: merchantPath })
     callback();
   };
 
   let value = {
-    auth: { id, adminSignin, adminSignout, partnerSignin, partnerSignout, merchantSignin, merchantSignout },
+    auth: { adminSignin, adminSignout, partnerSignin, partnerSignout, merchantSignin, merchantSignout },
     cookie,
     partnerList,
   }

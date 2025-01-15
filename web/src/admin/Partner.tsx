@@ -9,12 +9,15 @@ import axios from 'axios';
 
 interface DataType extends IPartner {
   key: number;
+  name: string;
+  remark: string;
+  id: number;
 }
 
 type FieldType = {
-  username?: string;
-  nickname?: string;
-  remark?: string;
+  name: string;
+  remark: string;
+  id: number;
 };
 
 enum ActionType {
@@ -110,10 +113,11 @@ function Partner() {
   }
 
   const handleUpdate = async (type: ActionType, value: DataType) => {
+    console.log('handleUpate', type, value)
     try {
       switch (type) {
         case ActionType.ENABLE: {
-          await apis.partnerUpdate({ enable: Number(value.enable) })
+          await apis.partnerUpdate({ id: value.id, enable: Number(value.enable) })
           fetchListPartner()
           showSuccessMsg(Number(value.enable) == 1 ? '启用成功' : '冻结成功')
           break;
@@ -159,7 +163,7 @@ function Partner() {
   };
 
   const openModal = (selectedData: DataType | null = null, isOpen: boolean = false) => {
-    console.log("selectedData", selectedData);
+    console.log("selectedData", selectedData, 'isOpen', isOpen);
     setSelectedData(selectedData!)
     setIsModalOpen(isOpen)
   }
@@ -180,7 +184,9 @@ function Partner() {
 
         <Divider />
         <Table<DataType> bordered columns={columns} dataSource={list} scroll={{ x: 'max-content' }} />
-        <PartnerCreateModal info={selectedData} isModalOpen={isModalOpen} onOk={onSuccess} onCancel={() => openModal()} />
+        {
+          isModalOpen && <PartnerCreateModal info={selectedData} isModalOpen={isModalOpen} onOk={onSuccess} onCancel={() => openModal()} />
+        }
       </Card>
     </>
   )

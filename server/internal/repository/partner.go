@@ -126,3 +126,34 @@ func (r *PartnerRepo) SetPassword(c echo.Context, id uint, password, newpassword
 
 	return &partner, nil
 }
+
+func (r *PartnerRepo) Update(c echo.Context, id uint, priority, dailyLimit int, changeCreditAmount, rechargeTime int64, remark string) (*model.Partner, error) {
+	db := data.Instance()
+
+	var partner model.Partner
+	err := db.Where("id = ?", id).First(&partner).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("用户不存在")
+		}
+		return nil, err
+	}
+
+	partner.Priority = priority
+	partner.DailyLimit = dailyLimit
+	partner.CreditAmount = partner.CreditAmount + changeCreditAmount
+	partner.RechargeTime = rechargeTime
+	partner.Remark = remark
+
+	err = db.Where("id = ?", id).Updates(model.Partner{
+		Priority:     partner.Priority,
+		DailyLimit:   partner.DailyLimit,
+		CreditAmount: partner.CreditAmount,
+		RechargeTime: partner.RechargeTime,
+		Remark:       partner.Remark}).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &partner, nil
+}
