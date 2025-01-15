@@ -13,6 +13,13 @@ type AdminLoginResp struct {
 	Role     uint   `json:"role"`
 }
 
+// 管理员登出
+type AdminLogoutReq struct {
+}
+
+type AdminLogoutResp struct {
+}
+
 // 管理员注册
 type AdminRegisterReq struct {
 	Username string `json:"username" binding:"required"`
@@ -69,7 +76,7 @@ type AdminDeleteResp struct {
 // 更新信息
 type AdminUpdateReq struct {
 	Username string `json:"username" binding:"required"`
-	Nickname string `json:"nickname"`
+	Nickname string `json:"nickname" binding:"required"`
 	Remark   string `json:"remark"`
 }
 
@@ -89,12 +96,20 @@ type AdminEnableResp struct {
 }
 
 type Admin struct {
-	Id        uint   `json:"id"`
-	Username  string `json:"username"`
-	Nickname  string `json:"nickname"`
-	Remark    string `json:"remark"`
-	Enable    int    `json:"enable"`
-	Role      uint   `json:"role"`
-	SecretKey string `json:"secretKey"`
-	UrlKey    string `json:"urlKey"`
+	Id       uint   `json:"id"`
+	Username string `json:"username"`
+	Nickname string `json:"nickname"`
+	Remark   string `json:"remark"`
+	Enable   int    `json:"enable"`
+	Role     uint   `json:"role"`
+	UrlKey   string `json:"urlKey"`
+}
+
+type AdminResetVerifiCodeReq struct {
+	Id uint `json:"id" binding:"required"`
+}
+
+// 密码重置
+type AdminResetVerifiCodeResp struct {
+	UrlKey string `json:"urlKey"`
 }

@@ -85,7 +85,7 @@ func (r *AdminRepo) Login(c echo.Context, username, password, verificode string)
 	// }
 
 	// if password != user.Password {
-	// 	return nil, errors.New("密码错误")
+	// 	return nil, errors.New("账号或密码错误")
 	// }
 
 	user.Token = util.NewToken()
@@ -97,6 +97,16 @@ func (r *AdminRepo) Login(c echo.Context, username, password, verificode string)
 	}
 
 	return &user, nil
+}
+
+func (r *AdminRepo) Logout(c echo.Context, token string) error {
+	db := data.Instance()
+
+	err := db.Where("token = ?", token).Updates(model.SysUser{ExpireAt: time.Now()}).Error
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (r *AdminRepo) List(c echo.Context) ([]*model.SysUser, error) {
@@ -236,6 +246,35 @@ func (r *AdminRepo) Enable(c echo.Context, username string, enable int) (*model.
 
 	user.Enable = model.EnableStatus(enable)
 	err = db.Where("username = ?", username).Updates(model.SysUser{Enable: user.Enable}).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
+}
+
+func (r *AdminRepo) ResetVerifiCode(c echo.Context, id uint) (*model.SysUser, error) {
+	db := data.Instance()
+
+	var user model.SysUser
+	err := db.Where("id = ?", id).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errors.New("用户不存在")
+		}
+		return nil, err
+	}
+
+	// 生成一个随机的密钥
+	key, err := totp.Generate(totp.GenerateOpts{
+		Issuer:      "Apollo11",
+		AccountName: user.Username,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	err = db.Where("id = ?", id).Updates(model.SysUser{SecretKey: key.Secret(), UrlKey: key.URL()}).Error
 	if err != nil {
 		return nil, err
 	}

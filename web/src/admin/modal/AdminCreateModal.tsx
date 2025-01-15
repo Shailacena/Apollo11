@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Button, Divider, Flex, Form, FormProps, Input, message, Modal, Popconfirm, QRCode, Space } from 'antd';
+import { Button, Divider, Flex, Form, FormProps, Input, message, Modal } from 'antd';
 import { AdminBaseInfoReq, useApis } from '../../api/api';
 import axios from 'axios';
 import TextArea from 'antd/es/input/TextArea';
@@ -15,7 +15,6 @@ export type FieldType = {
   username?: string;
   nickname?: string;
   secretKey?: string;
-  urlKey?: string;
   remark?: string;
 };
 
@@ -66,7 +65,7 @@ const AdminCreateModal = (params: ModalDataType) => {
     let { data } = await adminRegister(value)
     params?.onOk?.();
     Modal.success({
-      content: `添加成功, 密位为${data.password}`,
+      content: `创建管理员成功, 密位为${data.password}`,
     });
   }
 
@@ -110,39 +109,6 @@ const AdminCreateModal = (params: ModalDataType) => {
           >
             <Input />
           </Form.Item>
-
-
-          {
-            isEdit &&
-            <Form.Item<FieldType>
-              name="secretKey"
-              label="验证码"
-              required
-            >
-              <Space.Compact style={{ width: '100%' }}>
-                <Input
-                  disabled
-                  defaultValue={info?.secretKey}
-                />
-                <Button type="primary">
-                  重新生成
-                </Button>
-                <Popconfirm
-                  title="验证码"
-                  icon={null}
-                  description={
-                    info?.urlKey ? <QRCode value={info?.urlKey} size={320} /> : '无二维码，点击重新生成'
-                  }
-                  showCancel={false}
-                  okText="关闭"
-                >
-                <Button type="primary">
-                  二维码
-                </Button>
-                </Popconfirm>
-              </Space.Compact>
-            </Form.Item>
-          }
 
           <Form.Item<FieldType>
             name="remark"
