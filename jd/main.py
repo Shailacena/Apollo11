@@ -4,6 +4,7 @@ import time
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.remote.webelement import WebElement
 import json
 
 from undetected_chromedriver import Chrome, ChromeOptions
@@ -90,6 +91,7 @@ class CookieLogin():
 
         # self.drive.close()
 
+    #打开商品
     def openGoods(self):
         url = 'https://item.m.jd.com/product/10135127527639.html'
         self.drive.get(url)
@@ -97,6 +99,7 @@ class CookieLogin():
             element = WebDriverWait(self.drive, 100).until(
                 EC.element_to_be_clickable((By.ID, "rightBtn"))
             )
+            print(element.text)
             element.click()  # 点击元素
         except TimeoutExpired:
             print('超时了')
@@ -104,9 +107,27 @@ class CookieLogin():
             # self.drive.quit()
             time.sleep(2)
             try:
-                element = WebDriverWait(self.drive, 100).until(
-                    EC.element_to_be_clickable((By.CSS_SELECTOR, '.button_button_*')))
+                time.sleep(5)
+                # element = WebDriverWait(self.drive, 100).until(
+                    # self.drive.find_element(By.XPATH, '//*[starts-with(@class,"button_button_")]'))
+                element = self.drive.find_element(By.XPATH, '//*[starts-with(@class,"button_button_")]')
+                print(element.text)
+
+                # 点击立即支付
                 element.click()
+
+                time.sleep(5)
+
+                elements = self.drive.find_elements(By.CLASS_NAME, 'checkboxWrap')
+
+                # 使用JavaScript获取相邻节点
+                javascript = "var prev = arguments[0].previousSibling; return prev || null;"
+                previous_sibling = self.drive.execute_script(javascript, element)
+                
+                # 如果存在相邻节点，打印它的文本内容
+                if previous_sibling:
+                    print(previous_sibling.text)
+
             except TimeoutExpired:
                 print('超时了')
 
