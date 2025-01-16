@@ -2,6 +2,7 @@ package handler
 
 import (
 	v1 "apollo/server/api/v1"
+	"apollo/server/internal/middleware"
 	"apollo/server/internal/service"
 	"apollo/server/pkg/response"
 	"net/http"
@@ -38,6 +39,21 @@ func (h *AdminHandler) Login(c echo.Context) error {
 	}
 
 	resp, err := service.Admin.Login(c, req)
+	if err != nil {
+		return err
+	}
+
+	return response.ResponseSuccess(c, resp)
+}
+
+func (h *AdminHandler) Logout(c echo.Context) error {
+	req := new(v1.AdminLogoutReq)
+	if err := c.Bind(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	token := middleware.GetToken(c)
+	resp, err := service.Admin.Logout(c, req, token)
 	if err != nil {
 		return err
 	}
@@ -122,6 +138,20 @@ func (h *AdminHandler) Enable(c echo.Context) error {
 	}
 
 	resp, err := service.Admin.Enable(c, req)
+	if err != nil {
+		return err
+	}
+
+	return response.ResponseSuccess(c, resp)
+}
+
+func (h *AdminHandler) ResetVerifiCode(c echo.Context) error {
+	req := new(v1.AdminResetVerifiCodeReq)
+	if err := c.Bind(req); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	resp, err := service.Admin.ResetVerifiCode(c, req)
 	if err != nil {
 		return err
 	}

@@ -1,4 +1,4 @@
-import { Space, Table, Button, message, Card, Divider, Popconfirm } from 'antd';
+import { Space, Table, Button, message, Card, Divider, Popconfirm, QRCode, Typography, Modal } from 'antd';
 import type { TableProps } from 'antd';
 import { useEffect, useState } from 'react';
 import { IAdmin, useApis } from '../api/api';
@@ -6,6 +6,7 @@ import axios from 'axios';
 import AdminCreateModal, { FieldType } from './modal/AdminCreateModal';
 import { getRoleName, isSuperAdmin } from './role';
 
+const { Text } = Typography;
 interface DataType extends IAdmin {
   key: number;
 }
@@ -13,7 +14,7 @@ interface DataType extends IAdmin {
 function Admin() {
   const [list, setList] = useState<DataType[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false);
-  let { listAdmin, adminResetPassword, adminDelete, adminEnable } = useApis()
+  let { listAdmin, adminResetPassword, adminDelete, adminEnable, adminResetVerifiCode } = useApis()
   const [selectedData, setSelectedData] = useState<FieldType>(null!);
 
   const columns: TableProps<DataType>['columns'] = [
@@ -72,6 +73,25 @@ function Admin() {
               </Popconfirm>
             }
             <Button type="primary" size='small' danger onClick={() => resetPassword(d.username)}>重置密码</Button>
+            <Button type="primary" size='small' onClick={() => resetVerifiCode(d.id)}>重新生成</Button>
+            <Popconfirm
+              title="验证码"
+              icon={null}
+              description={
+                d?.urlKey ?
+                  <QRCode value={d?.urlKey} size={320} /> :
+                  <div>
+                    <Text>无二维码，点击</Text>
+                    <Text type="success">重新生成</Text>
+                  </div>
+              }
+              showCancel={false}
+              okText="关闭"
+            >
+              <Button type="primary" size='small'>
+                二维码
+              </Button>
+            </Popconfirm>
           </Space>
         )
       }
@@ -107,7 +127,6 @@ function Admin() {
   };
 
   const openModal = (selectedData: DataType | null = null, isOpen: boolean = false) => {
-    console.log("selectedData", selectedData);
     setSelectedData(selectedData!)
     setIsModalOpen(isOpen)
   }
@@ -123,7 +142,22 @@ function Admin() {
   const resetPassword = async (username: string) => {
     try {
       let { data } = await adminResetPassword({ username })
-      showSuccessMsg(`重置成功, 密位为 ${data.password}`)
+      Modal.success({
+        content: `重置密码成功, 密位为${data.password}`,
+      });
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        let msg = e.response?.data?.message
+        msg && showErrorMsg(msg);
+      }
+    }
+  };
+
+  const resetVerifiCode = async (id: number) => {
+    try {
+      await adminResetVerifiCode({ id })
+      fetchListAdmin()
+      showSuccessMsg(`重置验证码成功, 查看二维码`)
     } catch (e) {
       if (axios.isAxiosError(e)) {
         let msg = e.response?.data?.message

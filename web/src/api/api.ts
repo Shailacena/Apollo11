@@ -45,6 +45,7 @@ export interface IAdmin {
   remark: string
   enable: number
   role: number
+  urlKey: string
 }
 
 export interface AdminResetPasswordReq {
@@ -53,6 +54,14 @@ export interface AdminResetPasswordReq {
 
 interface AdminResetPasswordResp {
   password: string
+}
+
+export interface AdminResetVerifiCodeReq {
+  id: number
+}
+
+interface AdminResetVerifiCodeResp {
+  urlKey: string
 }
 
 export interface AdminDeleteReq {
@@ -123,7 +132,7 @@ export interface IPartner {
   remark: string
 }
 
-export interface PartnerBaseInfoReq{
+export interface PartnerBaseInfoReq {
   name?: string
   superiorAgent?: string
   level?: number
@@ -349,6 +358,11 @@ export function useApis() {
     },
     adminResetPassword(data: AdminResetPasswordReq): Promise<IResponseBody<AdminResetPasswordResp>> {
       return ax.post("/admin/resetPassword", data).then((res) => {
+        return res?.data
+      })
+    },
+    adminResetVerifiCode(data: AdminResetVerifiCodeReq): Promise<IResponseBody<AdminResetVerifiCodeResp>> {
+      return ax.post("/admin/resetVerifiCode", data).then((res) => {
         return res?.data
       })
     },

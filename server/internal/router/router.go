@@ -23,6 +23,7 @@ func Init(e *echo.Echo) {
 		adminGroup.POST("/delete", handler.Admin.Delete)
 		adminGroup.POST("/update", handler.Admin.Update)
 		adminGroup.POST("/enable", handler.Admin.Enable)
+		adminGroup.POST("/resetVerifiCode", handler.Admin.ResetVerifiCode)
 	}
 
 	// partnerTokenChecker := middleware.GenAuthHandler(repository.Partner)
