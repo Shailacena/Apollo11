@@ -2,9 +2,9 @@ package v1
 
 // 管理员登录
 type AdminLoginReq struct {
-	Username   string `json:"username" binding:"required"`
-	Password   string `json:"password" binding:"required"`
-	Verificode string `json:"verificode" binding:"required"`
+	Username   string `json:"username" validate:"required"`
+	Password   string `json:"password" validate:"required"`
+	Verificode string `json:"verificode"`
 }
 
 type AdminLoginResp struct {
@@ -22,8 +22,8 @@ type AdminLogoutResp struct {
 
 // 管理员注册
 type AdminRegisterReq struct {
-	Username string `json:"username" binding:"required"`
-	Nickname string `json:"nickname" binding:"required"`
+	Username string `json:"username" validate:"required"`
+	Nickname string `json:"nickname" validate:"required"`
 	Remark   string `json:"remark"`
 }
 
@@ -43,9 +43,8 @@ type ListAdminResp struct {
 
 // 密码修改
 type AdminSetPasswordReq struct {
-	Username    string `json:"username" binding:"required"`
-	OldPassword string `json:"oldpassword" binding:"required"`
-	NewPassword string `json:"newpassword" binding:"required"`
+	OldPassword string `json:"oldPassword" validate:"required"`
+	NewPassword string `json:"newPassword" validate:"required"`
 }
 
 // 密码修改
@@ -54,9 +53,7 @@ type AdminSetPasswordResp struct {
 
 // 密码重置
 type AdminResetPasswordReq struct {
-	Username    string `json:"username" binding:"required"`
-	OldPassword string `json:"oldpassword" binding:"required"`
-	NewPassword string `json:"newpassword" binding:"required"`
+	Username    string `json:"username" validate:"required"`
 }
 
 // 密码重置
@@ -66,7 +63,7 @@ type AdminResetPasswordResp struct {
 
 // 删除管理员
 type AdminDeleteReq struct {
-	Username string `json:"username" binding:"required"`
+	Username string `json:"username" validate:"required"`
 }
 
 // 删除管理员
@@ -75,8 +72,8 @@ type AdminDeleteResp struct {
 
 // 更新信息
 type AdminUpdateReq struct {
-	Username string `json:"username" binding:"required"`
-	Nickname string `json:"nickname" binding:"required"`
+	Username string `json:"username" validate:"required"`
+	Nickname string `json:"nickname" validate:"required"`
 	Remark   string `json:"remark"`
 }
 
@@ -86,7 +83,7 @@ type AdminUpdateResp struct {
 
 // 启用或禁用
 type AdminEnableReq struct {
-	Username string `json:"username" binding:"required"`
+	Username string `json:"username" validate:"required"`
 	Enable   int    `json:"enable"`
 }
 
@@ -106,7 +103,7 @@ type Admin struct {
 }
 
 type AdminResetVerifiCodeReq struct {
-	Id uint `json:"id" binding:"required"`
+	Id uint `json:"id" validate:"required"`
 }
 
 // 密码重置

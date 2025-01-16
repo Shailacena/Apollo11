@@ -23,6 +23,10 @@ func (h *PartnerHandler) Register(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
 	resp, err := service.Partner.Register(c, req)
 	if err != nil {
 		return err
@@ -35,6 +39,10 @@ func (h *PartnerHandler) Login(c echo.Context) error {
 	req := new(v1.PartnerLoginReq)
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
 	}
 
 	resp, err := service.Partner.Login(c, req)
@@ -51,6 +59,10 @@ func (h *PartnerHandler) List(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
 	resp, err := service.Partner.List(c, req)
 	if err != nil {
 		return err
@@ -63,6 +75,10 @@ func (h *PartnerHandler) ListBill(c echo.Context) error {
 	req := new(v1.ListPartnerBillReq)
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
 	}
 
 	resp, err := service.Partner.ListBill(c, req)
@@ -79,6 +95,10 @@ func (h *PartnerHandler) SetPassword(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
 	resp, err := service.Partner.SetPassword(c, req)
 	if err != nil {
 		return err
@@ -92,6 +112,10 @@ func (h *PartnerHandler) Update(c echo.Context) error {
 	err := c.Bind(req)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
 	}
 
 	resp, err := service.Partner.Update(c, req)

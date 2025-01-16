@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import { AdminLoginResp, IPartner, MerchantLoginResp, PartnerLoginResp } from "./api/api";
+import { AdminLoginResp, IPartner, MerchantLoginResp, PartnerLoginResp } from "./api/types";
 import { getExpirationDate } from "./utils/Tool";
 
 const TAG = 'AppProvider';

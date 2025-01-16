@@ -80,12 +80,12 @@ func (s *AdminService) List(c echo.Context, req *v1.ListAdminReq) (*v1.ListAdmin
 	}, nil
 }
 
-func (s *AdminService) SetPassword(c echo.Context, req *v1.AdminSetPasswordReq) (*v1.AdminSetPasswordResp, error) {
+func (s *AdminService) SetPassword(c echo.Context, req *v1.AdminSetPasswordReq, token string) (*v1.AdminSetPasswordResp, error) {
 	if len(req.NewPassword) < 6 {
 		return nil, echo.NewHTTPError(http.StatusBadRequest, "密码不符")
 	}
 
-	_, err := repository.Admin.SetPassword(c, req.Username, req.OldPassword, req.NewPassword)
+	_, err := repository.Admin.SetPassword(c, token, req.OldPassword, req.NewPassword)
 	if err != nil {
 		return nil, err
 	}

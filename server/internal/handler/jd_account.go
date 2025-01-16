@@ -23,6 +23,10 @@ func (h *JDAccountHandler) Create(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
 	resp, err := service.JDAccount.Create(c, req)
 	if err != nil {
 		return err
@@ -35,6 +39,10 @@ func (h *JDAccountHandler) List(c echo.Context) error {
 	req := new(v1.ListJDAccountReq)
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
 	}
 
 	resp, err := service.JDAccount.List(c, req)

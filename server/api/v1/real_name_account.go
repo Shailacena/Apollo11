@@ -2,7 +2,7 @@ package v1
 
 // 实名账号创建
 type RealNameAccountCreateReq struct {
-	AccountList []*BaseRealNameAccount `json:"accountList" binding:"required"`
+	AccountList []*BaseRealNameAccount `json:"accountList" validate:"required"`
 	Remark      string                 `json:"remark"`
 }
 

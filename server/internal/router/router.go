@@ -18,12 +18,13 @@ func Init(e *echo.Echo) {
 		adminGroupWithoutAuth.POST("/login", handler.Admin.Login)
 		adminGroup.POST("/register", handler.Admin.Register)
 		adminGroup.GET("/list", handler.Admin.List)
-		adminGroup.GET("/setPassword", handler.Admin.SetPassword)
+		adminGroup.POST("/setPassword", handler.Admin.SetPassword)
 		adminGroup.POST("/resetPassword", handler.Admin.ResetPassword)
 		adminGroup.POST("/delete", handler.Admin.Delete)
 		adminGroup.POST("/update", handler.Admin.Update)
 		adminGroup.POST("/enable", handler.Admin.Enable)
 		adminGroup.POST("/resetVerifiCode", handler.Admin.ResetVerifiCode)
+		adminGroup.POST("/logout", handler.Admin.Logout)
 	}
 
 	// partnerTokenChecker := middleware.GenAuthHandler(repository.Partner)

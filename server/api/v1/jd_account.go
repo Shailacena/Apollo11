@@ -2,7 +2,7 @@ package v1
 
 // jd账号创建
 type JDAccountCreateReq struct {
-	AccountList []BaseJDAccount `json:"accountList" binding:"required"`
+	AccountList []BaseJDAccount `json:"accountList" validate:"required"`
 	Remark      string          `json:"remark"`
 }
 

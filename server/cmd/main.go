@@ -7,6 +7,7 @@ import (
 	"apollo/server/pkg/app"
 	"apollo/server/pkg/config"
 	"apollo/server/pkg/data"
+	"apollo/server/pkg/validate"
 	"fmt"
 
 	"github.com/labstack/echo/v4"
@@ -27,6 +28,8 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 	e.Use(middleware.RequestID())
+
+	e.Validator = validate.NewReqValidator()
 
 	e.Use(middleware.BodyDump(func(c echo.Context, reqBody, resBody []byte) {
 		c.Logger().Info("reqBody:", string(reqBody))

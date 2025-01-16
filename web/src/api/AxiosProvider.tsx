@@ -17,7 +17,11 @@ export function AxiosProvider({ children }: { children: React.ReactNode }) {
   let headers: any = {}
 
   if (app?.cookie?.token) {
-    headers["Token"] = app.cookie.token
+    headers["Ttttt"] = app.cookie.token
+  }
+
+  if (app?.cookie?.role) {
+    headers["Rrrr"] = app.cookie.role
   }
 
   let get = (url: string): Promise<AxiosResponse | void> => {

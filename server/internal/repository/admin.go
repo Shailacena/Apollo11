@@ -52,10 +52,10 @@ func (r *AdminRepo) Login(c echo.Context, username, password, verificode string)
 	db := data.Instance()
 
 	var user model.SysUser
-	err := db.Where("username = ?", username).First(&user).Error
+	err := db.Where("username = ? AND password = ? AND enable = ?", username, password, model.Enabled).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, errors.New("用户不存在")
+			return nil, errors.New("账号或密码错误")
 		}
 		return nil, err
 	}
@@ -82,10 +82,6 @@ func (r *AdminRepo) Login(c echo.Context, username, password, verificode string)
 	// valid := totp.Validate(verificode, user.SecretKey)
 	// if !valid {
 	// 	return nil, errors.New("验证失败")
-	// }
-
-	// if password != user.Password {
-	// 	return nil, errors.New("账号或密码错误")
 	// }
 
 	user.Token = util.NewToken()
@@ -138,17 +134,17 @@ func (r *AdminRepo) CheckToken(c echo.Context, token string) error {
 	}
 
 	if time.Now().After(user.ExpireAt) {
-		return echo.NewHTTPError(http.StatusUnauthorized, "token已过期")
+		return echo.NewHTTPError(http.StatusUnauthorized, "无效token")
 	}
 
 	return nil
 }
 
-func (r *AdminRepo) SetPassword(c echo.Context, username, password, newpassword string) (*model.SysUser, error) {
+func (r *AdminRepo) SetPassword(c echo.Context, token, password, newPassword string) (*model.SysUser, error) {
 	db := data.Instance()
 
 	var user model.SysUser
-	err := db.Where("username = ?", username).First(&user).Error
+	err := db.Where("token = ?", token).First(&user).Error
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, errors.New("用户不存在")
@@ -159,9 +155,9 @@ func (r *AdminRepo) SetPassword(c echo.Context, username, password, newpassword 
 		return nil, errors.New("密码错误")
 	}
 
-	user.Password = newpassword
+	user.Password = newPassword
 
-	err = db.Where("username = ?", username).Updates(model.SysUser{Password: user.Password}).Error
+	err = db.Where("id = ?", user.ID).Updates(model.SysUser{Password: user.Password}).Error
 	if err != nil {
 		return nil, err
 	}

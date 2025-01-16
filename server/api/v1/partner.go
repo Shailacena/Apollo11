@@ -2,8 +2,8 @@ package v1
 
 // 合作商登录
 type PartnerLoginReq struct {
-	Id       uint   `json:"id" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Id       uint   `json:"id" validate:"required"`
+	Password string `json:"password" validate:"required"`
 }
 
 type PartnerLoginResp struct {
@@ -14,9 +14,9 @@ type PartnerLoginResp struct {
 
 // 合作商注册
 type PartnerRegisterReq struct {
-	Name          string `json:"name" binding:"required"`
-	SuperiorAgent string `json:"superiorAgent" binding:"required"`
-	Level         int    `json:"level" binding:"required"`
+	Name          string `json:"name" validate:"required"`
+	SuperiorAgent string `json:"superiorAgent" validate:"required"`
+	Level         int    `json:"level" validate:"required"`
 	Remark        string `json:"remark"`
 }
 
@@ -27,12 +27,11 @@ type PartnerRegisterResp struct {
 
 // 合作商更新
 type PartnerUpdateReq struct {
-	Id                 uint   `json:"id" binding:"required"`
+	Id                 uint   `json:"id" validate:"required"`
 	Priority           int    `json:"priority"`
 	DailyLimit         int    `json:"dailyLimit"`
 	ChangeCreditAmount int64  `json:"changeCreditAmount"`
 	RechargeTime       int64  `json:"rechargeTime"`
-	Enable        *int    `json:"enable"`
 	Remark             string `json:"remark"`
 }
 
@@ -123,9 +122,9 @@ type ListOrderResp struct {
 
 // 密码修改
 type PartnerSetPasswordReq struct {
-	Id          uint   `json:"id" binding:"required"`
-	OldPassword string `json:"oldpassword" binding:"required"`
-	NewPassword string `json:"newpassword" binding:"required"`
+	Id          uint   `json:"id" validate:"required"`
+	OldPassword string `json:"oldpassword" validate:"required"`
+	NewPassword string `json:"newpassword" validate:"required"`
 }
 
 // 密码修改
