@@ -2,6 +2,7 @@ from subprocess import TimeoutExpired
 from selenium import webdriver
 import time
 from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 import json
 
@@ -81,9 +82,33 @@ class CookieLogin():
 
         self.drive.refresh()
 
+        time.sleep(2)
+
+        self.openGoods()
+
         time.sleep(100000)
 
         # self.drive.close()
+
+    def openGoods(self):
+        url = 'https://item.m.jd.com/product/10135127527639.html'
+        self.drive.get(url)
+        try:
+            element = WebDriverWait(self.drive, 100).until(
+                EC.element_to_be_clickable((By.ID, "rightBtn"))
+            )
+            element.click()  # 点击元素
+        except TimeoutExpired:
+            print('超时了')
+        finally:
+            # self.drive.quit()
+            time.sleep(2)
+            try:
+                element = WebDriverWait(self.drive, 100).until(
+                    EC.element_to_be_clickable((By.CSS_SELECTOR, '.button_button_*')))
+                element.click()
+            except TimeoutExpired:
+                print('超时了')
 
 if __name__ == '__main__':
     login = CookieLogin()

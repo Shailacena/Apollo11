@@ -87,7 +87,7 @@ function Partner() {
       key: 'action',
       render: (_, d) => (
         <Space size="middle">
-          <Button type="primary" size='small' onClick={() => handleUpdate(ActionType.ENABLE, d)}>开启派单</Button>
+          <Button type="primary" size='small' danger={d.enable === 1} onClick={() => handleUpdate(ActionType.ENABLE, d)}>{d.enable === 1 ? '停止派单' : '开启派单'}</Button>
           <Button type="primary" size='small' onClick={() => handleUpdate(ActionType.UPDATE, d)}>修改</Button>
           <Button type="primary" size='small' danger onClick={() => handleUpdate(ActionType.DELETE, d)}>删除</Button>
           <Button type="primary" size='small' onClick={() => handleUpdate(ActionType.CREDIT, d)}>授信额度</Button>
@@ -119,7 +119,7 @@ function Partner() {
         case ActionType.ENABLE: {
           await apis.partnerUpdate({ id: value.id, enable: Number(value.enable) })
           fetchListPartner()
-          showSuccessMsg(Number(value.enable) == 1 ? '启用成功' : '冻结成功')
+          showSuccessMsg(Number(value.enable) == 1 ? '开启成功' : '停止派单')
           break;
         }
         case ActionType.RESETPASSWORD: {

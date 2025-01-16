@@ -32,6 +32,7 @@ type PartnerUpdateReq struct {
 	DailyLimit         int    `json:"dailyLimit"`
 	ChangeCreditAmount int64  `json:"changeCreditAmount"`
 	RechargeTime       int64  `json:"rechargeTime"`
+	Enable        *int    `json:"enable"`
 	Remark             string `json:"remark"`
 }
 
