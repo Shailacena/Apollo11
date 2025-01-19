@@ -47,7 +47,6 @@ type AdminSetPasswordReq struct {
 	NewPassword string `json:"newPassword" validate:"required"`
 }
 
-// 密码修改
 type AdminSetPasswordResp struct {
 }
 
@@ -56,7 +55,6 @@ type AdminResetPasswordReq struct {
 	Username    string `json:"username" validate:"required"`
 }
 
-// 密码重置
 type AdminResetPasswordResp struct {
 	Password string `json:"password"`
 }
@@ -66,7 +64,6 @@ type AdminDeleteReq struct {
 	Username string `json:"username" validate:"required"`
 }
 
-// 删除管理员
 type AdminDeleteResp struct {
 }
 
@@ -77,7 +74,6 @@ type AdminUpdateReq struct {
 	Remark   string `json:"remark"`
 }
 
-// 更新信息
 type AdminUpdateResp struct {
 }
 
@@ -87,7 +83,7 @@ type AdminEnableReq struct {
 	Enable   int    `json:"enable"`
 }
 
-// 更新信息
+
 type AdminEnableResp struct {
 	Enable int `json:"enable"`
 }
@@ -102,11 +98,11 @@ type Admin struct {
 	UrlKey   string `json:"urlKey"`
 }
 
+// 重置验证码
 type AdminResetVerifiCodeReq struct {
 	Id uint `json:"id" validate:"required"`
 }
 
-// 密码重置
 type AdminResetVerifiCodeResp struct {
 	UrlKey string `json:"urlKey"`
 }
