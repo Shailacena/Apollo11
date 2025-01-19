@@ -2,7 +2,7 @@ package v1
 
 // jd账号创建
 type JDAccountCreateReq struct {
-	AccountList []BaseJDAccount `json:"accountList" validate:"required"`
+	AccountList []BaseJDAccount `json:"accountList" validate:"required,len>0"`
 	Remark      string          `json:"remark"`
 }
 
@@ -12,6 +12,15 @@ type BaseJDAccount struct {
 }
 
 type JDAccountCreateResp struct {
+}
+
+// 启用或禁用
+type JDAccountEnableReq struct {
+	Id     uint `json:"id" validate:"required"`
+	Enable int  `json:"enable" validate:"required"`
+}
+
+type JDAccountEnableResp struct {
 }
 
 // jd账号列表
@@ -29,7 +38,7 @@ type JDAccount struct {
 	TotalOrderCount        int    `json:"totalOrderCount"`
 	TodayOrderCount        int    `json:"todayOrderCount"`
 	TotalSuccessOrderCount int    `json:"totalSuccessOrderCount"`
-	LoginStatus            int    `json:"loginStatus"`
+	OnlineStatus           int    `json:"onlineStatus"`
 	Enable                 int    `json:"enable"`
 	Remark                 string `json:"remark"`
 	CreateAt               int64  `json:"createAt"`

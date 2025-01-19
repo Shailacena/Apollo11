@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Modal, Form, Table, Input, Button, Card, Divider, message } from 'antd';
 import type { FormProps, TableProps } from 'antd';
-import { BaseRealNameAccount, IRealNameAccount, RealNameAccountCreateReq, useApis } from '../api/api';
+import { useApis } from '../api/api';
+import { BaseRealNameAccount, IRealNameAccount, RealNameAccountCreateReq } from '../api/types';
 import axios from 'axios';
 
 const { TextArea } = Input;

@@ -107,13 +107,13 @@ export interface ListJDAccountResp {
 }
 
 export interface IJDAccount {
-  id: string;
+  id: number;
   account: string;
   realNameStatus: number;
   totalOrderCount: number;
   todayOrderCount: number;
   totalSuccessOrderCount: number;
-  loginStatus: number;
+  onlineStatus: number;
   enable: number;
   remark: number;
   createAt: number;
@@ -317,6 +317,14 @@ export interface IJDAccountCreate {
 }
 
 export interface JDAccountCreateResp {}
+
+export interface JDAccountEnableReq {
+  id: number;
+  enable: number;
+}
+
+export interface JDAccountEnableResp {
+}
 
 export interface RealNameAccountCreateReq {
   accountList: Array<BaseRealNameAccount>;

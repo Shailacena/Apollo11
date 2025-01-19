@@ -7,6 +7,7 @@ import AdminCreateModal, { FieldType } from './modal/AdminCreateModal';
 import { getRoleName, isSuperAdmin } from './role';
 import { IAdmin } from '../api/types';
 import { EnableStatus } from '../utils/constant';
+import { isEnable } from '../utils/util';
 
 const { Text } = Typography;
 interface DataType extends IAdmin {
@@ -18,10 +19,6 @@ function Admin() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   let { listAdmin, adminResetPassword, adminDelete, adminEnable, adminResetVerifiCode } = useApis()
   const [selectedData, setSelectedData] = useState<FieldType>(null!);
-
-  const isEnable = (enable: number): boolean => {
-    return enable === EnableStatus.Enabled
-  }
 
   const columns: TableProps<DataType>['columns'] = [
     {
@@ -66,10 +63,20 @@ function Admin() {
       fixed: 'right',
       render: (_, d) => {
         let isSuper = isSuperAdmin(d.role)
+        let enable = isEnable(d.enable)
         return (
           <Space size="middle">
             {
-              !isSuper && <Button type="primary" size='small' danger={isEnable(d.enable)} onClick={() => enableAdmin(d.username, isEnable(d.enable) ? EnableStatus.Disabled : EnableStatus.Enabled)}>{isEnable(d.enable) ? '冻结' : '启用'}</Button>
+              !isSuper &&
+              <Button
+                type="primary"
+                size='small'
+                danger={enable}
+                onClick={
+                  () => enableAdmin(d.username, enable ? EnableStatus.Disabled : EnableStatus.Enabled)
+                }>
+                {enable ? '冻结' : '启用'}
+              </Button>
             }
             <Button type="primary" size='small' onClick={() => { openModal(d, true) }}>修改</Button>
             {

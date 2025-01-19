@@ -12,3 +12,8 @@
 .mr-10 {
   margin: 10px 0;
 }
+
+.inline_search_form .ant-form-item {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}

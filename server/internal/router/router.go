@@ -60,6 +60,7 @@ func Init(e *echo.Echo) {
 	jdAccountGroup := apiGroup.Group("/jdAccount")
 	{
 		jdAccountGroup.POST("/create", handler.JDAccount.Create)
+		jdAccountGroup.POST("/enable", handler.JDAccount.Enable)
 		jdAccountGroup.GET("/list", handler.JDAccount.List)
 	}
 

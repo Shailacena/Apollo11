@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Space, Table, Button, message, Card, Divider } from 'antd';
 import type { TableProps } from 'antd';
-import { IPartner, useApis } from '../api/api';
+import { useApis } from '../api/api';
+import { IPartner } from '../api/types';
 import { useAppContext } from '../AppProvider';
 import PartnerSearchForm from './searchform/PartnerSearchForm';
 import PartnerCreateModal from './modal/PartnerCreateModal';
@@ -31,7 +32,6 @@ enum ActionType {
 function Partner() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [list, setList] = useState<DataType[]>([])
-  const [messageApi, contextHolder] = message.useMessage();
   const [selectedData, setSelectedData] = useState<FieldType>(null!);
   let ctx = useAppContext();
   let apis = useApis()
@@ -174,7 +174,6 @@ function Partner() {
 
   return (
     <>
-      {contextHolder}
       <Card>
         <div style={{ display: 'flex' }}>
           <Button type="primary" onClick={() => { setIsModalOpen(true) }} >新增</Button>
