@@ -5,7 +5,7 @@ import { useAppContext } from "../AppProvider";
 
 interface AxiosInstanceContextType {
   axiosInstance: AxiosInstance;
-  get: (url: string) => Promise<AxiosResponse | void>
+  get: (url: string, params?: any) => Promise<AxiosResponse | void>
   post: (url: string, data: any) => Promise<AxiosResponse | void>
 }
 
@@ -24,8 +24,8 @@ export function AxiosProvider({ children }: { children: React.ReactNode }) {
     headers["Rrrr"] = app.cookie.role
   }
 
-  let get = (url: string): Promise<AxiosResponse | void> => {
-    return request.get(url, { headers }).then((res) => {
+  let get = (url: string, params?: any): Promise<AxiosResponse | void> => {
+    return request.get(url, { headers, params: params }).then((res) => {
       return res
     }).catch((e) => {
       if (e.status == 401) {

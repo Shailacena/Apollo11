@@ -46,7 +46,7 @@ func (s *JDAccountService) Enable(c echo.Context, req *v1.JDAccountEnableReq) (*
 }
 
 func (s *JDAccountService) List(c echo.Context, req *v1.ListJDAccountReq) (*v1.ListJDAccountResp, error) {
-	accounts, err := repository.JDAccount.List(c)
+	accounts, err := repository.JDAccount.List(c, req)
 	if err != nil {
 		return nil, err
 	}

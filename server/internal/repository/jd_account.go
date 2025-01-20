@@ -1,6 +1,7 @@
 package repository
 
 import (
+	v1 "apollo/server/api/v1"
 	"apollo/server/internal/model"
 	"apollo/server/pkg/data"
 
@@ -33,11 +34,34 @@ func (r *JDAccountRepo) Enable(c echo.Context, id uint, enable model.EnableStatu
 	return nil
 }
 
-func (r *JDAccountRepo) List(c echo.Context) ([]*model.JDAccount, error) {
+func (r *JDAccountRepo) List(c echo.Context, req *v1.ListJDAccountReq) ([]*model.JDAccount, error) {
 	db := data.Instance()
 
+	jd := model.JDAccount{}
+	if req.Id > 0 {
+		jd.ID = req.Id
+	}
+	if len(req.Account) > 0 {
+		jd.Account = req.Account
+	}
+	if req.TotalOrderCount > 0 {
+		jd.TotalOrderCount = req.TotalOrderCount
+	}
+	if req.OnlineStatus > 0 {
+		jd.OnlineStatus = model.OnlineStatus(req.OnlineStatus)
+	}
+	if req.Enable > 0 {
+		jd.Enable = model.EnableStatus(req.Enable)
+	}
+	if req.RealNameStatus > 0 {
+		jd.RealNameStatus = req.RealNameStatus
+	}
+	// if req.StartAt > 0 && req.EndAt > 0 {
+	// 	jd.RealNameStatus = req.RealNameStatus
+	// }
+
 	var accounts []*model.JDAccount
-	err := db.Limit(20).Find(&accounts).Error
+	err := db.Where(jd).Limit(20).Find(&accounts).Error
 	if err != nil {
 		return nil, err
 	}

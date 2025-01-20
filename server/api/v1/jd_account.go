@@ -25,6 +25,14 @@ type JDAccountEnableResp struct {
 
 // jd账号列表
 type ListJDAccountReq struct {
+	Id              uint   `query:"id"`
+	Account         string `query:"account"`
+	TotalOrderCount int    `query:"totalOrderCount"`
+	OnlineStatus    int    `query:"onlineStatus"`
+	Enable          int    `query:"enable"`
+	RealNameStatus  int    `query:"realNameStatus"`
+	StartAt         int64  `query:"startAt"`
+	EndAt           int64  `query:"endAt"`
 }
 
 type ListJDAccountResp struct {
