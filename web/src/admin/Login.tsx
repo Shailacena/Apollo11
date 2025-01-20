@@ -3,9 +3,10 @@ import bg from '../assets/bg.jpg';
 import { useAppContext } from '../AppProvider';
 import { useNavigate } from 'react-router-dom';
 import type { FormProps } from 'antd';
-import { AdminLoginReq, useApis } from '../api/api';
+import { useApis } from '../api/api';
 import axios from 'axios';
 import { useEffect } from 'react';
+import { AdminLoginReq } from '../api/types';
 
 function Login() {
   let navigate = useNavigate();

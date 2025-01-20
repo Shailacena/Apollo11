@@ -1,10 +1,13 @@
 import { Space, Table, Button, message, Card, Divider, Popconfirm, QRCode, Typography, Modal } from 'antd';
 import type { TableProps } from 'antd';
 import { useEffect, useState } from 'react';
-import { IAdmin, useApis } from '../api/api';
+import { useApis } from '../api/api';
 import axios from 'axios';
 import AdminCreateModal, { FieldType } from './modal/AdminCreateModal';
 import { getRoleName, isSuperAdmin } from './role';
+import { IAdmin } from '../api/types';
+import { EnableStatus } from '../utils/constant';
+import { isEnable } from '../utils/util';
 
 const { Text } = Typography;
 interface DataType extends IAdmin {
@@ -51,7 +54,7 @@ function Admin() {
       key: 'enable',
       dataIndex: 'enable',
       render: (_, d) => (
-        d.enable === 1 ? '启动' : '禁用'
+        isEnable(d.enable) ? '启动' : '禁用'
       )
     },
     {
@@ -60,10 +63,20 @@ function Admin() {
       fixed: 'right',
       render: (_, d) => {
         let isSuper = isSuperAdmin(d.role)
+        let enable = isEnable(d.enable)
         return (
           <Space size="middle">
             {
-              !isSuper && <Button type="primary" size='small' danger={d.enable === 1} onClick={() => enableAdmin(d.username, d.enable)}>{d.enable === 1 ? '冻结' : '启用'}</Button>
+              !isSuper &&
+              <Button
+                type="primary"
+                size='small'
+                danger={enable}
+                onClick={
+                  () => enableAdmin(d.username, enable ? EnableStatus.Disabled : EnableStatus.Enabled)
+                }>
+                {enable ? '冻结' : '启用'}
+              </Button>
             }
             <Button type="primary" size='small' onClick={() => { openModal(d, true) }}>修改</Button>
             {
@@ -183,7 +196,7 @@ function Admin() {
     try {
       await adminEnable({ username, enable })
       fetchListAdmin()
-      showSuccessMsg(enable == 1 ? '启用成功' : '冻结成功')
+      showSuccessMsg(isEnable(enable) ? '启用成功' : '冻结成功')
     } catch (e) {
       if (axios.isAxiosError(e)) {
         let msg = e.response?.data?.message

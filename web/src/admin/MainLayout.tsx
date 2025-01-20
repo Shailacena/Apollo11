@@ -1,4 +1,4 @@
-import { Layout, Menu, Dropdown, Space } from 'antd';
+import { Layout, Menu, Dropdown, message, Row, Col, Flex } from 'antd';
 import type { MenuProps } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
@@ -6,18 +6,24 @@ import { routes } from './routes';
 import { useAppContext } from '../AppProvider';
 import { useEffect, useState } from 'react';
 import CurrentLocation from '../components/CurrentLocation';
+import { useApis } from '../api/api';
+import SetPasswordModal from './modal/SetPasswordModal';
 
 const { Header, Content, Sider, Footer } = Layout;
 
 type MenuItem = Required<MenuProps>['items'][number];
 
+enum DropdownMenuKey {
+  SetPassword = '0',
+  Logout = '1'
+}
 
 interface LevelKeysProps {
   key?: string;
   children?: LevelKeysProps[];
 }
 
-const getLevelKeys = (items1: LevelKeysProps[]) => {
+const getLevelKeys = (items: LevelKeysProps[]) => {
   const key: Record<string, number> = {};
   const func = (items2: LevelKeysProps[], level = 1) => {
     items2.forEach((item) => {
@@ -29,14 +35,18 @@ const getLevelKeys = (items1: LevelKeysProps[]) => {
       }
     });
   };
-  func(items1);
+  func(items);
   return key;
 };
 
 const items: MenuProps['items'] = [
   {
+    label: "修改密码",
+    key: DropdownMenuKey.SetPassword
+  },
+  {
     label: "登出",
-    key: '0'
+    key: DropdownMenuKey.Logout
   }
 ]
 
@@ -45,6 +55,8 @@ function MainLayout() {
   const navigate = useNavigate()
   const loc = useLocation()
   const ctx = useAppContext()
+  const { adminLogout } = useApis()
+  const [isOpenPasswordModal, setOpenPasswordModal] = useState(false)
 
   const nickname = ctx?.cookie?.nickname
 
@@ -92,31 +104,42 @@ function MainLayout() {
   const [stateOpenKeys, setStateOpenKeys] = useState([routes[0].path, routes[0].path]);
 
   const onOpenChange: MenuProps['onOpenChange'] = (openKeys) => {
-    console.log('icccc onOpenChange', openKeys)
     const currentOpenKey = openKeys.find((key) => stateOpenKeys.indexOf(key) === -1);
-    // console.log('icccc onOpenChange', currentOpenKey)
-    // open
     if (currentOpenKey !== undefined) {
       const repeatIndex = openKeys
         .filter((key) => key !== currentOpenKey)
         .findIndex((key) => levelKeys[key] === levelKeys[currentOpenKey]);
       console.log(openKeys
-        // remove repeat key
         .filter((_, index) => index !== repeatIndex)
-        // remove current level all child
         .filter((key) => {
           return levelKeys[key] <= levelKeys[currentOpenKey]
         }))
       setStateOpenKeys(
         [openKeys
-          // remove repeat key
           .filter((_, index) => index !== repeatIndex)
-          // remove current level all child
           .filter((key) => levelKeys[key] <= levelKeys[currentOpenKey]).pop() || openKeys[0]],
       );
     } else {
-      // close
       setStateOpenKeys(openKeys);
+    }
+  }
+
+  const logout = async () => {
+    await adminLogout({})
+
+    message.success("退出登录成功", 0.7, () => {
+      ctx.auth.adminSignout(() => { })
+    })
+  }
+
+  const dropdownMenuClick: MenuProps['onClick'] = ({ key }) => {
+    switch (key) {
+      case DropdownMenuKey.SetPassword:
+        setOpenPasswordModal(true)
+        break;
+      case DropdownMenuKey.Logout:
+        logout()
+        break;
     }
   }
 
@@ -124,23 +147,24 @@ function MainLayout() {
     <>
       <Layout>
         <Header style={{ color: "#fff", height: 48 }}>
-          <span>管理后台</span>
-          <span style={{ position: 'absolute', right: 20 }}>
-            <Dropdown menu={{
-              items, onClick: ({ key }) => {
-                if (key === '0') {
-                  ctx.auth.adminSignout(() => { })
-                }
-              }
-            }} trigger={['click']}>
-              <a style={{ color: "#fff" }} onClick={(e) => e.preventDefault()}>
-                <Space>
-                  {nickname}
-                  <DownOutlined />
-                </Space>
-              </a>
-            </Dropdown>
-          </span>
+          <Row style={{height: "100%"}}>
+            <Col style={{height: "100%", lineHeight: "48px"}} span={12}>
+              <span style={{fontSize: "25px"}}>管理后台</span>
+            </Col>
+            <Col style={{height: "100%", lineHeight: "48px"}} span={12}>
+            <Flex justify="center" align="end" vertical>
+                <Dropdown menu={{
+                  items,
+                  onClick: dropdownMenuClick
+                }} trigger={['click']}>
+                  <a style={{ color: "#fff", fontSize: "16px" }} onClick={(e) => e.preventDefault()}>
+                      {nickname}
+                      <DownOutlined />
+                  </a>
+                </Dropdown>
+            </Flex>
+            </Col>
+          </Row>
         </Header>
         <Layout>
           <Sider width={200}>
@@ -165,6 +189,11 @@ function MainLayout() {
           Copyright ©{new Date().getFullYear()} 管理后台
         </Footer>
       </Layout>
+
+      {
+        isOpenPasswordModal &&
+        <SetPasswordModal isModalOpen={isOpenPasswordModal} onOk={() =>{setOpenPasswordModal(false)}} onCancel={()=>{ setOpenPasswordModal(false)}} />
+      }
     </>
   )
 }

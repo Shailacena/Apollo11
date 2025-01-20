@@ -2,8 +2,8 @@ package v1
 
 // 商户登录
 type MerchantLoginReq struct {
-	Id       uint   `json:"id" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Id       uint   `json:"id" validate:"required"`
+	Password string `json:"password" validate:"required"`
 }
 
 type MerchantLoginResp struct {
@@ -13,7 +13,7 @@ type MerchantLoginResp struct {
 
 // 商户注册
 type MerchantRegisterReq struct {
-	Name   string `json:"name" binding:"required"`
+	Name   string `json:"name" validate:"required"`
 	Remark string `json:"remark"`
 }
 
@@ -32,9 +32,9 @@ type ListMerchantResp struct {
 
 // 商户修改密码
 type MerchantSetPasswordReq struct {
-	Id          uint   `json:"id" binding:"required"`
-	OldPassword string `json:"oldpassword" binding:"required"`
-	NewPassword string `json:"newpassword" binding:"required"`
+	Id          uint   `json:"id" validate:"required"`
+	OldPassword string `json:"oldpassword" validate:"required"`
+	NewPassword string `json:"newpassword" validate:"required"`
 }
 
 type MerchantSetPasswordResp struct {

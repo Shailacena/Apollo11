@@ -24,6 +24,10 @@ func (h *AdminHandler) Register(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
 	resp, err := service.Admin.Register(c, req)
 	if err != nil {
 		return err
@@ -36,6 +40,10 @@ func (h *AdminHandler) Login(c echo.Context) error {
 	req := new(v1.AdminLoginReq)
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
 	}
 
 	resp, err := service.Admin.Login(c, req)
@@ -52,8 +60,12 @@ func (h *AdminHandler) Logout(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	token := middleware.GetToken(c)
-	resp, err := service.Admin.Logout(c, req, token)
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
+	header := middleware.GetDataFromHeader(c)
+	resp, err := service.Admin.Logout(c, req, header.Token)
 	if err != nil {
 		return err
 	}
@@ -65,6 +77,10 @@ func (h *AdminHandler) List(c echo.Context) error {
 	req := new(v1.ListAdminReq)
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
 	}
 
 	resp, err := service.Admin.List(c, req)
@@ -81,7 +97,12 @@ func (h *AdminHandler) SetPassword(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	resp, err := service.Admin.SetPassword(c, req)
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
+	header := middleware.GetDataFromHeader(c)
+	resp, err := service.Admin.SetPassword(c, req, header.Token)
 	if err != nil {
 		return err
 	}
@@ -93,6 +114,10 @@ func (h *AdminHandler) ResetPassword(c echo.Context) error {
 	req := new(v1.AdminResetPasswordReq)
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
 	}
 
 	resp, err := service.Admin.ResetPassword(c, req)
@@ -109,6 +134,10 @@ func (h *AdminHandler) Delete(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
 	resp, err := service.Admin.Delete(c, req)
 	if err != nil {
 		return err
@@ -121,6 +150,10 @@ func (h *AdminHandler) Update(c echo.Context) error {
 	req := new(v1.AdminUpdateReq)
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
 	}
 
 	resp, err := service.Admin.Update(c, req)
@@ -137,6 +170,10 @@ func (h *AdminHandler) Enable(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
 	resp, err := service.Admin.Enable(c, req)
 	if err != nil {
 		return err
@@ -149,6 +186,10 @@ func (h *AdminHandler) ResetVerifiCode(c echo.Context) error {
 	req := new(v1.AdminResetVerifiCodeReq)
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
 	}
 
 	resp, err := service.Admin.ResetVerifiCode(c, req)

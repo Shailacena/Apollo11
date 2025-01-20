@@ -23,6 +23,10 @@ func (h *GoodsHandler) Create(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
 	resp, err := service.Goods.Create(c, req)
 	if err != nil {
 		return err
@@ -35,6 +39,10 @@ func (h *GoodsHandler) List(c echo.Context) error {
 	req := new(v1.ListGoodsReq)
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
 	}
 
 	resp, err := service.Goods.List(c, req)

@@ -36,6 +36,15 @@ func (s *JDAccountService) Create(c echo.Context, req *v1.JDAccountCreateReq) (*
 	return &v1.JDAccountCreateResp{}, nil
 }
 
+func (s *JDAccountService) Enable(c echo.Context, req *v1.JDAccountEnableReq) (*v1.JDAccountEnableResp, error) {
+	err := repository.JDAccount.Enable(c, req.Id, model.EnableStatus(req.Enable))
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.JDAccountEnableResp{}, nil
+}
+
 func (s *JDAccountService) List(c echo.Context, req *v1.ListJDAccountReq) (*v1.ListJDAccountResp, error) {
 	accounts, err := repository.JDAccount.List(c)
 	if err != nil {
@@ -51,7 +60,7 @@ func (s *JDAccountService) List(c echo.Context, req *v1.ListJDAccountReq) (*v1.L
 			TotalOrderCount:        a.TotalOrderCount,
 			TodayOrderCount:        a.TodayOrderCount,
 			TotalSuccessOrderCount: a.TotalSuccessOrderCount,
-			LoginStatus:            a.LoginStatus,
+			OnlineStatus:           int(a.OnlineStatus),
 			Enable:                 int(a.Enable),
 			Remark:                 a.Remark,
 			CreateAt:               a.CreatedAt.Unix(),

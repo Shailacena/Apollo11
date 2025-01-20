@@ -23,6 +23,10 @@ func (h *MerchantHandler) Register(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
 	resp, err := service.Merchant.Register(c, req)
 	if err != nil {
 		return err
@@ -35,6 +39,10 @@ func (h *MerchantHandler) Login(c echo.Context) error {
 	req := new(v1.MerchantLoginReq)
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
 	}
 
 	resp, err := service.Merchant.Login(c, req)
@@ -51,6 +59,10 @@ func (h *MerchantHandler) List(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
 	resp, err := service.Merchant.List(c, req)
 	if err != nil {
 		return err
@@ -63,6 +75,10 @@ func (h *MerchantHandler) SetPassword(c echo.Context) error {
 	req := new(v1.MerchantSetPasswordReq)
 	if err := c.Bind(req); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
 	}
 
 	resp, err := service.Merchant.SetPassword(c, req)

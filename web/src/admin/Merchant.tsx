@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Modal, Form, Table, Input, Button, message, Space, Card, Divider } from 'antd';
 import type { FormProps, TableProps } from 'antd';
-import { IMerchant, MerchantRegisterReq, useApis } from '../api/api';
+import { useApis } from '../api/api';
+import { IMerchant, MerchantRegisterReq, } from '../api/types';
 import dayjs from 'dayjs';
 import axios from 'axios';
 
@@ -122,42 +123,42 @@ function Merchant() {
     <>
       {contextHolder}
       <Card>
-      <div>
-        <Button type="primary" onClick={showModal}>新增</Button>
-      </div>
-      <Divider />
-      <Table<DataType> bordered columns={columns} dataSource={list} />
+        <div>
+          <Button type="primary" onClick={showModal}>新增</Button>
+        </div>
+        <Divider />
+        <Table<DataType> bordered columns={columns} dataSource={list} />
 
-      <Modal title="新增商户" footer={null} onCancel={handleCancel} open={isModalOpen}>
-        <Form
-          preserve={false}
-          labelCol={{ span: 4 }}
-          name="basic"
-          autoComplete="off"
-          onFinish={onFinish}
-        >
-          <Form.Item<MerchantRegisterReq>
-            name="name"
-            label="名称"
-            required
+        <Modal title="新增商户" footer={null} onCancel={handleCancel} open={isModalOpen}>
+          <Form
+            preserve={false}
+            labelCol={{ span: 4 }}
+            name="basic"
+            autoComplete="off"
+            onFinish={onFinish}
           >
-            <Input />
-          </Form.Item>
+            <Form.Item<MerchantRegisterReq>
+              name="name"
+              label="名称"
+              required
+            >
+              <Input />
+            </Form.Item>
 
-          <Form.Item<MerchantRegisterReq>
-            name="remark"
-            label="备注"
-          >
-            <TextArea rows={4} />
-          </Form.Item>
+            <Form.Item<MerchantRegisterReq>
+              name="remark"
+              label="备注"
+            >
+              <TextArea rows={4} />
+            </Form.Item>
 
-          <Form.Item>
-            <Button size="large" block type="primary" htmlType="submit">
-              确定
-            </Button>
-          </Form.Item>
-        </Form >
-      </Modal>
+            <Form.Item>
+              <Button size="large" block type="primary" htmlType="submit">
+                确定
+              </Button>
+            </Form.Item>
+          </Form >
+        </Modal>
       </Card>
     </>
   )

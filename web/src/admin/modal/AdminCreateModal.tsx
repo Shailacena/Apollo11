@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Divider, Flex, Form, FormProps, Input, message, Modal } from 'antd';
-import { AdminBaseInfoReq, useApis } from '../../api/api';
+import { AdminBaseInfoReq } from '../../api/types';
+import { useApis } from '../../api/api';
 import axios from 'axios';
 import TextArea from 'antd/es/input/TextArea';
 
@@ -14,7 +15,6 @@ interface ModalDataType {
 export type FieldType = {
   username?: string;
   nickname?: string;
-  secretKey?: string;
   remark?: string;
 };
 
