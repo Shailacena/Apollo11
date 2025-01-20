@@ -11,6 +11,9 @@ import json
 from undetected_chromedriver import Chrome, ChromeOptions
 import undetected_chromedriver
 
+import jd_wskey
+import adress
+
 # chrome_driver_path = '/chromedriver-win64/chromedriver'
 # 自动下载并设置 ChromeDriver 路径
 # driver_path = undetected_chromedriver.install()
@@ -34,6 +37,7 @@ class CookieLogin():
         
         self.drive.add_cdp_listener('Network.requestWillBeSent', self.inter_request)
         self.drive.add_cdp_listener('Network.dataReceived', self.inter_reponse)
+        self.drive.add_cdp_listener('Network.getResponseBody', self.inter_reponse)
 
     def inter_request(self, request):
         print('inter_request', json.dumps(request))
@@ -41,9 +45,31 @@ class CookieLogin():
     def inter_reponse(self, response):
         print('inter_reponse', response)
 
-    # def getToken(self, cookie):
-    #     sess = requests.session()
-    #     token = jd_wskey.getToken(sess, cookies1)
+    def inter_reponseBody(self, response):
+        print('inter_reponseBody', response)
+
+    def getToken(self):
+        sess = requests.session()
+        cookie1 = 'pin=jd_umoLGScTnXXW;wskey=AAJnhLFuAEDIa-oEM7h7wp30mca70z1HuLeUmf_LCu0-16-zMuGrgmGIiV-U9ztc5ffDehvl73jILU21gFJ25odYxXRHGu-a;'
+        token = jd_wskey.getToken(sess, cookie1)
+        print('getToken:', token)
+        if isinstance(token, str):
+            #获取到的cookies是列表
+            cookieDict  = sess.cookies.get_dict()
+            print('getToken cookieDict:', cookieDict)
+
+            cookieList = []
+            for key, value in cookieDict.items():
+                cookieList.insert(0, {'name': key, 'value': value})
+            
+            #转成字符串
+            cookieStr = json.dumps(cookieList)
+
+            # print(cookieStr)
+            with open('data/JdcookieToken2.json', 'w') as f:
+                f.write(cookieStr)
+
+            print('cookie已写入')
 
     #先手动登录，让程序获取到cookie，保存下来
     def getcookie(self):
@@ -72,7 +98,7 @@ class CookieLogin():
         cookieStr = json.dumps(cookieList)
 
         # print(cookieStr)
-        with open('data/Jdcookie.json', 'w') as f:
+        with open('data/JdcookieToken.json', 'w') as f:
             f.write(cookieStr)
 
         print('cookie已写入')
@@ -82,7 +108,7 @@ class CookieLogin():
     #读取cookie
     def readcookie(self):
         self.drive.get('https://m.jd.com/')
-        with open('data/Jdcookie.json',mode='r',encoding='utf-8') as f:
+        with open('data/JdcookieToken.json',mode='r',encoding='utf-8') as f:
             cookie = f.read()
 
         #读取到的是字符串类型，loads之后就变成了python中的字典类型
@@ -126,6 +152,9 @@ class CookieLogin():
             # self.drive.quit()
             time.sleep(2)
             try:
+                noadresselement = self.drive.find_element(By.XPATH,'//*[contains(text(), "没有收货地址")]/parent::div/parent::div')
+                if noadresselement
+                print('没有收货地址', noadresselement.text)
                 time.sleep(5)
                 # element = WebDriverWait(self.drive, 100).until(
                     # self.drive.find_element(By.XPATH, '//*[starts-with(@class,"button_button_")]'))
@@ -181,6 +210,8 @@ class CookieLogin():
                 print('超时了')
 
 if __name__ == '__main__':
-    login = CookieLogin()
+    # login = CookieLogin()
     # login.getcookie()
-    login.readcookie()
+    # login.readcookie()
+    # login.getToken()
+    adress.adddress()

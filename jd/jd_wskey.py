@@ -93,7 +93,7 @@ def genJDUA():
     oaid = base64Encode(''.join(str(uuid.uuid4()).split('-'))[16:])
     ua_iphone = 'jdapp;iPhone;13.6.3;;;M/5.0;appBuild/169571;jdSupportDarkMode/0;ef/1;ep/{"ciphertype":5,"cipher":{"ud":"%s","sv":"CJqkCI4n","iad":""},"ts":%s,"hdid":"JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=","version":"1.0.3","appname":"com.360buy.jdmobile","ridx":-1};Mozilla/5.0 (iPhone; CPU iPhone OS 18_1_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;' % (aid, st)
     ua_android = 'jdapp;android;11.1.4;;;appBuild/98176;ef/1;ep/{"hdid":"JM9F1ywUPwflvMIpYPok0tt5k9kW4ArJEU3lfLhxBqw=","ts":%s,"ridx":-1,"cipher":{"sv":"CJS=","ad":"%s","od":"%s","ov":"CzO=","ud":"%s"},"ciphertype":5,"version":"1.2.0","appname":"com.jingdong.app.mall"};Mozilla/5.0 (Linux; Android 12; M2102K1C Build/SKQ1.220303.001; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/97.0.4692.98 Mobile Safari/537.36' % (st, aid, oaid, aid)
-    return ua_iphone
+    return ua_android
 
 def genParams():
     suid = ''.join(str(uuid.uuid4()).split('-'))[16:]
