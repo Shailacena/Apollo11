@@ -1,0 +1,22 @@
+[
+    {
+        "domain": ".jd.com",
+        "expiry": 1768493435,
+        "httpOnly": true,
+        "name": "pt_pin",
+        "path": "/",
+        "sameSite": "Lax",
+        "secure": false,
+        "value": "jd_QdznWtBdLxVK"
+    },
+    {
+        "domain": ".jd.com",
+        "expiry": 1768493435,
+        "httpOnly": true,
+        "name": "pt_key",
+        "path": "/",
+        "sameSite": "Lax",
+        "secure": false,
+        "value": "AAJnhLtOAEAAz9Kpu5uYX3csmh_JsyEWhAEY2Ch5GlEdikSIWueq0eB8Og1zrMPdXfNh_0gepzsjC9G6pXLtnLesGbkwSWSS"
+    }
+]
