@@ -1,4 +1,5 @@
 from subprocess import TimeoutExpired
+import requests
 from selenium import webdriver
 import time
 from selenium.webdriver.support.wait import WebDriverWait
@@ -16,19 +17,33 @@ import undetected_chromedriver
 
 class CookieLogin():
     def __init__(self):
+        # headers = {
+        #     'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36',
+        #     'sec-ch-ua-platform' : '"Android"',
+        # }
         headers = {
-            'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36',
-            'sec-ch-ua-platform' : '"Android"',
-        }
+            "Content-Type": "text/plain;charset=UTF-8",
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/132.0.0.0 Safari/537.36",
+            "sec-ch-ua-platform": "macOS"
+        },
         # opactions = webdriver.ChromeOptions()
         # opactions.add_argument(f"user-agent={headers['User-Agent']}")
         # opactions.add_argument('sec-ch-ua-platform="Android"')
-        self.drive = Chrome()
+        self.drive = Chrome(enable_cdp_events=True)
         self.url = 'https://plogin.m.jd.com/login/login'
+        
+        self.drive.add_cdp_listener('Network.requestWillBeSent', self.inter_request)
+        self.drive.add_cdp_listener('Network.dataReceived', self.inter_reponse)
 
-    # def justopen(self):
-    #     self.drive.get('https://jd.com/')
-    #     time.sleep(2000)
+    def inter_request(self, request):
+        print('inter_request', json.dumps(request))
+    
+    def inter_reponse(self, response):
+        print('inter_reponse', response)
+
+    # def getToken(self, cookie):
+    #     sess = requests.session()
+    #     token = jd_wskey.getToken(sess, cookies1)
 
     #先手动登录，让程序获取到cookie，保存下来
     def getcookie(self):
@@ -57,7 +72,7 @@ class CookieLogin():
         cookieStr = json.dumps(cookieList)
 
         # print(cookieStr)
-        with open('data/Jdcookie.txt', 'w') as f:
+        with open('data/Jdcookie.json', 'w') as f:
             f.write(cookieStr)
 
         print('cookie已写入')
@@ -67,7 +82,7 @@ class CookieLogin():
     #读取cookie
     def readcookie(self):
         self.drive.get('https://m.jd.com/')
-        with open('data/Jdcookie.txt',mode='r',encoding='utf-8') as f:
+        with open('data/Jdcookie.json',mode='r',encoding='utf-8') as f:
             cookie = f.read()
 
         #读取到的是字符串类型，loads之后就变成了python中的字典类型
@@ -94,13 +109,17 @@ class CookieLogin():
     #打开商品
     def openGoods(self):
         url = 'https://item.m.jd.com/product/10135127527639.html'
+        print('====================>打开商品', url)
         self.drive.get(url)
+        print('====================>打开商品后')
         try:
             element = WebDriverWait(self.drive, 100).until(
                 EC.element_to_be_clickable((By.ID, "rightBtn"))
             )
+            print('====================>找到立即购买按钮')
             print(element.text)
             element.click()  # 点击元素
+            print('====================>点击立即购买按钮后')
         except TimeoutExpired:
             print('超时了')
         finally:
@@ -111,22 +130,52 @@ class CookieLogin():
                 # element = WebDriverWait(self.drive, 100).until(
                     # self.drive.find_element(By.XPATH, '//*[starts-with(@class,"button_button_")]'))
                 element = self.drive.find_element(By.XPATH, '//*[starts-with(@class,"button_button_")]')
+                print('====================>找到下单按钮')
                 print(element.text)
 
                 # 点击立即支付
                 element.click()
-
+                print('====================>点击下单按钮后')
                 time.sleep(5)
 
-                elements = self.drive.find_elements(By.CLASS_NAME, 'checkboxWrap')
+                #找到含有微信的节点
+                pelement = self.drive.find_element(By.XPATH,'//*[contains(text(), "微信")]/parent::div/parent::div')
+                print('含有微信节点', pelement.text)
+                # 打印元素的innerHTML
+                if isinstance(pelement, WebElement):
+                    print(pelement.get_attribute('innerHTML'))
 
-                # 使用JavaScript获取相邻节点
-                javascript = "var prev = arguments[0].previousSibling; return prev || null;"
-                previous_sibling = self.drive.execute_script(javascript, element)
-                
-                # 如果存在相邻节点，打印它的文本内容
-                if previous_sibling:
-                    print(previous_sibling.text)
+                wechatcheckbox = pelement.find_element(By.CLASS_NAME, 'checkboxWrap')
+                if isinstance(wechatcheckbox, WebElement):
+                    print(wechatcheckbox.get_attribute('innerHTML'))
+
+                time.sleep(2)
+                print('====================>找到微信支付checkbox')
+                if isinstance(wechatcheckbox, WebElement):
+                    wechatcheckbox.click()
+                    print('====================>勾选checkbox后')
+                    # self.drive.execute_script("arguments[0].checked = true;", wechatcheckbox)
+
+                time.sleep(2)
+                paybtn = self.drive.find_element(By.CLASS_NAME, 'payBtn')
+                print('====================>找到支付按钮')
+                if isinstance(paybtn, WebElement):
+                    paybtn.click()
+                    print('====================>点击支付按钮后')
+
+                try:
+                # 等待页面加载完成
+                    WebDriverWait(self.drive, 60).until(EC.url_changes(self.drive.current_url))
+                    print('====================>重定向')
+                    # 获取当前页面的URL
+                    redirect_url = self.drive.current_url
+                    print("重定向链接:", redirect_url)
+
+
+                    
+                    # print(self.drive.page_source)
+                except TimeoutExpired:
+                    print('超时了')
 
             except TimeoutExpired:
                 print('超时了')
