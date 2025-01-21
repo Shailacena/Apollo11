@@ -72,14 +72,14 @@ class CookieLogin():
 
     def checkAdrress(self):
         # 获取本地HTML文件的路径
-        local_html_path = 'file:///'+os.path.abspath('F:/henry/z_local/Cooking/Apollo11/jd/files/确认订单_没有收获地址_新建地址.html')
-        # local_html_path = 'file:///Users/admin/Documents/Apollo11/jd/files/确认订单_没有收获地址_新建地址_files.html'
+        # local_html_path = 'file:///'+os.path.abspath('F:/henry/z_local/Cooking/Apollo11/jd/files/确认订单_没有收获地址_新建地址.html')
+        local_html_path = 'file:///Users/admin/Documents/Apollo11/jd/files/确认订单_没有收获地址_新建地址.html'
         print(local_html_path)
         # 使用Selenium打开本地HTML文件
         self.drive.get(local_html_path)
 
         #找到含有没有收货地址的节点
-        time.sleep(30)
+        time.sleep(2)
         try:
             pelement = self.drive.find_element(By.XPATH,'//*[contains(text(), "没有收货地址")]')
         except Exception as e:
@@ -90,20 +90,44 @@ class CookieLogin():
         # 打印元素的innerHTML
         if isinstance(pelement, WebElement):
             print(pelement.get_attribute('innerHTML'))
+        
+        try:
+            EmptyAddress_create_element = self.drive.find_element(By.XPATH, '//*[contains(@class,"EmptyAddress_create_")]')
+        except Exception as e:
+            print('没找到', e)
+            self.drive.quit()
+            raise SystemExit("退出脚本。")
+        
+        print('====================>找到创建地址按钮')
+        EmptyAddress_create_element.click()
+        print('====================>点击创建地址后')
 
-        wechatcheckbox = pelement.find_element(By.CLASS_NAME, 'checkboxWrap')
-        if isinstance(wechatcheckbox, WebElement):
-            print(wechatcheckbox.get_attribute('innerHTML'))
+    def addAdrress(self, address_str):
+        # 获取本地HTML文件的路径
+        # local_html_path = 'file:///'+os.path.abspath('F:/henry/z_local/Cooking/Apollo11/jd/files/确认订单_没有收获地址_新建地址.html')
+        local_html_path = 'file:///Users/admin/Documents/Apollo11/jd/files/编辑收货地址.html'
+        print(local_html_path)
+        # 使用Selenium打开本地HTML文件
+        self.drive.get(local_html_path)
 
         time.sleep(2)
-        # wechatcheckbox.click()
-        if isinstance(wechatcheckbox, WebElement):
-            self.drive.execute_script("arguments[0].checked = true;", wechatcheckbox)
+        IntellectAddress_textarea = self.drive.find_element(By.XPATH, '//*[contains(@class,"taro-textarea")]')
+        
+        # 地址识别textarea输入
+        IntellectAddress_textarea.clear()
+        IntellectAddress_textarea.send_keys(address_str)
 
         time.sleep(2)
-        paybtn = self.drive.find_element(By.CLASS_NAME, 'payBtn')
-        if isinstance(paybtn, WebElement):
-            paybtn.click()
+        
+        #点击识别
+        # IntellectAddress_sniffConfirm_ = self.drive.find_element(By.XPATH, '//*[contains(@class,"IntellectAddress_sniffConfirm_")]')
+        # IntellectAddress_sniffConfirm_.click()
+
+        time.sleep(10)
+
+        #保存并使用该地址
+        ConfirmBtn_confirmBtn_ = self.drive.find_element(By.XPATH, '//*[contains(@class,"ConfirmBtn_confirmBtn_")]')
+        # ConfirmBtn_confirmBtn_.click()
 
         # 等待页面加载完成
         WebDriverWait(self.drive, 60).until(EC.url_changes(self.drive.current_url))
@@ -117,4 +141,8 @@ class CookieLogin():
 
 if __name__ == '__main__':
     login = CookieLogin()
-    login.checkAdrress()
+    with open('data/adress.txt',mode='r',encoding='utf-8') as f:
+        adress = f.read()
+    # login.checkAdrress()
+    print(adress)
+    login.addAdrress(adress)
