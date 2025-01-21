@@ -62,6 +62,7 @@ func Init(e *echo.Echo) {
 		jdAccountGroup.POST("/create", handler.JDAccount.Create)
 		jdAccountGroup.POST("/enable", handler.JDAccount.Enable)
 		jdAccountGroup.GET("/list", handler.JDAccount.List)
+		jdAccountGroup.POST("/delete", handler.JDAccount.Enable)
 	}
 
 	statisticsGroup := apiGroup.Group("/statistics")

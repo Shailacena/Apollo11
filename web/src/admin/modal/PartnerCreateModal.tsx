@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Button, Form, FormProps, Input, message, Modal } from 'antd';
-import { PartnerBaseInfoReq, PartnerUpdateReq, useApis } from '../../api/api';
+import { useApis } from '../../api/api';
+import { PartnerBaseInfoReq, PartnerUpdateReq } from '../../api/types';
 import axios from 'axios';
 import TextArea from 'antd/es/input/TextArea';
 import { useAppContext } from '../../AppProvider';
@@ -50,7 +51,7 @@ const PartnerCreateModal = (params: ModalDataType) => {
     setFormDisabled(true)
     setConfirmLoading(true)
     try {
-      isEdit ? handleEdit({id: info!.id, ...value}) : handleRegister(value)
+      isEdit ? handleEdit({ id: info!.id, ...value }) : handleRegister(value)
     } catch (e) {
       if (axios.isAxiosError(e)) {
         let msg = e.response?.data?.message
@@ -83,7 +84,7 @@ const PartnerCreateModal = (params: ModalDataType) => {
 
   return (
     <>
-      <Modal title={title} footer={null} confirmLoading={confirmLoading} onCancel={()=>{params?.onCancel?.()}} open={isModalOpen}>
+      <Modal title={title} footer={null} confirmLoading={confirmLoading} onCancel={() => { params?.onCancel?.() }} open={isModalOpen}>
         <Form
           preserve={false}
           disabled={formDisabled}

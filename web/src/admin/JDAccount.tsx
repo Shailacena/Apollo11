@@ -1,27 +1,20 @@
 import { useEffect, useState } from 'react';
-import { Modal, Form, Table, Input, Button, Card, Divider, message, Space, Select, DatePicker } from 'antd';
+import { Form, Table, Input, Button, Card, Divider, message, Space, Select, DatePicker, Flex } from 'antd';
 import type { FormProps, TableProps } from 'antd';
 import { useApis } from '../api/api';
-import { IJDAccount, IJDAccountCreate, JDAccountCreateReq, ListJDAccountReq, ListJDAccountResp } from '../api/types';
+import { IJDAccount, ListJDAccountReq } from '../api/types';
 import axios from 'axios';
 import { getDataFormat } from '../utils/Tool';
 import { isEnable } from '../utils/util';
 import { EnableStatus } from '../utils/constant';
+import JDAccountCreateModal from './modal/JDAccountCreateModal';
 
-const { TextArea } = Input;
+
 const { Option } = Select;
 
 interface DataType extends IJDAccount {
   key: string;
 }
-
-type CreateFieldType = {
-  accounts: string;
-};
-
-type SearchFieldType = {
-
-};
 
 enum OnlineStatus {
   Online = 1,
@@ -36,7 +29,9 @@ enum RealNameStatus {
 function JDAccount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [list, setList] = useState<DataType[]>([])
-  let { listJDAccount, jdAccountCreate, jdAccountEnable } = useApis()
+  let { listJDAccount, jdAccountEnable } = useApis()
+
+  let searchParams: ListJDAccountReq = {}
 
   const isOnline = (onlineStatus: number) => {
     return onlineStatus === OnlineStatus.Online
@@ -147,6 +142,7 @@ function JDAccount() {
 
   const handleOk = () => {
     setIsModalOpen(false);
+    fetchJDAccountList()
   };
 
   const handleCancel = () => {
@@ -166,55 +162,12 @@ function JDAccount() {
     }
   };
 
-  const onFinish: FormProps<CreateFieldType>['onFinish'] = async (value) => {
-    try {
-      let accountList: IJDAccountCreate[] = []
-      if (value.accounts) {
-        let pinReg = /pin=([\s\S]*?);/
-        let keyReg = /wskey=([\s\S]*?);/
-
-        let list = value.accounts.split(/[(\r\n)\r\n]+/)
-
-        list?.forEach((line: string) => {
-          let pinMatch = line.trim().match(pinReg)
-          let pin = ''
-          if (pinMatch && pinMatch.length > 1) {
-            pin = pinMatch[1]
-          }
-          let keyMatch = line.trim().match(keyReg)
-          let wsKey = ''
-          if (keyMatch && keyMatch.length > 1) {
-            wsKey = keyMatch[1]
-          }
-
-          if (pin && wsKey) {
-            accountList.push({
-              account: pin,
-              wsKey: wsKey,
-            })
-          }
-        })
-      }
-
-      let data: JDAccountCreateReq = {
-        accountList: accountList,
-        remark: ""
-      }
-
-      await jdAccountCreate(data)
-
-      fetchJDAccountList()
-      setIsModalOpen(false);
-      message.success('导入成功')
-    } catch (e) {
-      if (axios.isAxiosError(e)) {
-        let msg = e.response?.data?.message
-        msg && message.error(msg)
-      }
+  const fetchJDAccountList = async () => {
+    const params: ListJDAccountReq = {
+      ...searchParams,
+      startAt: searchParams.startAt?.valueOf(),
+      endAt: searchParams.endAt?.valueOf(),
     }
-  };
-
-  const fetchJDAccountList = async (params?: ListJDAccountReq) => {
     const { data } = await listJDAccount(params)
     let d: DataType[] = data?.list?.map((item, index) => {
       let newItem: DataType = {
@@ -226,10 +179,10 @@ function JDAccount() {
     setList(d)
   }
 
-  const onSearch: FormProps<ListJDAccountReq>['onFinish'] = async (value) => {
-    console.log(value);
+  const onSearch: FormProps<ListJDAccountReq>['onFinish'] = (value) => {
+    searchParams = value
 
-    fetchJDAccountList(value)
+    fetchJDAccountList()
   }
 
   useEffect(() => {
@@ -311,46 +264,22 @@ function JDAccount() {
         </Form>
 
         <Divider />
-        <Button type="primary" onClick={showModal}>批量导入京东账号</Button>
+        <Flex gap="small" wrap>
+          <Button type="primary" onClick={showModal}>批量导入京东账号</Button>
+          <Button variant="solid" color="default">重置转换失败ck</Button>
+          <Button variant="solid" color="default">重置登录过期ck</Button>
+          <Button type="primary">重置指定搜索条件小号ck</Button>
+          <Button type="primary" danger>删除指定搜索条件小号ck</Button>
+          <Button type="default">导出指定搜索条件小号ck</Button>
+          <Button type="primary" danger>全部删除</Button>
+        </Flex>
         <Divider />
         <Table<DataType> bordered columns={columns} dataSource={list} />
 
-        <Modal title="导入京东账号" destroyOnClose open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={null}>
-          <Divider />
-          <Form
-            name="basic"
-            autoComplete="off"
-            onFinish={onFinish}
-          >
-            {/* <Form.Item<FieldType>
-              name="username"
-              label="类型"
-            >
-              <Select onChange={handleChange} options={[
-                { value: 'jack', label: 'Jack' },
-                { value: 'lucy', label: 'Lucy' },
-                { value: 'Yiminghe', label: 'yiminghe' },
-                { value: 'disabled', label: 'Disabled', disabled: true },
-              ]} style={{ width: 200 }}>
-              </Select>
-            </Form.Item> */}
-
-            <Form.Item<CreateFieldType>
-              name="accounts"
-              label="账号"
-            >
-              <TextArea rows={8} />
-            </Form.Item>
-
-            <Form.Item>
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <Button size="large" block type="primary" htmlType="submit" style={{ width: 100 }}>
-                  提交
-                </Button>
-              </div>
-            </Form.Item>
-          </Form >
-        </Modal>
+        {
+          isModalOpen &&
+          <JDAccountCreateModal isModalOpen={isModalOpen} onOk={handleOk} onCancel={handleCancel} />
+        }
       </Card>
     </>
   )

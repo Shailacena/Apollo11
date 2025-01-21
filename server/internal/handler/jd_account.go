@@ -72,3 +72,22 @@ func (h *JDAccountHandler) List(c echo.Context) error {
 
 	return response.ResponseSuccess(c, resp)
 }
+
+func (h *JDAccountHandler) Delete(c echo.Context) error {
+	req := new(v1.JDAccountDeleteReq)
+	err := c.Bind(req)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
+	resp, err := service.JDAccount.Delete(c, req)
+	if err != nil {
+		return err
+	}
+
+	return response.ResponseSuccess(c, resp)
+}

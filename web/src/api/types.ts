@@ -103,14 +103,14 @@ export interface IRealNameAccount extends BaseRealNameAccount {
 }
 
 export interface ListJDAccountReq {
-  id: number
-  account: string
-  totalOrderCount: number
-  onlineStatus: number
-  enable: number
-  realNameStatus: number
-  startAt: number
-  endAt: number
+  id?: number
+  account?: string
+  totalOrderCount?: number
+  onlineStatus?: number
+  enable?: number
+  realNameStatus?: number
+  startAt?: number
+  endAt?: number
 }
 
 export interface ListJDAccountResp {

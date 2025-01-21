@@ -2,7 +2,7 @@ package v1
 
 // jd账号创建
 type JDAccountCreateReq struct {
-	AccountList []BaseJDAccount `json:"accountList" validate:"required,len>0"`
+	AccountList []BaseJDAccount `json:"accountList" validate:"required"`
 	Remark      string          `json:"remark"`
 }
 
@@ -51,4 +51,13 @@ type JDAccount struct {
 	Remark                 string `json:"remark"`
 	CreateAt               int64  `json:"createAt"`
 	UpdateAt               int64  `json:"updateAt"`
+}
+
+// 删除
+type JDAccountDeleteReq struct {
+	Id     uint `json:"id" validate:"required"`
+	Enable int  `json:"enable" validate:"required"`
+}
+
+type JDAccountDeleteResp struct {
 }

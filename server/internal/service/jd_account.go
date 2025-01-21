@@ -72,3 +72,12 @@ func (s *JDAccountService) List(c echo.Context, req *v1.ListJDAccountReq) (*v1.L
 		List: list,
 	}, nil
 }
+
+func (s *JDAccountService) Delete(c echo.Context, req *v1.JDAccountDeleteReq) (*v1.JDAccountDeleteResp, error) {
+	err := repository.JDAccount.Delete(c, req.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.JDAccountDeleteResp{}, nil
+}

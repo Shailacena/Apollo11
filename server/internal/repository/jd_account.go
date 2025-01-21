@@ -4,6 +4,7 @@ import (
 	v1 "apollo/server/api/v1"
 	"apollo/server/internal/model"
 	"apollo/server/pkg/data"
+	"time"
 
 	"github.com/labstack/echo/v4"
 )
@@ -56,9 +57,9 @@ func (r *JDAccountRepo) List(c echo.Context, req *v1.ListJDAccountReq) ([]*model
 	if req.RealNameStatus > 0 {
 		jd.RealNameStatus = req.RealNameStatus
 	}
-	// if req.StartAt > 0 && req.EndAt > 0 {
-	// 	jd.RealNameStatus = req.RealNameStatus
-	// }
+	if req.StartAt > 0 && req.EndAt > 0 {
+		db = db.Where("created_at >= ? AND created_at <= ?", time.UnixMilli(req.StartAt), time.UnixMilli(req.EndAt))
+	}
 
 	var accounts []*model.JDAccount
 	err := db.Where(jd).Limit(20).Find(&accounts).Error
@@ -67,4 +68,15 @@ func (r *JDAccountRepo) List(c echo.Context, req *v1.ListJDAccountReq) ([]*model
 	}
 
 	return accounts, err
+}
+
+func (r *JDAccountRepo) Delete(c echo.Context, id uint) error {
+	// db := data.Instance()
+
+	// err := db.Where("id = ?", id).Delete().Error
+	// if err != nil {
+	// 	return err
+	// }
+
+	return nil
 }

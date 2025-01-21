@@ -15,6 +15,7 @@ interface ModalDataType {
 export type FieldType = {
   username?: string;
   nickname?: string;
+  secretKey?: string;
   remark?: string;
 };
 
