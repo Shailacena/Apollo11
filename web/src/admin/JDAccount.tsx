@@ -2,12 +2,11 @@ import { useEffect, useState } from 'react';
 import { Modal, Form, Table, Input, Button, Card, Divider, message, Space, Select, DatePicker } from 'antd';
 import type { FormProps, TableProps } from 'antd';
 import { useApis } from '../api/api';
-import { IJDAccount, IJDAccountCreate, JDAccountCreateReq } from '../api/types';
+import { IJDAccount, IJDAccountCreate, JDAccountCreateReq, ListJDAccountReq, ListJDAccountResp } from '../api/types';
 import axios from 'axios';
 import { getDataFormat } from '../utils/Tool';
 import { isEnable } from '../utils/util';
 import { EnableStatus } from '../utils/constant';
-import dayjs from 'dayjs';
 
 const { TextArea } = Input;
 const { Option } = Select;
@@ -16,8 +15,12 @@ interface DataType extends IJDAccount {
   key: string;
 }
 
-type FieldType = {
+type CreateFieldType = {
   accounts: string;
+};
+
+type SearchFieldType = {
+
 };
 
 enum OnlineStatus {
@@ -163,7 +166,7 @@ function JDAccount() {
     }
   };
 
-  const onFinish: FormProps<FieldType>['onFinish'] = async (value) => {
+  const onFinish: FormProps<CreateFieldType>['onFinish'] = async (value) => {
     try {
       let accountList: IJDAccountCreate[] = []
       if (value.accounts) {
@@ -211,8 +214,8 @@ function JDAccount() {
     }
   };
 
-  const fetchJDAccountList = async () => {
-    const { data } = await listJDAccount()
+  const fetchJDAccountList = async (params?: ListJDAccountReq) => {
+    const { data } = await listJDAccount(params)
     let d: DataType[] = data?.list?.map((item, index) => {
       let newItem: DataType = {
         key: index.toString(),
@@ -223,6 +226,12 @@ function JDAccount() {
     setList(d)
   }
 
+  const onSearch: FormProps<ListJDAccountReq>['onFinish'] = async (value) => {
+    console.log(value);
+
+    fetchJDAccountList(value)
+  }
+
   useEffect(() => {
     fetchJDAccountList()
   }, [])
@@ -230,32 +239,32 @@ function JDAccount() {
   return (
     <>
       <Card>
-        <Form className="inline_search_form" name="inline_search_form" layout="inline" onFinish={onFinish}>
-          <Form.Item
+        <Form className="inline_search_form" name="inline_search_form" layout="inline" onFinish={onSearch}>
+          <Form.Item<ListJDAccountReq>
             name="id"
           >
-            <Input placeholder="ID" />
+            <Input type="number" placeholder="ID" />
           </Form.Item>
 
-          <Form.Item
+          <Form.Item<ListJDAccountReq>
             name="account"
           >
             <Input placeholder="账号" />
           </Form.Item>
 
-          <Form.Item
+          <Form.Item<ListJDAccountReq>
             name="totalOrderCount"
           >
-            <Input placeholder="总下单数" />
+            <Input type="number" placeholder="总下单数" />
           </Form.Item>
 
-          <Form.Item
+          {/* <Form.Item<ListJDAccountReq>
             name="abnormal"
           >
             <Input placeholder="异常模糊搜索" />
-          </Form.Item>
+          </Form.Item> */}
 
-          <Form.Item
+          <Form.Item<ListJDAccountReq>
             name="enable"
           >
             <Select placeholder="状态">
@@ -264,7 +273,7 @@ function JDAccount() {
             </Select>
           </Form.Item>
 
-          <Form.Item
+          <Form.Item<ListJDAccountReq>
             name="onlineStatus"
           >
             <Select placeholder="在线状态">
@@ -273,7 +282,7 @@ function JDAccount() {
             </Select>
           </Form.Item>
 
-          <Form.Item
+          <Form.Item<ListJDAccountReq>
             name="realNameStatus"
           >
             <Select placeholder="实名状态">
@@ -282,29 +291,25 @@ function JDAccount() {
             </Select>
           </Form.Item>
 
-          <Form.Item
-            name="startTime"
+          <Form.Item<ListJDAccountReq>
+            name="startAt"
           >
             <DatePicker placeholder="起始日期" />
           </Form.Item>
 
-          <Form.Item
-            name="endTime"
+          <Form.Item<ListJDAccountReq>
+            name="endAt"
           >
             <DatePicker placeholder="截止日期" />
           </Form.Item>
 
-          <Form.Item shouldUpdate>
-            {() => (
-              <Button
-                type="primary"
-                htmlType="submit"
-              >
-                搜索
-              </Button>
-            )}
+          <Form.Item>
+            <Button type="primary" htmlType="submit">
+              搜索
+            </Button>
           </Form.Item>
         </Form>
+
         <Divider />
         <Button type="primary" onClick={showModal}>批量导入京东账号</Button>
         <Divider />
@@ -330,7 +335,7 @@ function JDAccount() {
               </Select>
             </Form.Item> */}
 
-            <Form.Item<FieldType>
+            <Form.Item<CreateFieldType>
               name="accounts"
               label="账号"
             >

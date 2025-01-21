@@ -17,11 +17,11 @@ export interface AdminLoginResp {
   role: number;
 }
 
-export interface AdminLogoutReq {}
+export interface AdminLogoutReq { }
 
-export interface AdminLogoutResp {}
+export interface AdminLogoutResp { }
 
-export interface AdminRegisterReq extends AdminBaseInfoReq {}
+export interface AdminRegisterReq extends AdminBaseInfoReq { }
 
 export interface AdminBaseInfoReq {
   username: string;
@@ -77,11 +77,11 @@ export interface AdminDeleteReq {
   username: string;
 }
 
-export interface AdminDeleteResp {}
+export interface AdminDeleteResp { }
 
-export interface AdminUpdateReq extends AdminBaseInfoReq {}
+export interface AdminUpdateReq extends AdminBaseInfoReq { }
 
-export interface AdminUpdateResp {}
+export interface AdminUpdateResp { }
 
 export interface AdminEnableReq {
   username: string;
@@ -100,6 +100,17 @@ export interface IRealNameAccount extends BaseRealNameAccount {
   realNameCount: number;
   enable: number;
   remark: string;
+}
+
+export interface ListJDAccountReq {
+  id: number
+  account: string
+  totalOrderCount: number
+  onlineStatus: number
+  enable: number
+  realNameStatus: number
+  startAt: number
+  endAt: number
 }
 
 export interface ListJDAccountResp {
@@ -143,7 +154,7 @@ export interface PartnerBaseInfoReq {
   remark?: string;
 }
 
-export interface PartnerRegisterReq extends PartnerBaseInfoReq {}
+export interface PartnerRegisterReq extends PartnerBaseInfoReq { }
 
 export interface PartnerRegisterResp {
   name: string;
@@ -167,7 +178,7 @@ export interface PartnerSetPasswordReq {
   newpassword: string;
 }
 
-export interface PartnerSetPasswordResp {}
+export interface PartnerSetPasswordResp { }
 
 export interface PartnerUpdateReq extends PartnerBaseInfoReq {
   id: number;
@@ -180,7 +191,7 @@ export interface PartnerUpdateReq extends PartnerBaseInfoReq {
   enable?: number;
 }
 
-export interface PartnerUpdateResp {}
+export interface PartnerUpdateResp { }
 
 export interface PartnerResetPasswordReq {
   name: string;
@@ -194,7 +205,7 @@ export interface PartnerDeleteReq {
   name: string;
 }
 
-export interface PartnerDeleteResp {}
+export interface PartnerDeleteResp { }
 
 export interface ListPartnerBillResp {
   list: Array<IPartnerBill>;
@@ -235,7 +246,7 @@ export interface GoodsCreateReq {
   shopName: string;
 }
 
-export interface GoodsCreateResp {}
+export interface GoodsCreateResp { }
 
 export interface ListMerchantResp {
   list: Array<IMerchant>;
@@ -278,7 +289,7 @@ export interface MerchantSetPasswordReq {
   newpassword: string;
 }
 
-export interface MerchantSetPasswordResp {}
+export interface MerchantSetPasswordResp { }
 
 export interface ListStatisticsResp {
   list: Array<IStatistics>;
@@ -316,7 +327,7 @@ export interface IJDAccountCreate {
   wsKey: string;
 }
 
-export interface JDAccountCreateResp {}
+export interface JDAccountCreateResp { }
 
 export interface JDAccountEnableReq {
   id: number;
@@ -336,4 +347,4 @@ export interface BaseRealNameAccount {
   name: string;
 }
 
-export interface RealNameAccountCreateResp {}
+export interface RealNameAccountCreateResp { }

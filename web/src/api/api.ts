@@ -54,6 +54,7 @@ import {
   AdminSetPasswordResp,
   JDAccountEnableReq,
   JDAccountEnableResp,
+  ListJDAccountReq,
 } from "./types";
 
 export function useApis() {
@@ -129,8 +130,10 @@ export function useApis() {
         return res?.data;
       });
     },
-    listJDAccount(): Promise<IResponseBody<ListJDAccountResp>> {
-      return ax.get("/jdAccount/list").then((res) => {
+    listJDAccount(
+      params?: ListJDAccountReq
+    ): Promise<IResponseBody<ListJDAccountResp>> {
+      return ax.get("/jdAccount/list", params).then((res) => {
         return res?.data;
       });
     },
