@@ -72,8 +72,8 @@ class CookieLogin():
 
     def checkAdrress(self):
         # 获取本地HTML文件的路径
-        # local_html_path = 'file:///'+os.path.abspath('F:/henry/z_local/Cooking/Apollo11/jd/files/确认订单_没有收获地址_新建地址.html')
-        local_html_path = 'file:///Users/admin/Documents/Apollo11/jd/files/确认订单_没有收获地址_新建地址.html'
+        local_html_path = 'file:///'+os.path.abspath('F:/henry/z_local/Cooking/Apollo11/jd/files/确认订单_没有收获地址_新建地址.html')
+        # local_html_path = 'file:///Users/admin/Documents/Apollo11/jd/files/确认订单_没有收获地址_新建地址.html'
         print(local_html_path)
         # 使用Selenium打开本地HTML文件
         self.drive.get(local_html_path)
@@ -143,6 +143,6 @@ if __name__ == '__main__':
     login = CookieLogin()
     with open('data/adress.txt',mode='r',encoding='utf-8') as f:
         adress = f.read()
-    # login.checkAdrress()
+    login.checkAdrress()
     print(adress)
-    login.addAdrress(adress)
+    # login.addAdrress(adress)

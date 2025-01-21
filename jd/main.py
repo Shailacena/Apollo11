@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from subprocess import TimeoutExpired
 import requests
 from selenium import webdriver
@@ -13,6 +14,7 @@ import undetected_chromedriver
 
 import jd_wskey
 import adress
+import verify
 
 # chrome_driver_path = '/chromedriver-win64/chromedriver'
 # 自动下载并设置 ChromeDriver 路径
@@ -34,11 +36,12 @@ class CookieLogin():
         # opactions.add_argument('sec-ch-ua-platform="Android"')
         # self.drive = Chrome()
         self.drive = Chrome(enable_cdp_events=True)
+        self.drive.set_window_size(680, 980)
         # self.url = 'https://plogin.m.jd.com/login/login'
         
-        self.drive.add_cdp_listener('Network.requestWillBeSent', self.inter_request)
-        self.drive.add_cdp_listener('Network.dataReceived', self.inter_reponse)
-        self.drive.add_cdp_listener('Network.getResponseBody', self.inter_reponse)
+        # self.drive.add_cdp_listener('Network.requestWillBeSent', self.inter_request)
+        # self.drive.add_cdp_listener('Network.dataReceived', self.inter_reponse)
+        # self.drive.add_cdp_listener('Network.getResponseBody', self.inter_reponse)
 
     def inter_request(self, request):
         print('inter_request', json.dumps(request))
@@ -61,7 +64,11 @@ class CookieLogin():
 
             cookieList = []
             for key, value in cookieDict.items():
-                cookieList.insert(0, {'name': key, 'value': value})
+                httponly = False
+                if (key == 'pt_pin') or (key == 'pt_key'):
+                    httponly = True
+                cookieList.insert(0, {'name': key, 'value': value, "domain": ".jd.com", "expiry": int((datetime.now() + timedelta(days=365)).timestamp()),
+                                      "httpOnly": httponly, "path": "/", "sameSite": "Lax", "secure": False})
             
             #转成字符串
             cookieStr = json.dumps(cookieList)
@@ -149,64 +156,98 @@ class CookieLogin():
         buyimielement.click()  # 点击元素
         print('====================>点击立即购买按钮后')
 
-            # self.drive.quit()
-        time.sleep(2)
-        if adress.checkdress(self):
+        time.sleep(5)
+
+        # 是否要验证
+        if self.checkVidff():
+            # 去验证
+            verify.verify(self)
+
+        # 是否未填地址
+        if self.checkdress():
+            # 去填地址
             adress.adddress(self)
-        else:
-            time.sleep(5)
-            # element = WebDriverWait(self.drive, 100).until(
-                # self.drive.find_element(By.XPATH, '//*[starts-with(@class,"button_button_")]'))
-            buysureelement = self.drive.find_element(By.XPATH, '//*[starts-with(@class,"button_button_")]')
-            print('====================>找到下单按钮')
-            print(buysureelement.text)
 
-            # 点击立即支付
-            buysureelement.click()
-            print('====================>点击下单按钮后')
+        self.takeOrder()
 
-            time.sleep(5)
+    # 下单
+    def takeOrder(self):
+        # 直接下单
+        # element = WebDriverWait(self.drive, 100).until(
+            # self.drive.find_element(By.XPATH, '//*[starts-with(@class,"button_button_")]'))
 
-            #找到含有微信的节点
-            pelement = self.drive.find_element(By.XPATH,'//*[contains(text(), "微信")]/parent::div/parent::div')
-            print('含有微信节点', pelement.text)
-            # 打印元素的innerHTML
-            if isinstance(pelement, WebElement):
-                print(pelement.get_attribute('innerHTML'))
+        buysureelement = self.drive.find_element(By.XPATH, '//*[starts-with(@class,"button_button_")]')
+        print('====================>找到下单按钮')
+        print(buysureelement.text)
 
-            wechatcheckbox = pelement.find_element(By.CLASS_NAME, 'checkboxWrap')
-            if isinstance(wechatcheckbox, WebElement):
-                print(wechatcheckbox.get_attribute('innerHTML'))
+        # 点击立即支付
+        buysureelement.click()
+        print('====================>点击下单按钮后')
 
-            time.sleep(2)
-            print('====================>找到微信支付checkbox')
-            if isinstance(wechatcheckbox, WebElement):
-                wechatcheckbox.click()
-                print('====================>勾选checkbox后')
-                # self.drive.execute_script("arguments[0].checked = true;", wechatcheckbox)
+        time.sleep(5)
 
-            time.sleep(2)
-            paybtn = self.drive.find_element(By.CLASS_NAME, 'payBtn')
-            print('====================>找到支付按钮')
-            if isinstance(paybtn, WebElement):
-                paybtn.click()
-                print('====================>点击支付按钮后')
+        #找到含有微信的节点
+        pelement = self.drive.find_element(By.XPATH,'//*[contains(text(), "微信")]/parent::div/parent::div')
 
-            try:
-            # 等待页面加载完成
-                WebDriverWait(self.drive, 60).until(EC.url_changes(self.drive.current_url))
-                print('====================>重定向')
-                # 获取当前页面的URL
-                redirect_url = self.drive.current_url
-                print("重定向链接:", redirect_url)
+        # 打印元素的innerHTML
+        # if isinstance(pelement, WebElement):
+        #     print(pelement.get_attribute('innerHTML'))
 
-                # print(self.drive.page_source)
-            except TimeoutExpired:
-                print('超时了')
+        wechatcheckbox = pelement.find_element(By.CLASS_NAME, 'checkboxWrap')
+        if isinstance(wechatcheckbox, WebElement):
+            print(wechatcheckbox.get_attribute('innerHTML'))
 
+        time.sleep(2)
+        print('====================>找到微信支付checkbox')
+        if isinstance(wechatcheckbox, WebElement):
+            wechatcheckbox.click()
+            print('====================>勾选checkbox后')
+            # self.drive.execute_script("arguments[0].checked = true;", wechatcheckbox)
+
+        time.sleep(2)
+        paybtn = self.drive.find_element(By.CLASS_NAME, 'payBtn')
+        print('====================>找到支付按钮')
+        if isinstance(paybtn, WebElement):
+            paybtn.click()
+            print('====================>点击支付按钮后')
+
+        try:
+        # 等待页面加载完成
+            WebDriverWait(self.drive, 60).until(EC.url_changes(self.drive.current_url))
+            print('====================>重定向')
+            # 获取当前页面的URL
+            redirect_url = self.drive.current_url
+            print("重定向链接:", redirect_url)
+
+            # print(self.drive.page_source)
+        except TimeoutExpired:
+            print('超时了')
+
+    # 检查有没有地址
+    def checkdress(self):
+        try:
+            EmptyAddress_create = self.drive.find_element(By.XPATH,'//*[contains(@class,"EmptyAddress_create")]')
+            print('没有填收货地址')
+            return True
+        except Exception as e:
+            print(e)
+            print('填了收货地址')
+            return False
+        
+    # 检查有没有需要验证
+    def checkVidff(self):
+        try:
+            self.drive.find_element(By.XPATH,'//*[contains(text(), "验证一下")]')
+            print('不需要验证')
+            return True
+        except Exception as e:
+            print(e)
+            print('需要验证')
+            return False
+        
 if __name__ == '__main__':
     login = CookieLogin()
     # login.getcookie()
-    # login.readcookie()
+    login.readcookie()
     # login.getToken()
     # adress.adddress()

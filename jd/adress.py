@@ -12,12 +12,20 @@ def adddress(app):
     EmptyAddress_create_element = app.drive.find_element(By.XPATH, '//*[contains(@class,"EmptyAddress_create_")]')
     EmptyAddress_create_element.click()
 
-    # 地址识别textarea输入
-    IntellectAddress_textarea = app.drive.find_element(By.XPATH, '//*[contains(@class,"taro-textarea")]')
-    IntellectAddress_textarea.clear()
-    IntellectAddress_textarea.send_keys(adress)
+    time.sleep(3)
 
-    time.sleep(10)
+    # 地址识别textarea输入
+    IntellectAddress_textarea = app.drive.find_element(By.XPATH, '//*[contains(@class,"IntellectAddress_textarea_")]')
+    taro_textarea = IntellectAddress_textarea.find_element(By.CLASS_NAME, 'taro-textarea')
+    taro_textarea.clear()
+    taro_textarea.send_keys(adress)
+
+    time.sleep(3)
+
+    IntellectAddress_sniffConfirm = app.drive.find_element(By.XPATH, '//*[contains(@class,"IntellectAddress_sniffConfirm")]')
+    IntellectAddress_sniffConfirm.click()
+
+    time.sleep(3)
 
     #保存并使用该地址
     ConfirmBtn_confirmBtn_ = app.drive.find_element(By.XPATH, '//*[contains(@class,"ConfirmBtn_confirmBtn_")]')
@@ -31,12 +39,15 @@ def adddress(app):
     
     print("重定向链接:", redirect_url)
     
-    time.sleep(5000)
+    time.sleep(5)
 
 def checkdress(app):
     try:
         app.drive.find_element(By.XPATH,'//*[contains(text(), "没有收货地址")]')
+        print('没有填收货地址')
         return True
     except Exception as e:
+        print(e)
+        print('填了收货地址')
         return False
 

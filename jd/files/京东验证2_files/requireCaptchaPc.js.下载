@@ -1,0 +1,46 @@
+var JdCaptcha = null; // 声明全局Jcap对象
+var jcapLoadCreate = (function(loaded){
+    var loaded = false;
+    var pubFn = [];
+    var script = document.createElement('script');
+    var head = document.getElementsByTagName('head')[0];
+    var info = {appType:3,tdat_version: 99992,host: "jcap.m.jd.com"};
+    script.src = "//storage.360buyimg.com/jsresource/jcap/js/captcha_mobile_2024_11_04.0dugxe.min.js";
+    script.onload = script.onreadystatechange = function() {
+        if(!loaded && (!script.readyState || /loaded|complete/.test(script.readyState))) {
+            script.onload = script.onreadystatechange = null;
+            loaded = true;
+            JdCaptcha = window.jdCAP?jdCAP.captcha(info):captcha(info);  // 初始化验证码
+            if(pubFn.length>0){
+                for(var i = pubFn.length;i>0;i--){
+                    var fnitem = pubFn.shift();
+                    if(typeof fnitem == 'function') fnitem(JdCaptcha());
+                }
+            }
+        }
+    }
+    head.appendChild(script);
+    return function(option,callback){
+        var handle = function(Jcap_vue){
+            try{
+                if(typeof callback == 'function'){ // 老版初始化
+                    Jcap_vue.setCachaOption(option); // 初始化保存参数
+                    callback(Jcap_vue); // 回调函数
+                    // if(typeof option.onLoad == 'function'){ // 初始化完成调load方法
+                    //     option.onLoad(); // 回调函数
+                    // }
+                    return
+                }
+                Jcap_vue.create(option);
+            }catch(e){}
+        }
+        if(!loaded){ // 未加载完成
+            pubFn.push(handle)
+            return
+        }
+        handle(JdCaptcha()); // 已加载完
+    }
+})();
+var captchaLoadJS = function(option, callback) {
+    jcapLoadCreate(option, callback);
+}
