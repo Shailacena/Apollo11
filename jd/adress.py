@@ -22,6 +22,7 @@ def adddress(app):
 
     time.sleep(3)
 
+    # 点击识别
     IntellectAddress_sniffConfirm = app.drive.find_element(By.XPATH, '//*[contains(@class,"IntellectAddress_sniffConfirm")]')
     IntellectAddress_sniffConfirm.click()
 
