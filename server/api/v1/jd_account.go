@@ -25,14 +25,18 @@ type JDAccountEnableResp struct {
 
 // jd账号列表
 type ListJDAccountReq struct {
-	Id              uint   `query:"id"`
-	Account         string `query:"account"`
-	TotalOrderCount int    `query:"totalOrderCount"`
-	OnlineStatus    int    `query:"onlineStatus"`
-	Enable          int    `query:"enable"`
-	RealNameStatus  int    `query:"realNameStatus"`
-	StartAt         int64  `query:"startAt"`
-	EndAt           int64  `query:"endAt"`
+	JDAccountSearchParams
+}
+
+type JDAccountSearchParams struct {
+	Id              uint   `query:"id" json:"id"`
+	Account         string `query:"account" json:"account"`
+	TotalOrderCount int    `query:"totalOrderCount" json:"totalOrderCount"`
+	OnlineStatus    int    `query:"onlineStatus" json:"onlineStatus"`
+	Enable          int    `query:"enable" json:"enable"`
+	RealNameStatus  int    `query:"realNameStatus" json:"realNameStatus"`
+	StartAt         int64  `query:"startAt" json:"startAt"`
+	EndAt           int64  `query:"endAt" json:"endAt"`
 }
 
 type ListJDAccountResp struct {
@@ -55,8 +59,8 @@ type JDAccount struct {
 
 // 删除
 type JDAccountDeleteReq struct {
-	Id     uint `json:"id" validate:"required"`
-	Enable int  `json:"enable" validate:"required"`
+	JDAccountSearchParams
+	IsAll bool `json:"isAll"`
 }
 
 type JDAccountDeleteResp struct {

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
+	"gorm.io/gorm"
 )
 
 var (
@@ -38,6 +39,18 @@ func (r *JDAccountRepo) Enable(c echo.Context, id uint, enable model.EnableStatu
 func (r *JDAccountRepo) List(c echo.Context, req *v1.ListJDAccountReq) ([]*model.JDAccount, error) {
 	db := data.Instance()
 
+	db, jd := filterJDAccount(db, &req.JDAccountSearchParams)
+
+	var accounts []*model.JDAccount
+	err := db.Where(jd).Limit(20).Find(&accounts).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return accounts, err
+}
+
+func filterJDAccount(db *gorm.DB, req *v1.JDAccountSearchParams) (*gorm.DB, model.JDAccount) {
 	jd := model.JDAccount{}
 	if req.Id > 0 {
 		jd.ID = req.Id
@@ -61,22 +74,19 @@ func (r *JDAccountRepo) List(c echo.Context, req *v1.ListJDAccountReq) ([]*model
 		db = db.Where("created_at >= ? AND created_at <= ?", time.UnixMilli(req.StartAt), time.UnixMilli(req.EndAt))
 	}
 
-	var accounts []*model.JDAccount
-	err := db.Where(jd).Limit(20).Find(&accounts).Error
-	if err != nil {
-		return nil, err
-	}
-
-	return accounts, err
+	return db, jd
 }
 
-func (r *JDAccountRepo) Delete(c echo.Context, id uint) error {
-	// db := data.Instance()
+func (r *JDAccountRepo) Delete(c echo.Context, req *v1.JDAccountDeleteReq) error {
+	db := data.Instance()
 
-	// err := db.Where("id = ?", id).Delete().Error
-	// if err != nil {
-	// 	return err
-	// }
+	var err error
+	if req.IsAll {
+		err = db.Where("1 = 1").Delete(&model.JDAccount{}).Error
+	} else {
+		db, jd := filterJDAccount(db, &req.JDAccountSearchParams)
+		err = db.Where(jd).Delete(&model.JDAccount{}).Error
+	}
 
-	return nil
+	return err
 }

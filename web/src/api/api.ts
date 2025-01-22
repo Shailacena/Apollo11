@@ -55,6 +55,8 @@ import {
   JDAccountEnableReq,
   JDAccountEnableResp,
   ListJDAccountReq,
+  JDAccountDeleteReq,
+  JDAccountDeleteResp,
 } from "./types";
 
 export function useApis() {
@@ -148,6 +150,13 @@ export function useApis() {
       data: JDAccountEnableReq
     ): Promise<IResponseBody<JDAccountEnableResp>> {
       return ax.post("/jdAccount/enable", data).then((res) => {
+        return res?.data;
+      });
+    },
+    jdAccountDelete(
+      data: JDAccountDeleteReq
+    ): Promise<IResponseBody<JDAccountDeleteResp>> {
+      return ax.post("/jdAccount/delete", data).then((res) => {
         return res?.data;
       });
     },

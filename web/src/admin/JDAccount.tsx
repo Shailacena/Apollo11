@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-import { Form, Table, Input, Button, Card, Divider, message, Space, Select, DatePicker, Flex } from 'antd';
+import { Form, Table, Input, Button, Card, Divider, message, Space, Select, DatePicker, Flex, ConfigProvider } from 'antd';
 import type { FormProps, TableProps } from 'antd';
 import { useApis } from '../api/api';
-import { IJDAccount, ListJDAccountReq } from '../api/types';
+import { IJDAccount, JDAccountSearchParams, ListJDAccountReq } from '../api/types';
 import axios from 'axios';
 import { getDataFormat } from '../utils/Tool';
 import { isEnable } from '../utils/util';
 import { EnableStatus } from '../utils/constant';
 import JDAccountCreateModal from './modal/JDAccountCreateModal';
-
+import { SearchOutlined } from '@ant-design/icons';
 
 const { Option } = Select;
 
@@ -26,20 +26,19 @@ enum RealNameStatus {
   NotRealName = 2
 }
 
+const isOnline = (onlineStatus: number) => {
+  return onlineStatus === OnlineStatus.Online
+}
+
+const isRealName = (realNameStatus: number) => {
+  return realNameStatus === RealNameStatus.RealName
+}
+
 function JDAccount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [list, setList] = useState<DataType[]>([])
-  let { listJDAccount, jdAccountEnable } = useApis()
-
-  let searchParams: ListJDAccountReq = {}
-
-  const isOnline = (onlineStatus: number) => {
-    return onlineStatus === OnlineStatus.Online
-  }
-
-  const isRealName = (realNameStatus: number) => {
-    return realNameStatus === RealNameStatus.RealName
-  }
+  let { listJDAccount, jdAccountEnable, jdAccountDelete } = useApis()
+  const [searchParams, setSearchParams] = useState<JDAccountSearchParams>({})
 
   const columns: TableProps<DataType>['columns'] = [
     {
@@ -163,11 +162,7 @@ function JDAccount() {
   };
 
   const fetchJDAccountList = async () => {
-    const params: ListJDAccountReq = {
-      ...searchParams,
-      startAt: searchParams.startAt?.valueOf(),
-      endAt: searchParams.endAt?.valueOf(),
-    }
+    const params: ListJDAccountReq = {...handleSearchParams()}
     const { data } = await listJDAccount(params)
     let d: DataType[] = data?.list?.map((item, index) => {
       let newItem: DataType = {
@@ -179,15 +174,29 @@ function JDAccount() {
     setList(d)
   }
 
-  const onSearch: FormProps<ListJDAccountReq>['onFinish'] = (value) => {
-    searchParams = value
+  const onSearch: FormProps<JDAccountSearchParams>['onFinish'] = async (value) => {
+    setSearchParams((pre) => ({...pre, ...value}))
+  }
 
+  const handleSearchParams = (): JDAccountSearchParams => {
+    return {
+      ...searchParams,
+      id: searchParams.id ? +searchParams.id : undefined,
+      startAt: searchParams.startAt?.valueOf(),
+      endAt: searchParams.endAt?.valueOf(),
+    }
+  }
+
+  const remove = async (isAll: boolean) => {
+    const params: JDAccountSearchParams = handleSearchParams()
+    await jdAccountDelete({...params, isAll })
     fetchJDAccountList()
+    message.success('删除成功')
   }
 
   useEffect(() => {
     fetchJDAccountList()
-  }, [])
+  }, [searchParams])
 
   return (
     <>
@@ -257,22 +266,22 @@ function JDAccount() {
           </Form.Item>
 
           <Form.Item>
-            <Button type="primary" htmlType="submit">
-              搜索
-            </Button>
+            <Button type="primary" icon={<SearchOutlined />} htmlType="submit"></Button>
           </Form.Item>
         </Form>
 
         <Divider />
-        <Flex gap="small" wrap>
-          <Button type="primary" onClick={showModal}>批量导入京东账号</Button>
-          <Button variant="solid" color="default">重置转换失败ck</Button>
-          <Button variant="solid" color="default">重置登录过期ck</Button>
-          <Button type="primary">重置指定搜索条件小号ck</Button>
-          <Button type="primary" danger>删除指定搜索条件小号ck</Button>
-          <Button type="default">导出指定搜索条件小号ck</Button>
-          <Button type="primary" danger>全部删除</Button>
-        </Flex>
+        <ConfigProvider>
+          <Flex gap="small" wrap>
+            <Button type="primary" onClick={showModal}>批量导入京东账号</Button>
+            <Button variant="solid" color="green" onClick={fetchJDAccountList}>重置转换失败ck</Button>
+            <Button variant="solid" color="orange">重置登录过期ck</Button>
+            <Button variant="solid" color="magenta">重置指定搜索条件小号ck</Button>
+            <Button type="primary" danger onClick={() => {remove(false)}}>删除指定搜索条件小号ck</Button>
+            <Button variant="solid" color="purple">导出指定搜索条件小号ck</Button>
+            <Button type="primary" danger onClick={() => {remove(true)}}>全部删除</Button>
+          </Flex>
+        </ConfigProvider>
         <Divider />
         <Table<DataType> bordered columns={columns} dataSource={list} />
 
