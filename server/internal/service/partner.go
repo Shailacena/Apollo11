@@ -19,7 +19,10 @@ type PartnerService struct {
 
 func (s *PartnerService) Register(c echo.Context, req *v1.PartnerRegisterReq) (*v1.PartnerRegisterResp, error) {
 	p := model.Partner{
-		Name:          req.Name,
+		Base: model.Base{
+			Nickname: req.Name,
+			Remark:   req.Remark,
+		},
 		DailyLimit:    -1,
 		CreditAmount:  0,
 		Priority:      10,
@@ -28,7 +31,6 @@ func (s *PartnerService) Register(c echo.Context, req *v1.PartnerRegisterReq) (*
 		StockAmount:   0,
 		RechargeTime:  999999,
 		PrivateKey:    util.RandStringRunes(16),
-		Remark:        req.Remark,
 	}
 	partner, err := repository.Partner.Register(c, &p)
 	if err != nil {
@@ -49,7 +51,7 @@ func (s *PartnerService) Login(c echo.Context, req *v1.PartnerLoginReq) (*v1.Par
 
 	return &v1.PartnerLoginResp{
 		Token: partner.Token,
-		Name:  partner.Name,
+		Name:  partner.Nickname,
 		Level: partner.Level,
 	}, nil
 }
@@ -64,7 +66,7 @@ func (s *PartnerService) List(c echo.Context, req *v1.ListPartnerReq) (*v1.ListP
 	for _, u := range partners {
 		list = append(list, &v1.Partner{
 			Id:            u.ID,
-			Name:          u.Name,
+			Name:          u.Nickname,
 			CreditAmount:  u.CreditAmount,
 			DailyLimit:    u.DailyLimit,
 			Priority:      u.Priority,

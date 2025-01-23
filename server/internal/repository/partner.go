@@ -23,7 +23,7 @@ func (r *PartnerRepo) Register(c echo.Context, p *model.Partner) (*model.Partner
 	db := data.Instance()
 
 	var partner model.Partner
-	err := db.Where("name = ?", p.Name).First(&partner).Error
+	err := db.Where("name = ?", p.Nickname).First(&partner).Error
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errors.New("合作商名称已注册")
 	}
@@ -119,7 +119,9 @@ func (r *PartnerRepo) SetPassword(c echo.Context, id uint, password, newpassword
 
 	partner.Password = newpassword
 
-	err = db.Where("id = ?", id).Updates(model.Partner{Password: partner.Password}).Error
+	err = db.Where("id = ?", id).Updates(model.Partner{
+		Base: model.Base{Password: partner.Password},
+	}).Error
 	if err != nil {
 		return nil, err
 	}
@@ -150,7 +152,10 @@ func (r *PartnerRepo) Update(c echo.Context, id uint, priority, dailyLimit int, 
 		DailyLimit:   partner.DailyLimit,
 		CreditAmount: partner.CreditAmount,
 		RechargeTime: partner.RechargeTime,
-		Remark:       partner.Remark}).Error
+		Base: model.Base{
+			Remark: partner.Remark,
+		},
+	}).Error
 	if err != nil {
 		return nil, err
 	}

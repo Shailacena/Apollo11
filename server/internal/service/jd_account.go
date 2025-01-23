@@ -81,3 +81,21 @@ func (s *JDAccountService) Delete(c echo.Context, req *v1.JDAccountDeleteReq) (*
 
 	return &v1.JDAccountDeleteResp{}, nil
 }
+
+func (s *JDAccountService) ResetStatus(c echo.Context, req *v1.JDAccountResetStatusReq) (*v1.JDAccountResetStatusResp, error) {
+	err := repository.JDAccount.ResetStatus(c, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.JDAccountResetStatusResp{}, nil
+}
+
+func (s *JDAccountService) Reset(c echo.Context, req *v1.JDAccountResetReq) (*v1.JDAccountResetResp, error) {
+	err := repository.JDAccount.Reset(c, req)
+	if err != nil {
+		return nil, err
+	}
+
+	return &v1.JDAccountResetResp{}, nil
+}

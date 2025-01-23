@@ -37,7 +37,7 @@ const isRealName = (realNameStatus: number) => {
 function JDAccount() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [list, setList] = useState<DataType[]>([])
-  let { listJDAccount, jdAccountEnable, jdAccountDelete } = useApis()
+  let { listJDAccount, jdAccountEnable, jdAccountDelete, jdAccountResetStatus, jdAccountReset } = useApis()
   const [searchParams, setSearchParams] = useState<JDAccountSearchParams>({})
 
   const columns: TableProps<DataType>['columns'] = [
@@ -162,7 +162,7 @@ function JDAccount() {
   };
 
   const fetchJDAccountList = async () => {
-    const params: ListJDAccountReq = {...handleSearchParams()}
+    const params: ListJDAccountReq = { ...handleSearchParams() }
     const { data } = await listJDAccount(params)
     let d: DataType[] = data?.list?.map((item, index) => {
       let newItem: DataType = {
@@ -175,7 +175,7 @@ function JDAccount() {
   }
 
   const onSearch: FormProps<JDAccountSearchParams>['onFinish'] = async (value) => {
-    setSearchParams((pre) => ({...pre, ...value}))
+    setSearchParams((pre) => ({ ...pre, ...value }))
   }
 
   const handleSearchParams = (): JDAccountSearchParams => {
@@ -189,10 +189,37 @@ function JDAccount() {
 
   const remove = async (isAll: boolean) => {
     const params: JDAccountSearchParams = handleSearchParams()
-    await jdAccountDelete({...params, isAll })
+    await jdAccountDelete({ ...params, isAll })
     fetchJDAccountList()
     message.success('删除成功')
   }
+
+  const resetStatus = async (isTransitionStatus: boolean = false, isLoginExpirationStatus: boolean = false) => {
+    try {
+      await jdAccountResetStatus({ isTransitionStatus, isLoginExpirationStatus })
+      fetchJDAccountList()
+      message.success('重置成功')
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        let msg = e.response?.data?.message
+        msg && message.error(msg);
+      }
+    }
+  };
+
+  const reset = async () => {
+    const params: JDAccountSearchParams = handleSearchParams()
+    try {
+      await jdAccountReset({ ...params })
+      fetchJDAccountList()
+      message.success('重置成功')
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        let msg = e.response?.data?.message
+        msg && message.error(msg);
+      }
+    }
+  };
 
   useEffect(() => {
     fetchJDAccountList()
@@ -274,12 +301,12 @@ function JDAccount() {
         <ConfigProvider>
           <Flex gap="small" wrap>
             <Button type="primary" onClick={showModal}>批量导入京东账号</Button>
-            <Button variant="solid" color="green" onClick={fetchJDAccountList}>重置转换失败ck</Button>
-            <Button variant="solid" color="orange">重置登录过期ck</Button>
-            <Button variant="solid" color="magenta">重置指定搜索条件小号ck</Button>
-            <Button type="primary" danger onClick={() => {remove(false)}}>删除指定搜索条件小号ck</Button>
+            <Button variant="solid" color="green" onClick={() => { resetStatus(true) }}>重置转换失败ck</Button>
+            <Button variant="solid" color="orange" onClick={() => { resetStatus(false, true) }}>重置登录过期ck</Button>
+            <Button variant="solid" color="magenta" onClick={reset}>重置指定搜索条件小号ck</Button>
+            <Button type="primary" danger onClick={() => { remove(false) }}>删除指定搜索条件小号ck</Button>
             <Button variant="solid" color="purple">导出指定搜索条件小号ck</Button>
-            <Button type="primary" danger onClick={() => {remove(true)}}>全部删除</Button>
+            <Button type="primary" danger onClick={() => { remove(true) }}>全部删除</Button>
           </Flex>
         </ConfigProvider>
         <Divider />

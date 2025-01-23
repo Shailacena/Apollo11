@@ -18,9 +18,11 @@ type AdminService struct {
 
 func (s *AdminService) Register(c echo.Context, req *v1.AdminRegisterReq) (*v1.AdminRegisterResp, error) {
 	u := model.SysUser{
-		Username: req.Username,
-		Nickname: req.Nickname,
-		Remark:   req.Remark,
+		Base: model.Base{
+			Username: req.Username,
+			Nickname: req.Nickname,
+			Remark:   req.Remark,
+		},
 	}
 	user, err := repository.Admin.Register(c, &u)
 	if err != nil {
