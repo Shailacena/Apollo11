@@ -1,10 +1,13 @@
+import os
 import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 def adddress(app):
-    with open('data/adress.txt',mode='r',encoding='utf-8') as f:
+    current_dir = current_dir = os.path.dirname(os.path.abspath(__file__))
+    adresspath = os.path.join(current_dir, 'data/adress.txt')
+    with open(adresspath, mode='r', encoding='utf-8') as f:
         adress = f.read()
     print(adress)
 
