@@ -51,18 +51,18 @@ func Init(e *echo.Echo) {
 		adminGroup.GET("/setPassword", handler.Merchant.SetPassword)
 	}
 
-	realNameAccountGroup := apiGroup.Group("/realNameAccount")
+	realNameAccountGroup := apiGroup.Group("/realNameAccount", adminTokenChecker())
 	{
 		realNameAccountGroup.POST("/create", handler.RealNameAccount.Create)
 		realNameAccountGroup.GET("/list", handler.RealNameAccount.List)
 	}
 
-	jdAccountGroup := apiGroup.Group("/jdAccount")
+	jdAccountGroup := apiGroup.Group("/jdAccount", adminTokenChecker())
 	{
 		jdAccountGroup.POST("/create", handler.JDAccount.Create)
 		jdAccountGroup.POST("/enable", handler.JDAccount.Enable)
 		jdAccountGroup.GET("/list", handler.JDAccount.List)
-		jdAccountGroup.POST("/delete", handler.JDAccount.Enable)
+		jdAccountGroup.POST("/delete", handler.JDAccount.Delete)
 	}
 
 	statisticsGroup := apiGroup.Group("/statistics")

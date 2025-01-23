@@ -102,7 +102,10 @@ export interface IRealNameAccount extends BaseRealNameAccount {
   remark: string;
 }
 
-export interface ListJDAccountReq {
+export interface ListJDAccountReq extends JDAccountSearchParams {
+}
+
+export interface JDAccountSearchParams {
   id?: number
   account?: string
   totalOrderCount?: number
@@ -128,6 +131,13 @@ export interface IJDAccount {
   enable: number;
   remark: number;
   createAt: number;
+}
+
+export interface JDAccountDeleteReq extends JDAccountSearchParams {
+  isAll: boolean
+}
+
+export interface JDAccountDeleteResp {
 }
 
 export interface ListPartnerResp {
