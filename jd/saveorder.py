@@ -7,7 +7,7 @@ current_dir = current_dir = os.path.dirname(os.path.abspath(__file__))
 
 # 新增新生成的订单
 def addOrderWxurl(jdaccount, orderId, wxurl):
-    with open(os.path.join(current_dir, 'data', 'Jdorder', jdaccount+'.json'), mode='r', encoding='utf-8') as f:
+    with open(os.path.join(current_dir, 'data', 'Jdorder', jdaccount+'.json'), mode='a+', encoding='utf-8') as f:
         data = f.read()
     try:
         orders = json.loads(data)

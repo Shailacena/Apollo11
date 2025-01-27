@@ -43,27 +43,57 @@ class CookieLogin():
         # opactions = webdriver.ChromeOptions()
         # opactions.add_argument(f"user-agent={headers['User-Agent']}")
         # opactions.add_argument('sec-ch-ua-platform="Android"')
+        options = ChromeOptions()
+        options.add_argument('--headless')
         # mac平台
-        # self.drive = uc.Chrome(driver_executable_path="/Users/admin/Documents/Apollo11/jd/chromedriver-mac-x64/chromedriver")
-        # windows平台
-        self.drive = uc.Chrome(enable_cdp_events=True, driver_executable_path=r"F:\henry\z_local\Cooking\Apollo11\jd\chromedriver-win64\chromedriver.exe")
-        print('创建Chrome')
+        if sys.platform == 'darwin':
+            self.drive = uc.Chrome(options=options, enable_cdp_events=True, driver_executable_path="/Users/admin/Documents/Apollo11/jd/chromedriver-mac-x64/chromedriver")
+        if sys.platform == 'windows':
+            # windows平台
+            self.drive = uc.Chrome(enable_cdp_events=True, driver_executable_path=r"F:\henry\z_local\Cooking\Apollo11\jd\chromedriver-win64\chromedriver.exe")
+        # print('创建Chrome')
         # self.drive = Chrome(enable_cdp_events=True)
         self.drive.set_window_size(680, 980)
         # self.url = 'https://plogin.m.jd.com/login/login'
         
         self.drive.add_cdp_listener('Network.requestWillBeSent', self.inter_request)
-        # self.drive.add_cdp_listener('Network.dataReceived', self.inter_reponse)
-        # self.drive.add_cdp_listener('Network.getResponseBody', self.inter_reponse)
 
     def inter_request(self, request):
-        if 'weixin' in request.params.documentURL:
-            print('inter_request weixin pay', json.dumps(request))
-            self.saveOrderWxurl(request.params.documentURL)
-        if 'orderId' in request.params.documentURL:
-            print('inter_request order', json.dumps(request))
-            self.saveOrderId(request.params.documentURL)
+        try:
+            if 'params' in request:
+                if 'plogin.m.jd.com' in request['params']['documentURL']:
+                    #token过期了，重新获取token
+                    self.getToken(self.ck)
+                    self.checkToken(self.ck)
+
+                if 'weixin' in request['params']['documentURL']:
+                    # print('inter_request weixin pay', request['params']['documentURL'])
+                    self.wxurl = request['params']['documentURL']
+                    if hasattr(self, 'orderId'):
+                        if login.saveOrder == False:
+                            saveorder.addOrderWxurl(self.jdaccount, self.orderId, self.wxurl)
+                            self.logOrderAndRaise()
+                if 'orderId' in request['params']['documentURL']:
+                    # print('inter_request order', json.dumps(request))
+                    if hasattr(self, 'wxurl'):
+                        if login.saveOrder == False:
+                            pattern = "orderId=(.*?)&"
+                            match = re.search(pattern, request['params']['documentURL'])
+                            if match != None:
+                                # print('inter_request orderId', match.group(1))
+                                self.orderId = match.group(1)
+                            saveorder.addOrderWxurl(self.jdaccount, self.orderId, self.wxurl)
+                            self.logOrderAndRaise()
+        except Exception as e:
+            print(e)
+            raise
     
+    def logOrderAndRaise(self):
+        print('jdaccount=', self.jdaccount)
+        print('wxurl=', self.wxurl)
+        print('orderId=', self.orderId)
+        raise
+
     def inter_reponse(self, response):
         print('inter_reponse', response)
 
@@ -75,11 +105,11 @@ class CookieLogin():
         sess = requests.session()
         jdaccount = self.getPin(ck)
         jd_ck = jd_wskey.getToken(sess, ck)
-        print('getToken:', jd_ck)
+        # print('getToken:', jd_ck)
         if isinstance(jd_ck, str):
             #获取到的cookies是列表
             cookieDict  = sess.cookies.get_dict()
-            print('getToken cookieDict:', cookieDict)
+            # print('getToken cookieDict:', cookieDict)
 
             cookieList = []
             for key, value in cookieDict.items():
@@ -98,7 +128,7 @@ class CookieLogin():
             with open(tokenpath, 'w') as f:
                 f.write(cookieStr)
 
-            print('cookie已写入')
+            # print('cookie已写入')
         
     #先手动登录，让程序获取到cookie，保存下来
     def getcookie(self):
@@ -135,8 +165,8 @@ class CookieLogin():
         with open(tokenpath, 'w') as f:
             f.write(cookieStr)
 
-        print('cookie已写入')
-        print(self.drive.current_url)
+        # print('cookie已写入')
+        # print(self.drive.current_url)
         self.drive.close()
 
     #加载cookie
@@ -144,7 +174,7 @@ class CookieLogin():
         self.loadck = True
         jdaccount = self.getPin(ck)
         current_dir = current_dir = os.path.dirname(os.path.abspath(__file__))
-        print(current_dir)
+        # print(current_dir)
         tokenpath = os.path.join(current_dir, 'data', 'JdcookieToken', jdaccount+'.json')
         try:
             with open(tokenpath, mode='r', encoding='utf-8') as f:
@@ -155,13 +185,13 @@ class CookieLogin():
 
         #读取到的是字符串类型，loads之后就变成了python中的字典类型
         cookie = json.loads(cookie)
-        print('读取cookie', cookie)
+        # print('读取cookie', cookie)
         self.drive.get('https://m.jd.com/')
         #先把所有的cookie全部删掉
         self.drive.delete_all_cookies()
         for item in cookie:
-            print(type(item))
-            print(item)
+            # print(type(item))
+            # print(item)
             if item['name'] == 'pt_pin':
                 self.jdaccount = item['value']
             self.drive.add_cookie(item)
@@ -174,18 +204,18 @@ class CookieLogin():
     #打开商品
     def openGoods(self):
         url = 'https://item.m.jd.com/product/' + self.sku + '.html'
-        print('====================>打开商品', url)
+        # print('====================>打开商品', url)
         self.drive.get(url)
-        print('====================>打开商品后')
+        # print('====================>打开商品后')
 
         # 立即购买
         buyimielement = WebDriverWait(self.drive, 100).until(
             EC.element_to_be_clickable((By.ID, "rightBtn"))
         )
-        print('====================>找到立即购买按钮')
-        print(buyimielement.text)
+        # print('====================>找到立即购买按钮')
+        # print(buyimielement.text)
         buyimielement.click()  # 点击元素
-        print('====================>点击立即购买按钮后')
+        # print('====================>点击立即购买按钮后')
 
         time.sleep(5)
 
@@ -194,6 +224,7 @@ class CookieLogin():
             # 去验证
             # verify.verify(self)
             print('需要验证')
+            raise
 
         # 是否未填地址
         if self.checkdress():
@@ -209,15 +240,17 @@ class CookieLogin():
         #     self.drive.find_element(By.XPATH, '//*[contains(@class,"ActionBar_submit")]'))
 
         buysureelement = self.drive.find_element(By.XPATH, '//*[contains(@class,"ActionBar_submit")]')
-        print('====================>找到下单按钮')
-        print(buysureelement.text)
+        # print('====================>找到下单按钮')
+        # print(buysureelement.text)
 
         # 点击立即支付
         buysureelement.click()
-        print('====================>点击下单按钮后')
+        # print('====================>点击下单按钮后')
 
         time.sleep(5)
 
+    # 收银台
+    def shouyintai(self):
         # ===================只有微信支付方式==================================
 
         # #找到含有微信的父父节点
@@ -243,19 +276,21 @@ class CookieLogin():
         # time.sleep(2)
 
         paybtn = self.drive.find_element(By.CLASS_NAME, 'payBtn')
-        print('====================>找到支付按钮')
+        # print('====================>找到支付按钮')
         if isinstance(paybtn, WebElement):
             paybtn.click()
-            print('====================>点击支付按钮后')
+            # print('====================>点击支付按钮后')
 
         try:
         # 等待页面加载完成
             WebDriverWait(self.drive, 60).until(EC.url_changes(self.drive.current_url))
-            print('====================>重定向')
+            # print('====================>重定向')
             # 获取当前页面的URL
-            redirect_url = self.drive.current_url
-            print("重定向链接:", redirect_url)
+            # redirect_url = self.drive.current_url
+            # print("重定向链接:", redirect_url)
 
+            # 等待10s
+            time.sleep(10)
             # print(self.drive.page_source)
         except TimeoutExpired:
             print('超时了')
@@ -272,12 +307,12 @@ class CookieLogin():
             for item in cookie_list:
                 if int(datetime.now().timestamp()) > item['expiry']:
                     # 过期了
-                    print('Token过期了')
+                    # print('Token过期了')
                     self.getToken(ck)
                     break
         except Exception as e:
             #没有文件
-            print('没有token文件')
+            # print('没有token文件')
             self.getToken(ck)
 
         self.loadcookie(ck)
@@ -286,20 +321,20 @@ class CookieLogin():
     def checkdress(self):
         try:
             self.drive.find_element(By.XPATH,'//*[contains(@class,"EmptyAddress_create")]')
-            print('没有填收货地址')
+            # print('没有填收货地址')
             return True
         except Exception as e:
-            print('填了收货地址')
+            # print('填了收货地址')
             return False
         
     # 检查有没有需要验证
     def checkVidff(self):
         try:
             self.drive.find_element(By.XPATH,'//*[contains(text(), "验证一下")]')
-            print('需要验证')
+            # print('需要验证')
             return True
         except Exception as e:
-            print('不需要验证')
+            # print('不需要验证')
             return False
     
     # 打开个人主页
@@ -317,26 +352,53 @@ class CookieLogin():
             modal__close = modal__wrap.find_element(By.CLASS_NAME, 'modal__close')
             modal__close.click()
         except Exception as e:
-            print('没有提示跳转APP')
+            # print('没有提示跳转APP')
+            time.sleep(1)
 
     #获取最近一笔订单号
     def getLastOrderId(self):
         self.openSelfHome()
+
+        time.sleep(3)
 
         my_order_entrance = self.drive.find_element(By.XPATH, '//*[contains(@class,"my_order_entrance")]')
         my_order_entrance.click()
 
         time.sleep(3)
 
-        indexmoduleorderbox = self.drive.find_element(By.XPATH, '//*[contains(@class,"index-module__order_box___")]')
-        indexmoduleorderbox.click()
+        try:
+            indexmoduleorderbox = self.drive.find_element(By.XPATH, '//*[contains(@class,"index-module__order_box___")]')
+            indexmoduleorderbox.click()
 
-        time.sleep(3)
-        
-        tit = self.drive.find_element(By.CLASS_NAME, 'tit')
-        print(tit.text)
+            time.sleep(3)
+            
+            orderp = self.drive.find_element(By.XPATH,'//*[contains(text(), "订单编号")]/parent::p')
 
-        return tit.text
+            orderId = re.findall(r'\d+', orderp.text)
+
+            self.orderId = orderId
+
+            print('orderid=', self.orderId)
+        except Exception as e:
+            # print('没有订单')
+            raise
+
+    #用最近一笔订单生成微信链接
+    def useLastOrderGetUrl(self):
+        self.getLastOrderId()
+
+        try:
+            paybtn = self.drive.find_element(By.XPATH,'//*[contains(text(), "去支付")]/parent::button')
+            paybtn.click()
+
+            time.sleep(3)
+
+            self.shouyintai()
+
+        except Exception as e:
+            # print('没有可支付的订单')
+            #去下单
+            login.openGoods()
 
     # 正则匹配，获取JD账号
     def getPin(self, ck):
@@ -347,26 +409,33 @@ class CookieLogin():
 
     # 关闭浏览器
     def close(self):
-        self.drive.close()
+        self.drive.quit()
 
 if __name__ == '__main__':
-    print('开始')
-    print(f"收到的参数: {sys.argv[1]} {sys.argv[2]}")
-    try:
-        login = CookieLogin()
-        login.loadck = False
-        login.ck = sys.argv[1]
-        login.sku = sys.argv[2]
-        # login.getcookie()
-        # login.loadcookie(arg1)
-        login.checkToken(login.ck)
-        # login.openSelfHome()
-        login.getLastOrderId()
-        time.sleep(10000)
-        login.openGoods()
-        # adress.adddress()
-        # saveorder.addOrderWxurl('123', 'sIDDK')
-    except Exception as e:
-        login.close()
-        raise ValueError(e)
+    # print('开始')
+    if len(sys.argv) == 3:
+        # print(f"收到的参数: {sys.argv[1]} {sys.argv[2]}")    
+        try:
+            login = CookieLogin()
+            #标记是否加载过ck到浏览器中
+            login.loadck = False
+            #标记是否保存过wxurl链接到缓存订单中
+            login.saveOrder = False
+            login.ck = sys.argv[1]
+            login.sku = sys.argv[2]
+            # login.getcookie()
+            # login.loadcookie(arg1)
+            login.checkToken(login.ck)
+            # login.getToken(login.ck)
+            login.useLastOrderGetUrl()
+            # login.getLastOrderId()
+            # adress.adddress()
+            # saveorder.addOrderWxurl('123', 'sIDDK')
+            login.close()
+        except Exception as e:
+            login.close()
+            raise ValueError(e)
+        
+        finally:
+            login.close()
 

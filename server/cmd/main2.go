@@ -20,9 +20,10 @@ import (
 )
 
 func main() {
-	ck := "pin=jd_umoLGScTnXXW;wskey=AAJnhLFuAEDIa-oEM7h7wp30mca70z1HuLeUmf_LCu0-16-zMuGrgmGIiV-U9ztc5ffDehvl73jILU21gFJ25odYxXRHGu-a;"
+	ck := "pin=jd_XgYOBMKfcELO;wskey=AAJnhLbSAEDVyHIPhPFwP1f0EIVeqLhjiqdX9f85Tu3Byn0dmsSC4e0xep-x3_S8UK8MmJZVOgdGUwPIogfngofFwArPyYEn;"
 	sku := "10085738847942"
-	cmd := exec.Command("python", "../jd/main.py", ck, sku)
+	// cmd := exec.Command("python", "../jd/main.py", ck, sku)
+	cmd := exec.Command("python3", "../jd/main.py", ck, sku)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("Error:", err)
