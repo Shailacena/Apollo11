@@ -87,7 +87,9 @@ func (r *AdminRepo) Login(c echo.Context, username, password, verificode string)
 	user.Token = util.NewToken()
 	user.ExpireAt = time.Now().Add(1 * time.Hour)
 
-	err = db.Where("username = ?", username).Updates(model.SysUser{Token: user.Token, ExpireAt: user.ExpireAt}).Error
+	err = db.Where("username = ?", username).Updates(model.SysUser{
+		Base: model.Base{Token: user.Token, ExpireAt: user.ExpireAt},
+	}).Error
 	if err != nil {
 		return nil, err
 	}
@@ -98,7 +100,9 @@ func (r *AdminRepo) Login(c echo.Context, username, password, verificode string)
 func (r *AdminRepo) Logout(c echo.Context, token string) error {
 	db := data.Instance()
 
-	err := db.Where("token = ?", token).Updates(model.SysUser{ExpireAt: time.Now()}).Error
+	err := db.Where("token = ?", token).Updates(model.SysUser{
+		Base: model.Base{ExpireAt: time.Now()},
+	}).Error
 	if err != nil {
 		return err
 	}
@@ -157,7 +161,9 @@ func (r *AdminRepo) SetPassword(c echo.Context, token, password, newPassword str
 
 	user.Password = newPassword
 
-	err = db.Where("id = ?", user.ID).Updates(model.SysUser{Password: user.Password}).Error
+	err = db.Where("id = ?", user.ID).Updates(model.SysUser{
+		Base: model.Base{Password: user.Password},
+	}).Error
 	if err != nil {
 		return nil, err
 	}
@@ -179,7 +185,9 @@ func (r *AdminRepo) ResetPassword(c echo.Context, username string) (*model.SysUs
 
 	user.Password = util.RandStringRunes(6)
 
-	err = db.Where("username = ?", username).Updates(model.SysUser{Password: user.Password}).Error
+	err = db.Where("username = ?", username).Updates(model.SysUser{
+		Base: model.Base{Password: user.Password},
+	}).Error
 	if err != nil {
 		return nil, err
 	}
@@ -220,7 +228,9 @@ func (r *AdminRepo) Update(c echo.Context, username, nickname, remark string) (*
 	}
 	user.Nickname = nickname
 	user.Remark = remark
-	err = db.Where("username = ?", username).Updates(model.SysUser{Nickname: user.Nickname, Remark: user.Remark}).Error
+	err = db.Where("username = ?", username).Updates(model.SysUser{
+		Base: model.Base{Nickname: user.Nickname, Remark: user.Remark},
+	}).Error
 	if err != nil {
 		return nil, err
 	}
@@ -241,7 +251,9 @@ func (r *AdminRepo) Enable(c echo.Context, username string, enable int) (*model.
 	}
 
 	user.Enable = model.EnableStatus(enable)
-	err = db.Where("username = ?", username).Updates(model.SysUser{Enable: user.Enable}).Error
+	err = db.Where("username = ?", username).Updates(model.SysUser{
+		Base: model.Base{Enable: user.Enable},
+	}).Error
 	if err != nil {
 		return nil, err
 	}

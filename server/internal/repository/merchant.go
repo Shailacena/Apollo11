@@ -23,7 +23,7 @@ func (r *MerchantRepo) Register(c echo.Context, p *model.Merchant) (*model.Merch
 	db := data.Instance()
 
 	var Merchant model.Merchant
-	err := db.Where("name = ?", p.Name).First(&Merchant).Error
+	err := db.Where("name = ?", p.Nickname).First(&Merchant).Error
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errors.New("合作商名称已注册")
 	}
@@ -107,7 +107,9 @@ func (r *MerchantRepo) SetPassword(c echo.Context, id uint, password, newpasswor
 
 	Merchant.Password = newpassword
 
-	err = db.Where("id = ?", id).Updates(model.Partner{Password: Merchant.Password}).Error
+	err = db.Where("id = ?", id).Updates(model.Partner{
+		Base: model.Base{Password: Merchant.Password},
+	}).Error
 	if err != nil {
 		return nil, err
 	}

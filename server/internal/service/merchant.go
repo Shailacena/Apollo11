@@ -18,8 +18,10 @@ type MerchantService struct {
 
 func (s *MerchantService) Register(c echo.Context, req *v1.MerchantRegisterReq) (*v1.MerchantRegisterResp, error) {
 	p := model.Merchant{
-		Name:   req.Name,
-		Remark: req.Remark,
+		Base: model.Base{
+			Nickname: req.Name,
+			Remark:   req.Remark,
+		},
 	}
 	Merchant, err := repository.Merchant.Register(c, &p)
 	if err != nil {
@@ -40,7 +42,7 @@ func (s *MerchantService) Login(c echo.Context, req *v1.MerchantLoginReq) (*v1.M
 
 	return &v1.MerchantLoginResp{
 		Token: merchant.Token,
-		Name:  merchant.Name,
+		Name:  merchant.Nickname,
 	}, nil
 }
 
@@ -54,7 +56,7 @@ func (s *MerchantService) List(c echo.Context, req *v1.ListMerchantReq) (*v1.Lis
 	for _, m := range merchants {
 		list = append(list, &v1.Merchant{
 			Id:         m.ID,
-			Name:       m.Name,
+			Name:       m.Nickname,
 			PrivateKey: m.PrivateKey,
 			Enable:     int(m.Enable),
 			Remark:     m.Remark,

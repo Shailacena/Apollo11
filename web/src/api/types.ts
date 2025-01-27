@@ -140,6 +140,20 @@ export interface JDAccountDeleteReq extends JDAccountSearchParams {
 export interface JDAccountDeleteResp {
 }
 
+export interface JDAccountResetStatusReq {
+  isTransitionStatus: boolean
+  isLoginExpirationStatus: boolean
+}
+
+export interface JDAccountResetStatusResp {
+}
+
+export interface JDAccountResetReq extends JDAccountSearchParams {
+}
+
+export interface JDAccountResetResp {
+}
+
 export interface ListPartnerResp {
   list: Array<IPartner>;
 }

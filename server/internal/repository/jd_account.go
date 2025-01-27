@@ -90,3 +90,32 @@ func (r *JDAccountRepo) Delete(c echo.Context, req *v1.JDAccountDeleteReq) error
 
 	return err
 }
+
+func (r *JDAccountRepo) ResetStatus(c echo.Context, req *v1.JDAccountResetStatusReq) error {
+	db := data.Instance()
+
+	var err error
+	if req.IsTransitionStatus {
+		err = db.Where("transitionStatus = 3").Updates(&model.JDAccount{
+			TransitionStatus: 1,
+		}).Error
+	} else if req.IsLoginExpirationStatus {
+		err = db.Where("loginExpirationStatus = 2").Updates(&model.JDAccount{
+			LoginExpirationStatus: 1,
+		}).Error
+	}
+
+	return err
+}
+
+func (r *JDAccountRepo) Reset(c echo.Context, req *v1.JDAccountResetReq) error {
+	db := data.Instance()
+
+	db, jd := filterJDAccount(db, &req.JDAccountSearchParams)
+	jd.TransitionStatus = 1
+	jd.LoginExpirationStatus = 1
+
+	err := db.Where("transitionStatus = 3 OR loginExpirationStatus = 2").Updates(&jd).Error
+
+	return err
+}

@@ -57,6 +57,10 @@ import {
   ListJDAccountReq,
   JDAccountDeleteReq,
   JDAccountDeleteResp,
+  JDAccountResetStatusReq,
+  JDAccountResetStatusResp,
+  JDAccountResetReq,
+  JDAccountResetResp,
 } from "./types";
 
 export function useApis() {
@@ -157,6 +161,20 @@ export function useApis() {
       data: JDAccountDeleteReq
     ): Promise<IResponseBody<JDAccountDeleteResp>> {
       return ax.post("/jdAccount/delete", data).then((res) => {
+        return res?.data;
+      });
+    },
+    jdAccountResetStatus(
+      data: JDAccountResetStatusReq
+    ): Promise<IResponseBody<JDAccountResetStatusResp>> {
+      return ax.post("/jdAccount/resetStatus", data).then((res) => {
+        return res?.data;
+      });
+    },
+    jdAccountReset(
+      data: JDAccountResetReq
+    ): Promise<IResponseBody<JDAccountResetResp>> {
+      return ax.post("/jdAccount/reset", data).then((res) => {
         return res?.data;
       });
     },

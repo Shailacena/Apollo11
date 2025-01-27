@@ -35,7 +35,6 @@ func (h *JDAccountHandler) Create(c echo.Context) error {
 	return response.ResponseSuccess(c, resp)
 }
 
-
 func (h *JDAccountHandler) Enable(c echo.Context) error {
 	req := new(v1.JDAccountEnableReq)
 	err := c.Bind(req)
@@ -85,6 +84,44 @@ func (h *JDAccountHandler) Delete(c echo.Context) error {
 	}
 
 	resp, err := service.JDAccount.Delete(c, req)
+	if err != nil {
+		return err
+	}
+
+	return response.ResponseSuccess(c, resp)
+}
+
+func (h *JDAccountHandler) ResetStatus(c echo.Context) error {
+	req := new(v1.JDAccountResetStatusReq)
+	err := c.Bind(req)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
+	resp, err := service.JDAccount.ResetStatus(c, req)
+	if err != nil {
+		return err
+	}
+
+	return response.ResponseSuccess(c, resp)
+}
+
+func (h *JDAccountHandler) Reset(c echo.Context) error {
+	req := new(v1.JDAccountResetReq)
+	err := c.Bind(req)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+
+	if err := c.Validate(req); err != nil {
+		return err
+	}
+
+	resp, err := service.JDAccount.Reset(c, req)
 	if err != nil {
 		return err
 	}

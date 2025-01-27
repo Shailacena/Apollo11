@@ -65,3 +65,20 @@ type JDAccountDeleteReq struct {
 
 type JDAccountDeleteResp struct {
 }
+
+// 重置状态
+type JDAccountResetStatusReq struct {
+	IsTransitionStatus      bool `json:"isTransitionStatus"`
+	IsLoginExpirationStatus bool `json:"isLoginExpirationStatus"`
+}
+
+type JDAccountResetStatusResp struct {
+}
+
+// 重置异常状态
+type JDAccountResetReq struct {
+	JDAccountSearchParams
+}
+
+type JDAccountResetResp struct {
+}
