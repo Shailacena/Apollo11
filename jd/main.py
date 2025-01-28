@@ -31,6 +31,29 @@ sys.stdout.reconfigure(encoding='utf-8')
 
 class CookieLogin():
     def __init__(self):
+        self.init = True
+        self.output = {
+            'err': [],
+            'jdaccount':'',
+            'wxurl':'',
+            'jdorderId':'',
+            'orderId':'',
+            'sku':'',
+            # 0 未完成
+            # 1 成功
+            # -1 token 转换失败
+            # 
+            'status':0
+        }
+
+    def init(self, params):
+        self.ck = params[1]
+        self.sku = params[2]
+        self.our_orderid = params[3]
+        self.adress = params[4]
+        self.proxyip = params[5]
+        self.output['sku'] = self.sku
+        self.output['orderid'] = self.our_orderid
         # headers = {
         #     'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36',
         #     'sec-ch-ua-platform' : '"Android"',
@@ -45,6 +68,7 @@ class CookieLogin():
         # opactions.add_argument('sec-ch-ua-platform="Android"')
         options = ChromeOptions()
         options.add_argument('--headless')
+        options.add_argument("--proxy-server=%s" % self.proxyip)
         # mac平台
         if sys.platform == 'darwin':
             self.drive = uc.Chrome(options=options, enable_cdp_events=True, driver_executable_path="/Users/admin/Documents/Apollo11/jd/chromedriver-mac-x64/chromedriver")
@@ -71,7 +95,7 @@ class CookieLogin():
                     self.wxurl = request['params']['documentURL']
                     if hasattr(self, 'orderId'):
                         if login.saveOrder == False:
-                            saveorder.addOrderWxurl(self.jdaccount, self.orderId, self.wxurl)
+                            saveorder.addOrderWxurl(self.jdaccount, self.jdorderId, self.wxurl)
                             self.logOrderAndRaise()
                 if 'orderId' in request['params']['documentURL']:
                     # print('inter_request order', json.dumps(request))
@@ -81,17 +105,21 @@ class CookieLogin():
                             match = re.search(pattern, request['params']['documentURL'])
                             if match != None:
                                 # print('inter_request orderId', match.group(1))
-                                self.orderId = match.group(1)
-                            saveorder.addOrderWxurl(self.jdaccount, self.orderId, self.wxurl)
+                                self.jdorderId = match.group(1)
+                            saveorder.addOrderWxurl(self.jdaccount, self.jdorderId, self.wxurl)
                             self.logOrderAndRaise()
         except Exception as e:
-            print(e)
+            self.output['err']+[e]
             raise
     
     def logOrderAndRaise(self):
-        print('jdaccount=', self.jdaccount)
-        print('wxurl=', self.wxurl)
-        print('orderId=', self.orderId)
+        self.output['wxurl'] = self.wxurl
+        self.output['jdorderId'] = self.jdorderId
+        self.output['orderId'] = self.our_orderid
+        self.output['jdaccount'] = self.jdaccount
+        if self.wxurl and self.wxurl != '':
+            if self.jdorderId and self.jdorderId != '':
+                self.output['status'] = 1
         raise
 
     def inter_reponse(self, response):
@@ -147,7 +175,7 @@ class CookieLogin():
         try:
             WebDriverWait(self.drive, 100).until(EC.url_to_be(url))
         except TimeoutExpired:
-            print('超时了')
+            self.output['err']+['扫码超时']
 
         #登录之后停2秒
         time.sleep(2)
@@ -180,8 +208,8 @@ class CookieLogin():
             with open(tokenpath, mode='r', encoding='utf-8') as f:
                 cookie = f.read()
         except Exception as e:
-            print(e)
-            raise e
+            self.output['err']+[e]
+            raise
 
         #读取到的是字符串类型，loads之后就变成了python中的字典类型
         cookie = json.loads(cookie)
@@ -223,13 +251,13 @@ class CookieLogin():
         if self.checkVidff():
             # 去验证
             # verify.verify(self)
-            print('需要验证')
+            self.output['err']+['需要验证']
             raise
 
         # 是否未填地址
         if self.checkdress():
             # 去填地址
-            adress.adddress(self)
+            adress.adddress(self, adress)
 
         self.takeOrder()
 
@@ -293,7 +321,7 @@ class CookieLogin():
             time.sleep(10)
             # print(self.drive.page_source)
         except TimeoutExpired:
-            print('超时了')
+            self.output['err']+['收银台超时']
 
     # 检查token是否有效
     def checkToken(self, ck):
@@ -376,16 +404,19 @@ class CookieLogin():
 
             orderId = re.findall(r'\d+', orderp.text)
 
-            self.orderId = orderId
-
-            print('orderid=', self.orderId)
+            self.jdorderId = orderId
         except Exception as e:
             # print('没有订单')
             raise
 
     #用最近一笔订单生成微信链接
     def useLastOrderGetUrl(self):
-        self.getLastOrderId()
+        try:
+            self.getLastOrderId()
+        except Exception as e:
+            #没有最近一笔订单
+            #去下单
+            login.openGoods()
 
         try:
             paybtn = self.drive.find_element(By.XPATH,'//*[contains(text(), "去支付")]/parent::button')
@@ -421,8 +452,7 @@ if __name__ == '__main__':
             login.loadck = False
             #标记是否保存过wxurl链接到缓存订单中
             login.saveOrder = False
-            login.ck = sys.argv[1]
-            login.sku = sys.argv[2]
+            login.init(sys.argv)
             # login.getcookie()
             # login.loadcookie(arg1)
             login.checkToken(login.ck)
@@ -433,9 +463,8 @@ if __name__ == '__main__':
             # saveorder.addOrderWxurl('123', 'sIDDK')
             login.close()
         except Exception as e:
-            login.close()
-            raise ValueError(e)
-        
+            login.output['err']+[e]
         finally:
             login.close()
+            print(json.dumps(login.output))
 
