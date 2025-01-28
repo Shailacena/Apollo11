@@ -40,7 +40,11 @@ class CookieLogin():
             'orderId':'',#我们后台的订单id
             'sku':'',#商品sku
             'status':0 # 0(未完成); 1(成功); -1(token转换失败)
-            # 
+            # -2 JD_WSKEY接口抛出错误 尝试重试 更换IP
+            # -3 疑似IP风控等问题 默认为失效
+            # -4 JD_appjmp 接口错误 请重试或者更换IP
+            # -5 JD_appjmp提取Cookie错误 请重试或者更换IP
+            # -6 WsKey状态失效;token有fake
         }
 
     def init(self, params):
@@ -129,7 +133,7 @@ class CookieLogin():
     def getToken(self, ck):
         sess = requests.session()
         jdaccount = self.getPin(ck)
-        jd_ck = jd_wskey.getToken(sess, ck)
+        jd_ck = jd_wskey.getToken(self, sess, ck)
         # print('getToken:', jd_ck)
         if isinstance(jd_ck, str):
             #获取到的cookies是列表
@@ -154,6 +158,9 @@ class CookieLogin():
                 f.write(cookieStr)
 
             # print('cookie已写入')
+        else:
+            if jd_ck == False:
+                raise
         
     #先手动登录，让程序获取到cookie，保存下来
     def getcookie(self):
