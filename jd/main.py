@@ -33,17 +33,14 @@ class CookieLogin():
     def __init__(self):
         self.init = True
         self.output = {
-            'err': [],
+            'err': [],#错误信息列表
             'jdaccount':'',
             'wxurl':'',
             'jdorderId':'',
             'orderId':'',
             'sku':'',
-            # 0 未完成
-            # 1 成功
-            # -1 token 转换失败
+            'status':0 # 0(未完成); 1(成功); -1(token转换失败)
             # 
-            'status':0
         }
 
     def init(self, params):
@@ -95,7 +92,7 @@ class CookieLogin():
                     self.wxurl = request['params']['documentURL']
                     if hasattr(self, 'orderId'):
                         if login.saveOrder == False:
-                            saveorder.addOrderWxurl(self.jdaccount, self.jdorderId, self.wxurl)
+                            # saveorder.addOrderWxurl(self.jdaccount, self.jdorderId, self.wxurl)
                             self.logOrderAndRaise()
                 if 'orderId' in request['params']['documentURL']:
                     # print('inter_request order', json.dumps(request))
@@ -106,7 +103,7 @@ class CookieLogin():
                             if match != None:
                                 # print('inter_request orderId', match.group(1))
                                 self.jdorderId = match.group(1)
-                            saveorder.addOrderWxurl(self.jdaccount, self.jdorderId, self.wxurl)
+                            # saveorder.addOrderWxurl(self.jdaccount, self.jdorderId, self.wxurl)
                             self.logOrderAndRaise()
         except Exception as e:
             self.output['err']+[e]

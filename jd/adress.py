@@ -39,7 +39,7 @@ def adddress(app, adressstr):
     WebDriverWait(app.drive, 60).until(EC.url_changes(app.drive.current_url))
     
     # 获取当前页面的URL
-    redirect_url = app.drive.current_url
+    # redirect_url = app.drive.current_url
     
     time.sleep(5)
 
