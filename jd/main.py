@@ -34,11 +34,11 @@ class CookieLogin():
         self.init = True
         self.output = {
             'err': [],#错误信息列表
-            'jdaccount':'',
-            'wxurl':'',
-            'jdorderId':'',
-            'orderId':'',
-            'sku':'',
+            'jdaccount':'',#ck中提取的jd帐号jd_XgYOBMKfcELO
+            'wxurl':'',#微信支付链接
+            'jdorderId':'',#京东的订单id
+            'orderId':'',#我们后台的订单id
+            'sku':'',#商品sku
             'status':0 # 0(未完成); 1(成功); -1(token转换失败)
             # 
         }
