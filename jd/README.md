@@ -2,7 +2,10 @@
 2、
 
 pip install undetected-chromedriver
-pip3 install pyautogui 鼠标点击
-pip3 install Pillow 图像处理
 
-pip install mysql-connector-python mysql数据库
+pip install requests
+
+<!-- pip3 install pyautogui 鼠标点击 -->
+<!-- pip3 install Pillow 图像处理 -->
+
+<!-- pip install mysql-connector-python mysql数据库 -->

@@ -261,7 +261,7 @@ class CookieLogin():
         # 是否未填地址
         if self.checkdress():
             # 去填地址
-            adress.adddress(self, adress)
+            adress.adddress(self, self.adress)
 
         self.takeOrder()
 
