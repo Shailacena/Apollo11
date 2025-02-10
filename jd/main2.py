@@ -20,8 +20,6 @@ import undetected_chromedriver as uc
 
 import jd_wskey
 import adress
-import verify
-import saveorder
 
 sys.stdout.reconfigure(encoding='utf-8')
 
