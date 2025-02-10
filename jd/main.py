@@ -55,8 +55,9 @@ class CookieLogin():
             self.ck = params[2]
             self.sku = params[3]
             self.our_orderid = params[4]
-            self.adress = params[5]
-            self.proxyip = params[6]
+            self.jdorderId = params[5]
+            self.adress = params[6]
+            self.proxyip = params[7]
             self.output['sku'] = self.sku
             self.output['orderid'] = self.our_orderid
         except Exception as e:
@@ -343,9 +344,9 @@ class CookieLogin():
     # 检查token是否有效
     def checkToken(self, ck, isauto = True):
         try:
-            jdaccount = self.getPin(ck)
+            self.jdaccount = self.getPin(ck)
             current_dir = current_dir = os.path.dirname(os.path.abspath(__file__))
-            tokenpath = os.path.join(current_dir, 'data', 'JdcookieToken', jdaccount+'.json')
+            tokenpath = os.path.join(current_dir, 'data', 'JdcookieToken', self.jdaccount+'.json')
             
             with open(tokenpath, mode='r', encoding='utf-8') as f:
                 cookie = f.read()
@@ -511,6 +512,17 @@ if __name__ == '__main__':
             # login.getLastOrderId()
             # adress.adddress()
             # saveorder.addOrderWxurl('123', 'sIDDK')
+        except Exception as e:
+            login.output['err']+[e]
+        finally:
+            login.close()
+            print(json.dumps(login.output))
+    elif sys.argv[1] == 'checkOrder':
+        try:
+            login.init(sys.argv)
+            # login.getcookie()
+            login.checkToken(login.ck, False)
+            login.checkLastOrderIsPay()
         except Exception as e:
             login.output['err']+[e]
         finally:

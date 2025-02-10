@@ -20,13 +20,17 @@ import (
 )
 
 func main() {
+	// getpayurl 获取支付链接
+	// checkorder 查询支付状态
+	action := "getpayurl"
 	ck := "pin=jd_XgYOBMKfcELO;wskey=AAJnhLbSAEDVyHIPhPFwP1f0EIVeqLhjiqdX9f85Tu3Byn0dmsSC4e0xep-x3_S8UK8MmJZVOgdGUwPIogfngofFwArPyYEn;"
 	sku := "10085738847942"
 	adress := "李任秀 13672281779 江西省宜春地区宜春市 中山路1号19"
 	ip := "https://105.120.4.94:500"
 	orderid := "10000001"
+	jdorderid := ""
 	// cmd := exec.Command("python", "../jd/main.py", ck, sku)
-	cmd := exec.Command("python3", "../jd/main.py", ck, sku, orderid, adress, ip)
+	cmd := exec.Command("python3", "../jd/main.py", action, ck, sku, orderid, jdorderid, adress, ip)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		fmt.Println("Error:", err)
