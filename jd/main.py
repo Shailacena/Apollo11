@@ -21,7 +21,7 @@ import undetected_chromedriver as uc
 
 import jd_wskey
 import adress
-import verify
+import checkProxy
 import saveorder
 
 sys.stdout.reconfigure(encoding='utf-8')
@@ -48,6 +48,7 @@ class CookieLogin():
             # -4 JD_appjmp 接口错误 请重试或者更换IP
             # -5 JD_appjmp提取Cookie错误 请重试或者更换IP
             # -6 WsKey状态失效;token有fake
+            # -7 代理ip失效
             
             # 100 已付款，待收货
             # -101 没有最近一笔订单
@@ -66,6 +67,7 @@ class CookieLogin():
             self.output['orderid'] = self.our_orderid
         except Exception as e:
             self.addLog(e)
+
         # headers = {
         #     'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36',
         #     'sec-ch-ua-platform' : '"Android"',
@@ -95,8 +97,13 @@ class CookieLogin():
         # self.drive = Chrome(enable_cdp_events=True)
         self.drive.set_window_size(680, 980)
         self.url = 'https://plogin.m.jd.com/login/login'
-        
         self.drive.add_cdp_listener('Network.requestWillBeSent', self.inter_request)
+
+        if hasattr(self, "proxyip"):
+            if checkProxy.check_proxy(self.proxyip) == False:
+                self.output['status'] = -7
+                self.addLog('代理ip失效')
+                raise
 
     def inter_request(self, request):
         try:
@@ -241,11 +248,11 @@ class CookieLogin():
         except Exception as e:
             self.addLog(e)
             raise
-
         #读取到的是字符串类型，loads之后就变成了python中的字典类型
         cookie = json.loads(cookie)
         # print('读取cookie', cookie)
         self.drive.get('https://m.jd.com/')
+        time.sleep(1)
         #先把所有的cookie全部删掉
         self.drive.delete_all_cookies()
         for item in cookie:
@@ -360,7 +367,6 @@ class CookieLogin():
             self.jdaccount = self.getPin(ck)
             current_dir = current_dir = os.path.dirname(os.path.abspath(__file__))
             tokenpath = os.path.join(current_dir, 'data', 'JdcookieToken', self.jdaccount+'.json')
-            
             with open(tokenpath, mode='r', encoding='utf-8') as f:
                 cookie = f.read()
             cookie_list = json.loads(cookie)
@@ -514,7 +520,7 @@ class CookieLogin():
         if self.test:
             print(msg)
         else:
-            self.output['err'] + [msg]
+            self.output['err'].append(str(msg))
 
     # 关闭浏览器
     def close(self):
@@ -529,7 +535,7 @@ if __name__ == '__main__':
     #标记是否保存过wxurl链接到缓存订单中
     login.saveOrder = False
     if sys.argv[1] == 'getpayurl':
-        # print(f"收到的参数: {sys.argv[1]} {sys.argv[2]}")    
+        # print(f"收到的参数: {sys.argv[1]} {sys.argv[2]}") 
         try:
             login.init(sys.argv)
             # login.getcookie()
@@ -541,7 +547,7 @@ if __name__ == '__main__':
             # adress.adddress()
             # saveorder.addOrderWxurl('123', 'sIDDK')
         except Exception as e:
-            login.output['err']+[e]
+            login.addLog(e)
         finally:
             login.close()
             print(json.dumps(login.output))
