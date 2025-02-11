@@ -30,15 +30,9 @@ else:
 try:
     import requests  # 导入HTTP模块
 except Exception as e:
-    logger.info(str(e) + "\n缺少requests模块, 请执行命令：pip3 install requests\n")  # 日志输出
     sys.exit(1)  # 退出脚本
-os.environ['no_proxy'] = '*'  # 禁用代理
-requests.packages.urllib3.disable_warnings()  # 抑制错误
-try:
-    from notify import send  # 导入青龙消息通知模块
-except Exception as err:
-    logger.debug(str(err))  # 调试日志输出
-    logger.info("无推送文件")  # 标准日志输出
+
+# os.environ['no_proxy'] = '*'  # 禁用代理
 
 ver = 40904  # 版本号
 
