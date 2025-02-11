@@ -24,6 +24,7 @@ import verify
 import saveorder
 
 sys.stdout.reconfigure(encoding='utf-8')
+requests.packages.urllib3.disable_warnings()  # 抑制错误
 
 # chrome_driver_path = '/chromedriver-win64/chromedriver'
 # 自动下载并设置 ChromeDriver 路径
@@ -48,6 +49,7 @@ class CookieLogin():
             
             # 100 已付款，待收货
             # -101 没有最近一笔订单
+            # -102 订单号不匹配
         }
 
     def init(self, params):
@@ -61,7 +63,7 @@ class CookieLogin():
             self.output['sku'] = self.sku
             self.output['orderid'] = self.our_orderid
         except Exception as e:
-            self.output['err'] + [e]
+            self.addLog(e)
         # headers = {
         #     'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36',
         #     'sec-ch-ua-platform' : '"Android"',
@@ -118,7 +120,7 @@ class CookieLogin():
                             # saveorder.addOrderWxurl(self.jdaccount, self.jdorderId, self.wxurl)
                             self.loggetOrderPayUrlAndRaise()
         except Exception as e:
-            self.output['err']+[e]
+            self.addLog(e)
             raise
     
     def loggetOrderPayUrlAndRaise(self):
@@ -127,7 +129,7 @@ class CookieLogin():
         self.output['orderId'] = self.our_orderid
         self.output['jdaccount'] = self.jdaccount
         if self.wxurl and self.wxurl != '':
-            if self.jdorderId and self.jdorderId != '':
+            if hasattr(self, 'jdorderId') and self.jdorderId != '':
                 self.output['status'] = 1
         raise
 
@@ -146,6 +148,11 @@ class CookieLogin():
     # 获取Token
     def getToken(self, ck):
         sess = requests.session()
+        if hasattr(self, 'proxyip'):
+            sess.proxies = {
+                'http':self.proxyip,
+                'https':self.proxyip
+            }
         jdaccount = self.getPin(ck)
         jd_ck = jd_wskey.getToken(self, sess, ck)
         # print('getToken:', jd_ck)
@@ -193,7 +200,7 @@ class CookieLogin():
         try:
             WebDriverWait(self.drive, 100).until(EC.url_to_be(url))
         except TimeoutExpired:
-            self.output['err']+['扫码超时']
+            self.addLog('扫码超时')
 
         #登录之后停2秒
         time.sleep(2)
@@ -226,7 +233,7 @@ class CookieLogin():
             with open(tokenpath, mode='r', encoding='utf-8') as f:
                 cookie = f.read()
         except Exception as e:
-            self.output['err']+[e]
+            self.addLog(e)
             raise
 
         #读取到的是字符串类型，loads之后就变成了python中的字典类型
@@ -269,7 +276,7 @@ class CookieLogin():
         if self.checkVidff():
             # 去验证
             # verify.verify(self)
-            self.output['err']+['需要验证']
+            self.addLog('需要验证')
             raise
 
         # 是否未填地址
@@ -339,7 +346,7 @@ class CookieLogin():
             time.sleep(10)
             # print(self.drive.page_source)
         except TimeoutExpired:
-            self.output['err']+['收银台超时']
+            self.addLog('收银台超时')
 
     # 检查token是否有效
     def checkToken(self, ck, isauto = True):
@@ -424,9 +431,16 @@ class CookieLogin():
 
             orderId = re.findall(r'\d+', orderp.text)
 
-            self.jdorderId = orderId[0]
+            last_jdorderId = orderId[0]
 
-            print(self.jdorderId)
+            if hasattr(self, 'jdorderId') and self.jdorderId != '':
+                if self.jdorderId != last_jdorderId:
+                    self.output['status'] = -102
+                    self.addLog('订单号不匹配')
+                    self.logcheckOrderPayAndRaise()
+            else:
+                self.jdorderId = last_jdorderId
+                # print(self.jdorderId)
 
         except Exception as e:
             # print('没有订单')
@@ -462,21 +476,21 @@ class CookieLogin():
             #没有最近一笔订单
             #去下单
             self.output['status'] = -101
-            self.output['err'] + ['没有最近一笔订单']
-            raise
+            self.addLog('没有最近一笔订单')
+            self.logcheckOrderPayAndRaise()
 
         try:
             shouhuo_div = self.drive.find_element(By.XPATH,'//*[contains(text(), "确认收货")]/parent::div')
             self.output['status'] = 100
-            print('已付款')
+            # print('已付款')
             self.logcheckOrderPayAndRaise()
 
         except Exception as e:
-            print('查看是否代付款')
+            # print('查看是否待付款')
             try:
                 paybtn = self.drive.find_element(By.XPATH,'//*[contains(text(), "去支付")]/parent::button')
                 self.output['status'] = -102
-                self.output['err'] + ['待付款']
+                self.addLog('待付款')
             except Exception as e:
                 self.logcheckOrderPayAndRaise()
 
@@ -489,6 +503,13 @@ class CookieLogin():
         if match:
             return match.group(1)
 
+    # 日志处理
+    def addLog(self, msg):
+        if self.test:
+            print(msg)
+        else:
+            self.output['err'] + [msg]
+
     # 关闭浏览器
     def close(self):
         self.drive.quit()
@@ -498,6 +519,7 @@ if __name__ == '__main__':
     login = CookieLogin()
     #标记是否加载过ck到浏览器中
     login.loadck = False
+    login.test = False
     #标记是否保存过wxurl链接到缓存订单中
     login.saveOrder = False
     if sys.argv[1] == 'getpayurl':
