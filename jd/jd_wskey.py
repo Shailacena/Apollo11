@@ -19,14 +19,6 @@ import uuid
 WSKEY_MODE = 0
 # 0 = Default / 1 = Debug!
 
-if "WSKEY_DEBUG" in os.environ or WSKEY_MODE:  # 判断调试模式变量
-    logging.basicConfig(level=logging.DEBUG, format='%(message)s')  # 设置日志为 Debug等级输出
-    logger = logging.getLogger(__name__)  # 主模块
-    logger.debug("\nDEBUG模式开启!\n")  # 消息输出
-else:
-    logging.basicConfig(level=logging.INFO, format='%(message)s')  # Info级日志
-    logger = logging.getLogger(__name__)  # 主模块
-
 try:
     import requests  # 导入HTTP模块
 except Exception as e:

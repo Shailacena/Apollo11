@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from datetime import datetime, timedelta
+import logging
 import os
 import re
 from subprocess import TimeoutExpired
@@ -25,6 +26,7 @@ import saveorder
 
 sys.stdout.reconfigure(encoding='utf-8')
 requests.packages.urllib3.disable_warnings()  # 抑制错误
+logging.basicConfig(level=logging.ERROR, format='%(message)s')  # Info级日志
 
 # chrome_driver_path = '/chromedriver-win64/chromedriver'
 # 自动下载并设置 ChromeDriver 路径
@@ -151,6 +153,7 @@ class CookieLogin():
     # 获取Token
     def getToken(self, ck):
         sess = requests.session()
+        sess.keep_alive = False
         if hasattr(self, 'proxyip'):
             sess.proxies = {
                 'http':self.proxyip,
@@ -163,7 +166,7 @@ class CookieLogin():
             #获取到的cookies是列表
             cookieDict  = sess.cookies.get_dict()
             # print('getToken cookieDict:', cookieDict)
-
+            sess.close()
             cookieList = []
             for key, value in cookieDict.items():
                 httponly = False
