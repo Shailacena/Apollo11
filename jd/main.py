@@ -78,12 +78,15 @@ class CookieLogin():
         # options.add_argument('--headless')
         if hasattr(self, "proxyip"):
             options.add_argument("--proxy-server=%s" % self.proxyip)
+        
+        current_dir = current_dir = os.path.dirname(os.path.abspath(__file__))
+
         # mac平台
         if sys.platform == 'darwin':
-            self.drive = uc.Chrome(options=options, enable_cdp_events=True, driver_executable_path="/Users/admin/Documents/Apollo11/jd/chromedriver-mac-x64/chromedriver")
+            self.drive = uc.Chrome(options=options, enable_cdp_events=True, driver_executable_path=os.path.join(current_dir, 'chromedriver-mac-x64', 'chromedriver'))
         if sys.platform == 'windows':
             # windows平台
-            self.drive = uc.Chrome(enable_cdp_events=True, driver_executable_path=r"F:\henry\z_local\Cooking\Apollo11\jd\chromedriver-win64\chromedriver.exe")
+            self.drive = uc.Chrome(enable_cdp_events=True, driver_executable_path=os.path.join(current_dir, 'chromedriver-win64', 'chromedriver.exe'))
         # print('创建Chrome')
         # self.drive = Chrome(enable_cdp_events=True)
         self.drive.set_window_size(680, 980)
