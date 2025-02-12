@@ -50,10 +50,11 @@ class CookieLogin():
         options.add_argument('--headless')
         # mac平台
         if sys.platform == 'darwin':
-            self.drive = uc.Chrome(options=options, enable_cdp_events=True, driver_executable_path="/Users/admin/Documents/Apollo11/jd/chromedriver-mac-x64/chromedriver")
+            self.drive = uc.Chrome(options=options, enable_cdp_events=True, driver_executable_path="/Users/admin/Documents/Apollo11/jd/chromedriver-mac-x64-133/chromedriver")
         if sys.platform == 'windows':
             # windows平台
             self.drive = uc.Chrome(enable_cdp_events=True, driver_executable_path=r"F:\henry\z_local\Cooking\Apollo11\jd\chromedriver-win64\chromedriver.exe")
+        print(self.drive)
         self.drive.set_window_size(680, 980)
         self.url = 'https://baidu.com'
         

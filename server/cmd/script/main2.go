@@ -26,7 +26,7 @@ func main() {
 	ck := "pin=jd_XgYOBMKfcELO;wskey=AAJnhLbSAEDVyHIPhPFwP1f0EIVeqLhjiqdX9f85Tu3Byn0dmsSC4e0xep-x3_S8UK8MmJZVOgdGUwPIogfngofFwArPyYEn;"
 	sku := "10085738847942"
 	adress := "李任秀 13672281779 江西省宜春地区宜春市 中山路1号19"
-	ip := "https://105.120.4.94:500"
+	ip := "http://211.95.152.42:11641"
 	orderid := "10000001"
 	jdorderid := ""
 	// cmd := exec.Command("python", "../jd/main.py", ck, sku)

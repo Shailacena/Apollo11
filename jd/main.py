@@ -66,6 +66,7 @@ class CookieLogin():
             self.output['sku'] = self.sku
             self.output['orderid'] = self.our_orderid
         except Exception as e:
+            self.addLog('init:')
             self.addLog(e)
 
         # headers = {
@@ -85,11 +86,16 @@ class CookieLogin():
         if hasattr(self, "proxyip"):
             options.add_argument("--proxy-server=%s" % self.proxyip)
         
-        current_dir = current_dir = os.path.dirname(os.path.abspath(__file__))
+        current_dir = os.path.dirname(os.path.abspath(__file__))
 
         # mac平台
         if sys.platform == 'darwin':
-            self.drive = uc.Chrome(options=options, enable_cdp_events=True, driver_executable_path=os.path.join(current_dir, 'chromedriver-mac-x64', 'chromedriver'))
+            path = os.path.join(current_dir, 'chromedriver-mac-x64-133', 'chromedriver')
+            # path = '/Users/admin/Documents/Apollo11/jd/chromedriver-mac-x64-133/chromedriver'
+            print(path)
+            self.drive = uc.Chrome(options=options, enable_cdp_events=True, driver_executable_path=path)
+            print(self.drive.exe)
+            # self.drive = uc.Chrome(options=options, enable_cdp_events=True)
         if sys.platform == 'windows':
             # windows平台
             self.drive = uc.Chrome(enable_cdp_events=True, driver_executable_path=os.path.join(current_dir, 'chromedriver-win64', 'chromedriver.exe'))
@@ -102,7 +108,7 @@ class CookieLogin():
         if hasattr(self, "proxyip"):
             if checkProxy.check_proxy(self.proxyip) == False:
                 self.output['status'] = -7
-                self.addLog('代理ip失效')
+                self.addLog('ip time out')
                 raise
 
     def inter_request(self, request):
@@ -132,6 +138,7 @@ class CookieLogin():
                             # saveorder.addOrderWxurl(self.jdaccount, self.jdorderId, self.wxurl)
                             self.loggetOrderPayUrlAndRaise()
         except Exception as e:
+            self.addLog('inter_request:')
             self.addLog(e)
             raise
     
@@ -186,7 +193,7 @@ class CookieLogin():
             cookieStr = json.dumps(cookieList)
 
             # print(cookieStr)
-            current_dir = current_dir = os.path.dirname(os.path.abspath(__file__))
+            current_dir = os.path.dirname(os.path.abspath(__file__))
             tokenpath = os.path.join(current_dir, 'data', 'JdcookieToken', jdaccount+'.json')
             with open(tokenpath, 'w') as f:
                 f.write(cookieStr)
@@ -246,6 +253,7 @@ class CookieLogin():
             with open(tokenpath, mode='r', encoding='utf-8') as f:
                 cookie = f.read()
         except Exception as e:
+            self.addLog('loadcookie:')
             self.addLog(e)
             raise
         #读取到的是字符串类型，loads之后就变成了python中的字典类型
@@ -524,7 +532,8 @@ class CookieLogin():
 
     # 关闭浏览器
     def close(self):
-        self.drive.quit()
+        if hasattr(self, 'drive'):
+            self.drive.quit()
 
 if __name__ == '__main__':
     # print('开始')
@@ -558,7 +567,7 @@ if __name__ == '__main__':
             login.checkToken(login.ck, False)
             login.checkLastOrderIsPay()
         except Exception as e:
-            login.output['err']+[e]
+            login.addLog(e)
         finally:
             login.close()
             print(json.dumps(login.output))
@@ -569,7 +578,7 @@ if __name__ == '__main__':
             login.checkToken(login.ck, False)
             login.checkLastOrderIsPay()
         except Exception as e:
-            login.output['err']+[e]
+            login.addLog(e)
         finally:
             login.close()
             print(json.dumps(login.output))
