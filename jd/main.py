@@ -57,10 +57,11 @@ class CookieLogin():
 
     def init(self, params):
         try:
+            self.action = params[1]
             self.ck = params[2]
             self.sku = params[3]
             self.our_orderid = params[4]
-            self.jdorderId = params[5]
+            self.in_jdorderId = params[5]
             self.adress = params[6]
             self.proxyip = params[7]
             self.output['sku'] = self.sku
@@ -453,8 +454,8 @@ class CookieLogin():
 
             last_jdorderId = orderId[0]
 
-            if hasattr(self, 'jdorderId') and self.jdorderId != '':
-                if self.jdorderId != last_jdorderId:
+            if hasattr(self, 'jdorderId') and self.in_jdorderId != '':
+                if self.in_jdorderId != last_jdorderId:
                     self.output['status'] = -102
                     self.addLog('订单号不匹配')
                     self.logcheckOrderPayAndRaise()
@@ -472,6 +473,7 @@ class CookieLogin():
             self.getLastOrderId()
         except Exception as e:
             #没有最近一笔订单
+            #或者订单号不匹配
             #去下单
             login.openGoods()
 
