@@ -52,3 +52,22 @@ pipx install requests
 <!-- pip3 install Pillow 图像处理 -->
 
 <!-- pip install mysql-connector-python mysql数据库 -->
+
+---------------------------------
+Chrome浏览器自动升级导致driver失效
+因此需要关闭Chrome的自动升级
+
+**以下两个都未测试
+
+1、通过 apt 锁定版本 sudo apt-mark hold google-chrome-stable
+
+2、通过Chrome的策略管理浏览器的行为
+创建一个 JSON 配置文件，例如 policies.json：
+{
+    "DisableBackgroundMode": true,
+    "DisableBackgroundNetworking": true,
+    "DisableBackgroundTimer": true,
+    "UpdateDefault": "none"
+}
+将此文件放置在 /etc/opt/chrome/policies/managed/ 目录下。
+确保 Chrome 用户有权限读取此文件。
