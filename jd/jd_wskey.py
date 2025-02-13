@@ -151,7 +151,7 @@ def getToken(app, sess, wskey):  # 方法 获取 Wskey转换使用的 Token 由 
         tokenKey = res_json['tokenKey']  # 取出TokenKey
     except Exception as err:
         app.output['err']+["JD_WSKEY接口抛出错误 尝试重试 更换IP"]
-        app['status'] = -2
+        app.output['status'] = -2
         # return False, wskey  # 返回 -> False[Bool], Wskey
         return False  # 返回 -> False[Bool], Wskey
     else:
@@ -163,7 +163,7 @@ def appjmp(app, sess, wskey, tokenKey):  # 方法 传递 wskey & tokenKey
     wskey = "pt_" + str(wskey.split(";")[0])  # 变量组合 使用 ; 分割变量 拼接 pt_
     if tokenKey == 'xxx':  # 判断 tokenKey返回值
         app.output['err']+[str(wskey) + ";疑似IP风控等问题 默认为失效"]
-        app['status'] = -3
+        app.output['status'] = -3
         # return False, wskey  # 返回 -> False[Bool], Wskey
         return False  # 返回 -> False[Bool], Wskey
     headers = {
@@ -181,7 +181,7 @@ def appjmp(app, sess, wskey, tokenKey):  # 方法 传递 wskey & tokenKey
                            timeout=20)  # HTTP请求 [GET] 阻止跳转 超时 20秒
     except Exception as err:
         app.output['err']+["JD_appjmp 接口错误 请重试或者更换IP"]
-        app['status'] = -4
+        app.output['status'] = -4
         # return False, wskey  # 返回 -> False[Bool], Wskey
         return False  # 返回 -> False[Bool], Wskey
     else:
@@ -196,13 +196,13 @@ def appjmp(app, sess, wskey, tokenKey):  # 方法 传递 wskey & tokenKey
             jd_ck = str(pt_key) + ';' + str(pt_pin) + ';'  # 拼接变量
         except Exception as err:
             app.output['err']+["JD_appjmp提取Cookie错误 请重试或者更换IP"]
-            app['status'] = -5
+            app.output['status'] = -5
             # return False, wskey  # 返回 -> False[Bool], Wskey
             return False  # 返回 -> False[Bool], Wskey
         else:
             if 'fake' in pt_key:  # 判断 pt_key中 是否存在fake
                 app.output['err']+[str(wskey) + ";WsKey状态失效;token有fake"]
-                app['status'] = -6
+                app.output['status'] = -6
                 # return False, wskey  # 返回 -> False[Bool], Wskey
                 return False  # 返回 -> False[Bool], Wskey
             else:

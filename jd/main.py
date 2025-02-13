@@ -6,6 +6,7 @@ import os
 import re
 from subprocess import TimeoutExpired
 import sys
+import traceback
 # import requests
 import requests
 from selenium import webdriver
@@ -37,6 +38,7 @@ class CookieLogin():
         self.isInit = True
         self.output = {
             'err': [],#错误信息列表
+            'step':[],#记录步骤
             'jdaccount':'',#ck中提取的jd帐号jd_XgYOBMKfcELO
             'wxurl':'',#微信支付链接
             'jdorderId':'',#京东的订单id
@@ -84,7 +86,7 @@ class CookieLogin():
         # opactions.add_argument('sec-ch-ua-platform="Android"')
         options = ChromeOptions()
         # options.add_argument('--headless')
-        if hasattr(self, "proxyip"):
+        if hasattr(self, "proxyip") and self.proxyip != "":
             options.add_argument("--proxy-server=%s" % self.proxyip)
         
         current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -93,9 +95,7 @@ class CookieLogin():
         if sys.platform == 'darwin':
             path = os.path.join(current_dir, 'chromedriver-mac-x64-133', 'chromedriver')
             # path = '/Users/admin/Documents/Apollo11/jd/chromedriver-mac-x64-133/chromedriver'
-            print(path)
             self.drive = uc.Chrome(options=options, enable_cdp_events=True, driver_executable_path=path)
-            print(self.drive.exe)
             # self.drive = uc.Chrome(options=options, enable_cdp_events=True)
         if sys.platform == 'windows':
             # windows平台
@@ -167,6 +167,7 @@ class CookieLogin():
 
     # 获取Token
     def getToken(self, ck):
+        self.output['step'].append('getToken in')
         sess = requests.session()
         sess.keep_alive = False
         if hasattr(self, 'proxyip'):
@@ -176,6 +177,7 @@ class CookieLogin():
             }
         jdaccount = self.getPin(ck)
         jd_ck = jd_wskey.getToken(self, sess, ck)
+        self.output['step'].append('getToken get jd_ck')
         # print('getToken:', jd_ck)
         if isinstance(jd_ck, str):
             #获取到的cookies是列表
@@ -245,6 +247,7 @@ class CookieLogin():
 
     #加载cookie
     def loadcookie(self, ck):
+        self.output['step'].append('loadcookie in')
         self.loadck = True
         jdaccount = self.getPin(ck)
         current_dir = current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -273,7 +276,7 @@ class CookieLogin():
             #是一个列表内套字典的形式
 
         self.drive.refresh()
-
+        self.output['step'].append('loadcookie success')
         time.sleep(2)
 
     #打开商品
@@ -372,6 +375,7 @@ class CookieLogin():
 
     # 检查token是否有效
     def checkToken(self, ck, isauto = True):
+        self.output['step'].append('checkToken in')
         try:
             self.jdaccount = self.getPin(ck)
             current_dir = current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -379,12 +383,15 @@ class CookieLogin():
             with open(tokenpath, mode='r', encoding='utf-8') as f:
                 cookie = f.read()
             cookie_list = json.loads(cookie)
+            self.output['step'].append('checkToken load cookie file success')
             if isauto:
                 for item in cookie_list:
-                    if int(datetime.now().timestamp()) > item['expiry']:
-                        # 过期了
-                        self.getToken(ck)
-                        break
+                    if item['name'] == 'pt_token':
+                        if int(datetime.now().timestamp()) > item['expiry']:
+                            # 过期了
+                            self.output['step'].append('checkToken token out expiry')
+                            self.getToken(ck)
+                            break
         except Exception as e:
             #没有文件
             # print('没有token文件')
@@ -469,6 +476,7 @@ class CookieLogin():
 
     #用最近一笔订单生成微信链接
     def useLastOrderGetUrl(self):
+        self.output['step'].append('useLastOrderGetUrl in')
         try:
             self.getLastOrderId()
         except Exception as e:
@@ -530,6 +538,7 @@ class CookieLogin():
         if self.test:
             print(msg)
         else:
+            traceback.print_exc()
             self.output['err'].append(str(msg))
 
     # 关闭浏览器
