@@ -15,6 +15,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver import ActionChains
 import json
 
 from undetected_chromedriver import Chrome, ChromeOptions
@@ -40,6 +41,7 @@ class CookieLogin():
             'err': [],#错误信息列表
             'step':[],#记录步骤
             'jdaccount':'',#ck中提取的jd帐号jd_XgYOBMKfcELO
+            'in_jdorderId':'',#传入的京东订单号
             'wxurl':'',#微信支付链接
             'jdorderId':'',#京东的订单id
             'orderId':'',#我们后台的订单id
@@ -53,8 +55,10 @@ class CookieLogin():
             # -7 代理ip失效
             
             # 100 已付款，待收货
+            # 101 已完成
             # -101 没有最近一笔订单
             # -102 订单号不匹配
+            # -103 订单已取消
         }
 
     def init(self, params):
@@ -68,6 +72,7 @@ class CookieLogin():
             self.proxyip = params[7]
             self.output['sku'] = self.sku
             self.output['orderid'] = self.our_orderid
+            self.output['in_jdorderId'] = self.in_jdorderId
         except Exception as e:
             self.addLog('init:')
             self.addLog(e)
@@ -153,11 +158,11 @@ class CookieLogin():
                 self.output['status'] = 1
         raise
 
-    def logcheckOrderPayAndRaise(self):
+    def logcheckOrderPayAndRaise(self, msg = ''):
         self.output['jdorderId'] = self.jdorderId
         self.output['orderId'] = self.our_orderid
         self.output['jdaccount'] = self.jdaccount
-        raise
+        raise ValueError(msg)
 
     def inter_reponse(self, response):
         print('inter_reponse', response)
@@ -280,11 +285,12 @@ class CookieLogin():
         time.sleep(2)
 
     #打开商品
-    def openGoods(self):
+    def openGoods2buy(self):
         url = 'https://item.m.jd.com/product/' + self.sku + '.html'
         # print('====================>打开商品', url)
         self.drive.get(url)
         # print('====================>打开商品后')
+        self.output['step'].append('openGoods2buy in')
 
         # 立即购买
         buyimielement = WebDriverWait(self.drive, 100).until(
@@ -292,6 +298,7 @@ class CookieLogin():
         )
         # print('====================>找到立即购买按钮')
         # print(buyimielement.text)
+        self.output['step'].append('openGoods2buy find [buy button]')
         buyimielement.click()  # 点击元素
         # print('====================>点击立即购买按钮后')
 
@@ -305,7 +312,7 @@ class CookieLogin():
             raise
 
         # 是否未填地址
-        if self.checkdress():
+        if self.checkaddress():
             # 去填地址
             adress.adddress(self, self.adress)
 
@@ -313,6 +320,7 @@ class CookieLogin():
 
     # 下单
     def takeOrder(self):
+        self.output['step'].append('takeOrder in')
         # 直接下单
         # buysureelement = WebDriverWait(self.drive, 10).until(
         #     self.drive.find_element(By.XPATH, '//*[contains(@class,"ActionBar_submit")]'))
@@ -320,43 +328,55 @@ class CookieLogin():
         buysureelement = self.drive.find_element(By.XPATH, '//*[contains(@class,"ActionBar_submit")]')
         # print('====================>找到下单按钮')
         # print(buysureelement.text)
-
+        self.output['step'].append('takeOrder find [ActionBar_submit]')
         # 点击立即支付
         buysureelement.click()
         # print('====================>点击下单按钮后')
 
         time.sleep(5)
 
+        self.shouyintai()
+
     # 收银台
     def shouyintai(self):
+        self.output['step'].append('shouyintai in')
+
         # ===================只有微信支付方式==================================
 
-        # #找到含有微信的父父节点
-        # pelement = self.drive.find_element(By.XPATH,'//*[contains(text(), "微信")]/parent::div/parent::div')
+        #找到含有微信的父父节点
+        pelement = self.drive.find_element(By.XPATH,'//*[contains(text(), "微信支付")]/parent::div/parent::div/parent::div/parent::div')
 
-        # # 打印元素的innerHTML
-        # if isinstance(pelement, WebElement):
-        #     print(pelement.get_attribute('innerHTML'))
+        # 打印元素的innerHTML
+        if isinstance(pelement, WebElement):
+            print(pelement.get_attribute('innerHTML'))
 
-        # try:
-        #     wechatcheckbox = pelement.find_element(By.CLASS_NAME, 'checkboxWrap')
-        # except Exception as e:
-        #     print(e)
-        #     time.sleep(1000)
+        try:
+            wechatcheckbox = pelement.find_element(By.CLASS_NAME, 'checkboxWrap')
+        except Exception as e:
+            print(e)
+            # time.sleep(1000)
 
-        # time.sleep(2)
+        time.sleep(2)
 
-        # print('====================>找到微信支付checkbox')
+        print('====================>找到微信支付checkbox')
+        if isinstance(wechatcheckbox, WebElement):
+            print(wechatcheckbox.get_attribute('innerHTML'))
+
         # wechatcheckbox.click()
-        # print('====================>勾选checkbox后')
-        # # self.drive.execute_script("arguments[0].checked = true;", wechatcheckbox)
+        # 使用模拟鼠标点击
+        ActionChains(self.drive).click(wechatcheckbox).perform()
+        self.output['step'].append('shouyintai choose wechat pay success')
+        print('====================>勾选checkbox后')
+        # self.drive.execute_script("arguments[0].checked = true;", wechatcheckbox)
 
-        # time.sleep(2)
+        time.sleep(1)
 
-        paybtn = self.drive.find_element(By.CLASS_NAME, 'payBtn')
+        paybottom = self.drive.find_element(By.CLASS_NAME, 'PayButtom')
+        paybtn = paybottom.find_element(By.CLASS_NAME, 'payBtn')
+        self.output['step'].append('shouyintai find [pay button]')
         # print('====================>找到支付按钮')
-        if isinstance(paybtn, WebElement):
-            paybtn.click()
+
+        paybtn.click()
             # print('====================>点击支付按钮后')
 
         try:
@@ -400,9 +420,11 @@ class CookieLogin():
         self.loadcookie(ck)
         
     # 检查有没有地址
-    def checkdress(self):
+    def checkaddress(self):
+        self.output['step'].append('checkaddress in')
         try:
             self.drive.find_element(By.XPATH,'//*[contains(@class,"EmptyAddress_create")]')
+            self.output['step'].append('checkdress find [EmptyAddress_create div]')
             # print('没有填收货地址')
             return True
         except Exception as e:
@@ -411,8 +433,10 @@ class CookieLogin():
         
     # 检查有没有需要验证
     def checkVidff(self):
+        self.output['step'].append('checkVidff in')
         try:
             self.drive.find_element(By.XPATH,'//*[contains(text(), "验证一下")]')
+            self.output['step'].append('checkdress find [need checkVidff div]')
             # print('需要验证')
             return True
         except Exception as e:
@@ -421,10 +445,12 @@ class CookieLogin():
     
     # 打开个人主页
     def openSelfHome(self):
+        self.output['step'].append('openSelfHome in')
         if self.loadck == False:
             self.loadcookie(self.ck)
 
         element = self.drive.find_element(By.ID, 'msShortcutMenu')
+        self.output['step'].append('openSelfHome find [msShortcutMenu div]')
         element.click()
 
         time.sleep(5)
@@ -432,6 +458,7 @@ class CookieLogin():
         try:
             modal__wrap = self.drive.find_element(By.CLASS_NAME, 'modal__wrap')
             modal__close = modal__wrap.find_element(By.CLASS_NAME, 'modal__close')
+            self.output['step'].append('openSelfHome find [modal__wrap div]')
             modal__close.click()
         except Exception as e:
             # print('没有提示跳转APP')
@@ -439,32 +466,42 @@ class CookieLogin():
 
     #获取最近一笔订单号
     def getLastOrderId(self):
+        self.output['step'].append('getLastOrderId in')
         self.openSelfHome()
 
         time.sleep(3)
 
         # my_order_entrance = self.drive.find_element(By.XPATH, '//*[contains(@class,"my_order_entrance")]')
         my_order_entrance = self.drive.find_element(By.XPATH,'//*[contains(text(), "全部订单")]/parent::div/parent::div')
+        self.output['step'].append('getLastOrderId find [all order div]')
         my_order_entrance.click()
 
         time.sleep(3)
 
         try:
             indexmoduleorderbox = self.drive.find_element(By.XPATH, '//*[contains(@class,"index-module__order_box___")]')
+            self.output['step'].append('getLastOrderId find [index-module__order_box___]')
             indexmoduleorderbox.click()
 
             time.sleep(3)
             
-            orderp = self.drive.find_element(By.XPATH,'//*[contains(text(), "订单编号")]/parent::p')
+            # index-module__regular
+            # orderp = self.drive.find_element(By.XPATH,'//*[contains(text(), "订单编号")]/parent::p')
+            self.output['step'].append('getLastOrderId in order detail')
+            index_module__regular = self.drive.find_element(By.XPATH, '//*[contains(@class,"index-module__regular")]')
+            # print(index_module__regular.get_attribute('textContent'))
+            # print(index_module__regular.text)
+            # 获取字符串中的数字
+            orderIds = re.findall(r'\d+', index_module__regular.text)
+            self.output['step'].append('getLastOrderId find [last order id] is' + str(orderIds))
 
-            orderId = re.findall(r'\d+', orderp.text)
+            # 执行了re.findall的时候才是数组
+            last_jdorderId = orderIds[0]
 
-            last_jdorderId = orderId[0]
-
-            if hasattr(self, 'jdorderId') and self.in_jdorderId != '':
+            if hasattr(self, 'in_jdorderId') and self.in_jdorderId != '':
                 if self.in_jdorderId != last_jdorderId:
                     self.output['status'] = -102
-                    self.addLog('订单号不匹配')
+                    self.addLog('in_jdorderId != last_jdorderId')
                     self.logcheckOrderPayAndRaise()
             else:
                 self.jdorderId = last_jdorderId
@@ -472,6 +509,8 @@ class CookieLogin():
 
         except Exception as e:
             # print('没有订单')
+            self.output['status'] = -101
+            self.addLog('没有最近一笔订单')
             raise e
 
     #用最近一笔订单生成微信链接
@@ -479,50 +518,83 @@ class CookieLogin():
         self.output['step'].append('useLastOrderGetUrl in')
         try:
             self.getLastOrderId()
+
+            try:
+                paybtn = self.drive.find_element(By.XPATH,'//*[contains(text(), "去支付")]/parent::button')
+                self.output['step'].append('useLastOrderGetUrl find [go to pay button]')
+                paybtn.click()
+
+                time.sleep(3)
+
+                self.shouyintai()
+
+            except Exception as e:
+                # print('没有可支付的订单')
+                #去下单
+                login.openGoods2buy()
+
         except Exception as e:
             #没有最近一笔订单
             #或者订单号不匹配
             #去下单
-            login.openGoods()
+            login.openGoods2buy()
 
-        try:
-            paybtn = self.drive.find_element(By.XPATH,'//*[contains(text(), "去支付")]/parent::button')
-            paybtn.click()
-
-            time.sleep(3)
-
-            self.shouyintai()
-
-        except Exception as e:
-            # print('没有可支付的订单')
-            #去下单
-            login.openGoods()
+        
 
     #查询最近一笔订单是否付款
     def checkLastOrderIsPay(self):
+        self.output['step'].append('checkLastOrderIsPay in')
+
+        self.getLastOrderId()
+
+        # 查询有无订单状态字段
+        # 已取消 有次字段
         try:
-            self.getLastOrderId()
+            index_module__state_txt = self.drive.find_element(By.XPATH, '//*[contains(@class,"index-module__state_txt")]')
+            # 状态中的中文
+            state_str = self.extract_chinese(index_module__state_txt.text)[0]
+            self.output['step'].append('checkLastOrderIsPay find index-module__state_txt' + state_str)
+            if (state_str == '已取消'):
+                self.output['status'] = -103
+                # print('已取消')
+                self.output['step'].append('checkLastOrderIsPay find status ' + str(self.output['status']))
+                self.logcheckOrderPayAndRaise('success')
+            elif (state_str == '完成'):
+                self.output['status'] = 101
+                # print('已完成')
+                self.output['step'].append('checkLastOrderIsPay find status ' + str(self.output['status']))
+                self.logcheckOrderPayAndRaise('success')
+            elif (state_str == '等待收货'):
+                self.output['status'] = 100
+                # print('已付款，待收货')
+                self.output['step'].append('checkLastOrderIsPay find status ' + str(self.output['status']))
+                self.logcheckOrderPayAndRaise('success')
         except Exception as e:
-            #没有最近一笔订单
-            #去下单
-            self.output['status'] = -101
-            self.addLog('没有最近一笔订单')
-            self.logcheckOrderPayAndRaise()
+            # 如果没有报错，直接返回吧
+            # print(str(e))
+            # print(str(e) == 'success')
+            if (str(e) == 'success'):
+                raise
+            self.output['step'].append('checkLastOrderIsPay not find index_module__state_txt')
 
         try:
-            shouhuo_div = self.drive.find_element(By.XPATH,'//*[contains(text(), "确认收货")]/parent::div')
+            self.drive.find_element(By.XPATH,'//*[contains(text(), "确认收货")]/parent::div')
+            self.output['step'].append('checkLastOrderIsPay find [confirm receive]')
             self.output['status'] = 100
-            # print('已付款')
+            # print('已付款，待收货')
             self.logcheckOrderPayAndRaise()
 
         except Exception as e:
             # print('查看是否待付款')
+            self.output['step'].append('checkLastOrderIsPay not find confirm receive')
             try:
                 paybtn = self.drive.find_element(By.XPATH,'//*[contains(text(), "去支付")]/parent::button')
+                self.output['step'].append('checkLastOrderIsPay find [go to pay]')
                 self.output['status'] = -102
                 self.addLog('待付款')
             except Exception as e:
-                self.logcheckOrderPayAndRaise()
+                # print('查看是否已取消')
+                self.output['step'].append('checkLastOrderIsPay not find go to pay')
 
             self.logcheckOrderPayAndRaise()
 
@@ -533,6 +605,12 @@ class CookieLogin():
         if match:
             return match.group(1)
 
+    # 获取字符串中的中文，返回数组
+    def extract_chinese(self, text):
+        pattern = re.compile(r'[\u4e00-\u9fa5]+')
+        chinese_chars = re.findall(pattern, text)
+        return chinese_chars
+    
     # 日志处理
     def addLog(self, msg):
         if self.test:
@@ -562,7 +640,10 @@ if __name__ == '__main__':
             # login.loadcookie(arg1)
             login.checkToken(login.ck)
             # login.getToken(login.ck)
-            login.useLastOrderGetUrl()
+            if login.in_jdorderId != '':
+                login.useLastOrderGetUrl()
+            else:
+                login.openGoods2buy()
             # login.getLastOrderId()
             # adress.adddress()
             # saveorder.addOrderWxurl('123', 'sIDDK')
@@ -571,7 +652,7 @@ if __name__ == '__main__':
         finally:
             login.close()
             print(json.dumps(login.output))
-    elif sys.argv[1] == 'checkOrder':
+    elif sys.argv[1] == 'checkorder':
         try:
             login.init(sys.argv)
             # login.getcookie()

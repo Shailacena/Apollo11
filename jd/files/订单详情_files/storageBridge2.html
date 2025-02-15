@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<!-- saved from url=(0285)https://wqs.jd.com/portal/wx/storageBridge2.shtml?1209&_fromiframe=1&_refer=https%3A%2F%2Ftrade.m.jd.com%2Forder%2Forderlist_jdm.shtml%3Fsceneval%3D2%26jxsid%3D17395906899100491239%26appCode%3Dms0ca95114%26orderType%3Dall%26ptag%3D7155.1.11%26source%3Dm_inner_myJd.orderFloor_orderlist -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>代理</title></head><body><script type="text/javascript">
+(function() {
+    function handleRequest(event) {
+        try {
+            if(!event.origin || !event.origin.match(/\.jd\.(com|hk)$/)){
+                return;
+            }
+            var data = JSON.parse(event.data);
+            var storage = data.ss!="1"?window.localStorage:window.sessionStorage;
+                if (data.op === 'M') { //getAll Message
+                var arrJs = [];
+                for (var key in localStorage) {
+                    if (/^_m_/.test(key)) {
+                        arrJs.push({
+                            key: key,
+                            obj: localStorage.getItem(key)
+                        });
+                    }
+                }
+
+                event.source.postMessage(JSON.stringify({
+                    id: data.id,
+                    key: data.key,
+                    value: arrJs,
+                    timer:data.timer
+                }), event.origin);
+            } else if (data.op === 'W') { //写操作  
+                storage.setItem(data.key, JSON.stringify(data.value));
+                event.source.postMessage(event.data, event.origin);
+            } else if (data.op === 'D') { //删除  
+                storage.removeItem(data.key);
+                event.source.postMessage(event.data, event.origin);
+            } else if (data.op === 'X') { //清空  
+                storage.clear();
+                event.source.postMessage(event.data, event.origin);
+            } else { //默认：读操作  
+                var value = JSON.parse(storage.getItem(data.key));
+                event.source.postMessage(JSON.stringify({
+                    id: data.id,
+                    key: data.key,
+                    value: value,
+                    timer:data.timer
+                }), event.origin);
+            }
+        } catch (e) {
+            // event.source.postMessage(event.data, event.origin);
+        }
+    }
+
+   
+    window.addEventListener("message", handleRequest, false);
+   
+})();
+</script></body></html>

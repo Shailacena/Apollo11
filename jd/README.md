@@ -71,3 +71,10 @@ Chrome浏览器自动升级导致driver失效
 }
 将此文件放置在 /etc/opt/chrome/policies/managed/ 目录下。
 确保 Chrome 用户有权限读取此文件。
+
+** 以下注意修改 undetected_chromedriver
+/Users/admin/Library/Python/3.9/lib/python/site-packages/undetected_chromedriver/__init__.py
+注视掉407行logger
+
+/Users/admin/Library/Python/3.9/lib/python/site-packages/undetected_chromedriver/patcher.py
+352行patch_exe，去掉检查新版本

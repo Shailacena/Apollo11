@@ -22,8 +22,19 @@ import (
 func main() {
 	// getpayurl 获取支付链接
 	// checkorder 查询支付状态
-	action := "getpayurl"
-	// ck := "pin=jd_XgYOBMKfcELO;wskey=AAJnhLbSAEDVyHIPhPFwP1f0EIVeqLhjiqdX9f85Tu3Byn0dmsSC4e0xep-x3_S8UK8MmJZVOgdGUwPIogfngofFwArPyYEn;"
+
+	//======================
+	// action := "getpayurl"
+	// ck := "pin=jd_44754e08b8767;wskey=AAJnqh-tADAzXrPjDuVgolEya6lscGQnnbW2IxYvV_Lzwj1_9aoHgxL6zd1GEWMuHVtky94yqzs;"
+	// sku := "10085738847942"
+	// adress := "李先生 13756376578 江西省宜春地区宜春市 建设路11号19A"
+	// // ip := "http://211.95.152.42:11641"
+	// ip := ""
+	// orderid := "10000001"
+	// jdorderid := ""
+
+	//===========================
+	action := "checkorder"
 	ck := "pin=jd_44754e08b8767;wskey=AAJnqh-tADAzXrPjDuVgolEya6lscGQnnbW2IxYvV_Lzwj1_9aoHgxL6zd1GEWMuHVtky94yqzs;"
 	sku := "10085738847942"
 	// adress := "李任秀 13672281779 江西省宜春地区宜春市 中山路1号19"
@@ -31,8 +42,8 @@ func main() {
 	// ip := "http://211.95.152.42:11641"
 	ip := ""
 	orderid := "10000001"
-	jdorderid := ""
-	// cmd := exec.Command("python", "../jd/main.py", ck, sku)
+	jdorderid := "309702091453"
+
 	cmd := exec.Command("python3", "../jd/main.py", action, ck, sku, orderid, jdorderid, adress, ip)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
