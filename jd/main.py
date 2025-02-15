@@ -59,6 +59,7 @@ class CookieLogin():
             # -101 没有最近一笔订单
             # -102 订单号不匹配
             # -103 订单已取消
+            # -104 SKU不匹配
         }
 
     def init(self, params):
@@ -499,6 +500,7 @@ class CookieLogin():
             last_jdorderId = orderIds[0]
 
             if hasattr(self, 'in_jdorderId') and self.in_jdorderId != '':
+                # 订单号不匹配
                 if self.in_jdorderId != last_jdorderId:
                     self.output['status'] = -102
                     self.addLog('in_jdorderId != last_jdorderId')
@@ -538,7 +540,6 @@ class CookieLogin():
             #或者订单号不匹配
             #去下单
             login.openGoods2buy()
-
         
 
     #查询最近一笔订单是否付款

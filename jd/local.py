@@ -24,7 +24,9 @@ class CookieLogin():
         # opactions = webdriver.ChromeOptions()
         # opactions.add_argument(f"user-agent={headers['User-Agent']}")
         # opactions.add_argument('sec-ch-ua-platform="Android"')
-        self.drive = Chrome()
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        path = os.path.join(current_dir, 'chromedriver-mac-x64-133', 'chromedriver')
+        self.drive = Chrome(driver_executable_path=path)
 
     def checkWechatPay(self):
         # 获取本地HTML文件的路径
@@ -139,10 +141,36 @@ class CookieLogin():
         
         time.sleep(5000)
 
+    def checkSku(self):
+        # 获取本地HTML文件的路径
+        # local_html_path = 'file:///' + os.path.abspath('F:/henry/z_local/Cooking/Apollo11/jd/files/京东收银台.html')
+        local_html_path = 'file:///Users/admin/Documents/Apollo11/jd/files/订单详情.html'
+        print(local_html_path)
+        # 使用Selenium打开本地HTML文件
+        self.drive.get(local_html_path)
+
+        #找到含有SKU
+        try:
+            selector = '[data-eparam*="skuid"]'
+            # pelement = self.drive.find_element(By.CSS_SELECTOR,'//*[contains(text(), "skuid")]')
+            pelement = self.drive.find_element(By.CSS_SELECTOR, selector)
+        except Exception as e:
+            print('没找到', e)
+            self.drive.quit()
+            raise SystemExit("退出脚本。")
+
+        # 打印元素的innerHTML
+        if isinstance(pelement, WebElement):
+            print(pelement.get_attribute('data-eparam'))
+            print(pelement.text)
+        
+        time.sleep(5)
+
 if __name__ == '__main__':
     login = CookieLogin()
-    with open('data/adress.txt',mode='r',encoding='utf-8') as f:
-        adress = f.read()
-    login.checkAdrress()
-    print(adress)
+    # with open('data/adress.txt',mode='r',encoding='utf-8') as f:
+    #     adress = f.read()
+    login.checkSku()
+    # print(adress)
     # login.addAdrress(adress)
+    login.drive.quit()
