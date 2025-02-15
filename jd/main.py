@@ -558,14 +558,14 @@ class CookieLogin():
                 self.addLog(e)
                 # print('没有可支付的订单')
                 #去下单
-                # login.openGoods2buy()
+                login.openGoods2buy()
 
         except Exception as e:
             #没有最近一笔订单
             #或者订单号不匹配
             #去下单
             self.addLog(e)
-            # login.openGoods2buy()
+            login.openGoods2buy()
         
 
     #查询最近一笔订单是否付款
