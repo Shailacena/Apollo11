@@ -13,6 +13,7 @@ import { IRoute, routes } from './admin/routes'
 import zhCN from 'antd/lib/locale/zh_CN';
 import { AxiosProvider } from './api/AxiosProvider'
 import { ConfigProvider } from 'antd'
+import PaymentPage from './open/PaymentPage'
 
 // import MainLayout from './MainLayout'
 
@@ -29,6 +30,7 @@ function App() {
             <Route path="/admin/login" element={<Login />} />
             <Route path="/partner/login" element={<LoginPartner />} />
             <Route path="/merchant/login" element={<LoginMerchant />} />
+            <Route path="/open/PaymentPage" element={<PaymentPage />} />
             <Route
               path="/admin"
               element={
