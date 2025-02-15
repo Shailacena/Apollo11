@@ -60,6 +60,7 @@ class CookieLogin():
             # -102 订单号不匹配
             # -103 订单已取消
             # -104 SKU不匹配
+            # -105 待支付
         }
 
     def init(self, params):
@@ -71,6 +72,7 @@ class CookieLogin():
             self.in_jdorderId = params[5]
             self.adress = params[6]
             self.proxyip = params[7]
+            self.jdorderId = ''
             self.output['sku'] = self.sku
             self.output['orderid'] = self.our_orderid
             self.output['in_jdorderId'] = self.in_jdorderId
@@ -91,6 +93,7 @@ class CookieLogin():
         # opactions.add_argument(f"user-agent={headers['User-Agent']}")
         # opactions.add_argument('sec-ch-ua-platform="Android"')
         options = ChromeOptions()
+
         # options.add_argument('--headless')
         if hasattr(self, "proxyip") and self.proxyip != "":
             options.add_argument("--proxy-server=%s" % self.proxyip)
@@ -108,11 +111,11 @@ class CookieLogin():
             self.drive = uc.Chrome(enable_cdp_events=True, driver_executable_path=os.path.join(current_dir, 'chromedriver-win64', 'chromedriver.exe'))
         # print('创建Chrome')
         # self.drive = Chrome(enable_cdp_events=True)
-        self.drive.set_window_size(680, 980)
+        self.drive.set_window_size(320, 880)
         self.url = 'https://plogin.m.jd.com/login/login'
         self.drive.add_cdp_listener('Network.requestWillBeSent', self.inter_request)
 
-        if hasattr(self, "proxyip"):
+        if hasattr(self, "proxyip") and self.proxyip != '':
             if checkProxy.check_proxy(self.proxyip) == False:
                 self.output['status'] = -7
                 self.addLog('ip time out')
@@ -344,41 +347,60 @@ class CookieLogin():
 
         # ===================只有微信支付方式==================================
 
+        # 删除京东银行卡支付
+        try:
+            jdPayWrap = self.drive.find_element(By.CLASS_NAME, 'jdPayWrap')
+            self.drive.execute_script("arguments[0].remove();", jdPayWrap)
+        except Exception as e:
+            self.output['step'].append('shouyintai delete jdPayWrap success')
+
         #找到含有微信的父父节点
-        pelement = self.drive.find_element(By.XPATH,'//*[contains(text(), "微信支付")]/parent::div/parent::div/parent::div/parent::div')
+        pelement = self.drive.find_element(By.XPATH,'//*[contains(text(), "微信支付")]/parent::div/parent::div/parent::div/parent::div/parent::div')
 
         # 打印元素的innerHTML
-        if isinstance(pelement, WebElement):
-            print(pelement.get_attribute('innerHTML'))
+        # if isinstance(pelement, WebElement):
+        #     print(pelement.get_attribute('innerHTML'))
 
         try:
             wechatcheckbox = pelement.find_element(By.CLASS_NAME, 'checkboxWrap')
         except Exception as e:
-            print(e)
+            # print(e)
+            self.output['step'].append('shouyintai not find wechat checkboxWrap')
             # time.sleep(1000)
 
-        time.sleep(2)
+        time.sleep(1)
 
-        print('====================>找到微信支付checkbox')
-        if isinstance(wechatcheckbox, WebElement):
-            print(wechatcheckbox.get_attribute('innerHTML'))
+        # print('====================>找到微信支付checkbox')
+        # if isinstance(wechatcheckbox, WebElement):
+        #     print(wechatcheckbox.get_attribute('innerHTML'))
+        self.output['step'].append('shouyintai find [wechat checkboxWrap]')
 
-        # wechatcheckbox.click()
-        # 使用模拟鼠标点击
-        ActionChains(self.drive).click(wechatcheckbox).perform()
+        try:
+            wechatcheckbox.click()
+        except Exception as e:
+            # 使用模拟鼠标点击
+            time.sleep(100)
+            ActionChains(self.drive).move_to_element(wechatcheckbox).click(wechatcheckbox).perform()
+
         self.output['step'].append('shouyintai choose wechat pay success')
-        print('====================>勾选checkbox后')
+        # print('====================>勾选checkbox后')
         # self.drive.execute_script("arguments[0].checked = true;", wechatcheckbox)
 
         time.sleep(1)
 
-        paybottom = self.drive.find_element(By.CLASS_NAME, 'PayButtom')
-        paybtn = paybottom.find_element(By.CLASS_NAME, 'payBtn')
+        try:
+            paybottom = self.drive.find_element(By.CLASS_NAME, 'PayButtom')
+            paybtn = paybottom.find_element(By.CLASS_NAME, 'payBtn')
+        except Exception as e:
+            paybtn = self.drive.find_element(By.XPATH,'//*[contains(text(), "确认付款")]/parent::div')
+
         self.output['step'].append('shouyintai find [pay button]')
         # print('====================>找到支付按钮')
 
+        time.sleep(1)
         paybtn.click()
-            # print('====================>点击支付按钮后')
+
+        # print('====================>点击支付按钮后')
 
         try:
         # 等待页面加载完成
@@ -484,30 +506,32 @@ class CookieLogin():
             self.output['step'].append('getLastOrderId find [index-module__order_box___]')
             indexmoduleorderbox.click()
 
+            # self.getOrderDeatilParam()
             time.sleep(3)
             
-            # index-module__regular
-            # orderp = self.drive.find_element(By.XPATH,'//*[contains(text(), "订单编号")]/parent::p')
             self.output['step'].append('getLastOrderId in order detail')
-            index_module__regular = self.drive.find_element(By.XPATH, '//*[contains(@class,"index-module__regular")]')
-            # print(index_module__regular.get_attribute('textContent'))
-            # print(index_module__regular.text)
+
+            try:
+                orderp = self.drive.find_element(By.XPATH, '//*[contains(@class,"index-module__regular")]')
+            except Exception as e:
+                orderp = self.drive.find_element(By.XPATH,'//*[contains(text(), "订单编号")]/parent::p')
+
+            # print(orderp.get_attribute('textContent'))
+            # print(orderp.text)
+
             # 获取字符串中的数字
-            orderIds = re.findall(r'\d+', index_module__regular.text)
+            orderIds = re.findall(r'\d+', orderp.text)
             self.output['step'].append('getLastOrderId find [last order id] is' + str(orderIds))
 
             # 执行了re.findall的时候才是数组
             last_jdorderId = orderIds[0]
-
+            self.jdorderId = last_jdorderId
             if hasattr(self, 'in_jdorderId') and self.in_jdorderId != '':
                 # 订单号不匹配
                 if self.in_jdorderId != last_jdorderId:
                     self.output['status'] = -102
                     self.addLog('in_jdorderId != last_jdorderId')
                     self.logcheckOrderPayAndRaise()
-            else:
-                self.jdorderId = last_jdorderId
-                # print(self.jdorderId)
 
         except Exception as e:
             # print('没有订单')
@@ -531,15 +555,17 @@ class CookieLogin():
                 self.shouyintai()
 
             except Exception as e:
+                self.addLog(e)
                 # print('没有可支付的订单')
                 #去下单
-                login.openGoods2buy()
+                # login.openGoods2buy()
 
         except Exception as e:
             #没有最近一笔订单
             #或者订单号不匹配
             #去下单
-            login.openGoods2buy()
+            self.addLog(e)
+            # login.openGoods2buy()
         
 
     #查询最近一笔订单是否付款
@@ -583,21 +609,63 @@ class CookieLogin():
             self.output['step'].append('checkLastOrderIsPay find [confirm receive]')
             self.output['status'] = 100
             # print('已付款，待收货')
-            self.logcheckOrderPayAndRaise()
-
+            self.logcheckOrderPayAndRaise('success')
         except Exception as e:
-            # print('查看是否待付款')
+            if (str(e) == 'success'):
+                raise
+            # print('非已付款、待收货状态')
             self.output['step'].append('checkLastOrderIsPay not find confirm receive')
-            try:
-                paybtn = self.drive.find_element(By.XPATH,'//*[contains(text(), "去支付")]/parent::button')
-                self.output['step'].append('checkLastOrderIsPay find [go to pay]')
-                self.output['status'] = -102
-                self.addLog('待付款')
-            except Exception as e:
-                # print('查看是否已取消')
-                self.output['step'].append('checkLastOrderIsPay not find go to pay')
 
-            self.logcheckOrderPayAndRaise()
+        try:
+            self.drive.find_element(By.XPATH,'//*[contains(text(), "去支付")]/parent::button')
+            self.output['step'].append('checkLastOrderIsPay find [go to pay]')
+            self.output['status'] = -105
+            self.logcheckOrderPayAndRaise('success')
+        except Exception as e:
+            if (str(e) == 'success'):
+                raise
+            # print('非待支付状态')
+            self.output['step'].append('checkLastOrderIsPay not find go to pay')
+
+        try:
+            self.drive.find_element(By.XPATH,'//*[contains(text(), "已完成")]/parent::div')
+            self.output['step'].append('checkLastOrderIsPay find [finish]')
+            self.output['status'] = 101
+            self.logcheckOrderPayAndRaise('success')
+        except Exception as e:
+            if (str(e) == 'success'):
+                raise
+            # print('非已完成状态')
+            self.output['step'].append('checkLastOrderIsPay not find finish')
+
+        try:
+            self.drive.find_element(By.XPATH,'//*[contains(text(), "已取消")]/parent::div')
+            self.output['step'].append('checkLastOrderIsPay find [cancel]')
+            self.output['status'] = -103
+            self.logcheckOrderPayAndRaise('success')
+        except Exception as e:
+            if (str(e) == 'success'):
+                raise
+            # print('非已完成状态')
+            self.output['step'].append('checkLastOrderIsPay not find cancel')
+        
+        self.logcheckOrderPayAndRaise()
+
+    def getOrderDeatilParam(self):
+        try:
+            # 待支付页面没有这个eparam
+            selector = '[data-eparam*="skuid"]'
+            pelement = self.drive.find_element(By.CSS_SELECTOR, selector)
+        except Exception as e:
+            print('没找到', e)
+            time.sleep(1000)
+            self.drive.quit()
+            raise SystemExit("退出脚本。")
+
+        # 打印元素的innerHTML
+        if isinstance(pelement, WebElement):
+            print(pelement.get_attribute('data-eparam'))
+            print(pelement.text)
 
     # 正则匹配，获取JD账号
     def getPin(self, ck):
@@ -617,7 +685,7 @@ class CookieLogin():
         if self.test:
             print(msg)
         else:
-            traceback.print_exc()
+            # traceback.print_exc()
             self.output['err'].append(str(msg))
 
     # 关闭浏览器

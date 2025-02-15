@@ -27,7 +27,7 @@ class CookieLogin():
         current_dir = os.path.dirname(os.path.abspath(__file__))
         path = os.path.join(current_dir, 'chromedriver-mac-x64-133', 'chromedriver')
         self.drive = Chrome(driver_executable_path=path)
-
+        self.drive.set_window_size(320, 640)
     def checkWechatPay(self):
         # 获取本地HTML文件的路径
         # local_html_path = 'file:///' + os.path.abspath('F:/henry/z_local/Cooking/Apollo11/jd/files/京东收银台.html')
@@ -38,7 +38,7 @@ class CookieLogin():
 
         #找到含有微信的节点
         try:
-            pelement = self.drive.find_element(By.XPATH,'//*[contains(text(), "微信支付")]/parent::div/parent::div')
+            pelement = self.drive.find_element(By.XPATH,'//*[contains(text(), "微信支付")]/parent::div/parent::div/parent::div/parent::div')
         except Exception as e:
             print('没找到', e)
             self.drive.quit()
@@ -49,28 +49,37 @@ class CookieLogin():
             print(pelement.get_attribute('innerHTML'))
 
         wechatcheckbox = pelement.find_element(By.CLASS_NAME, 'checkboxWrap')
-        if isinstance(wechatcheckbox, WebElement):
-            print(wechatcheckbox.get_attribute('innerHTML'))
+        # if isinstance(wechatcheckbox, WebElement):
+        #     print(wechatcheckbox.get_attribute('innerHTML'))
 
-        time.sleep(2)
+        try:
+            jdPayWrap = self.drive.find_element(By.CLASS_NAME, 'jdPayWrap')
+            self.drive.execute_script("arguments[0].remove();", jdPayWrap)
+        except Exception as e:
+            print('no jdPayWrap')
+            
+        time.sleep(200)
         # wechatcheckbox.click()
         if isinstance(wechatcheckbox, WebElement):
             self.drive.execute_script("arguments[0].checked = true;", wechatcheckbox)
 
         time.sleep(2)
         paybtn = self.drive.find_element(By.CLASS_NAME, 'payBtn')
-        if isinstance(paybtn, WebElement):
-            paybtn.click()
+        # if isinstance(paybtn, WebElement):
+        #     paybtn.click()
+
+        paybottom = self.drive.find_element(By.CLASS_NAME, 'PayButtom')
+        paybtn = paybottom.find_element(By.CLASS_NAME, 'payBtn')
 
         # 等待页面加载完成
-        WebDriverWait(self.drive, 60).until(EC.url_changes(self.drive.current_url))
+        # WebDriverWait(self.drive, 60).until(EC.url_changes(self.drive.current_url))
         
         # 获取当前页面的URL
-        redirect_url = self.drive.current_url
+        # redirect_url = self.drive.current_url
         
-        print("重定向链接:", redirect_url)
+        # print("重定向链接:", redirect_url)
         
-        time.sleep(5000)
+        time.sleep(1)
 
     def checkAdrress(self):
         # 获取本地HTML文件的路径
@@ -144,11 +153,11 @@ class CookieLogin():
     def checkSku(self):
         # 获取本地HTML文件的路径
         # local_html_path = 'file:///' + os.path.abspath('F:/henry/z_local/Cooking/Apollo11/jd/files/京东收银台.html')
-        local_html_path = 'file:///Users/admin/Documents/Apollo11/jd/files/订单详情.html'
+        local_html_path = 'file:///Users/admin/Documents/Apollo11/jd/files/订单详情-待支付.html'
         print(local_html_path)
         # 使用Selenium打开本地HTML文件
         self.drive.get(local_html_path)
-
+        time.sleep(100)
         #找到含有SKU
         try:
             selector = '[data-eparam*="skuid"]'
@@ -170,7 +179,8 @@ if __name__ == '__main__':
     login = CookieLogin()
     # with open('data/adress.txt',mode='r',encoding='utf-8') as f:
     #     adress = f.read()
-    login.checkSku()
     # print(adress)
     # login.addAdrress(adress)
+    login.checkWechatPay()
+    # login.checkSku()
     login.drive.quit()

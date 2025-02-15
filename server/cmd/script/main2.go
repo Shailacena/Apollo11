@@ -34,15 +34,13 @@ func main() {
 	// jdorderid := ""
 
 	//===========================
-	action := "checkorder"
+	action := "getpayurl"
 	ck := "pin=jd_44754e08b8767;wskey=AAJnqh-tADAzXrPjDuVgolEya6lscGQnnbW2IxYvV_Lzwj1_9aoHgxL6zd1GEWMuHVtky94yqzs;"
 	sku := "10085738847942"
-	// adress := "李任秀 13672281779 江西省宜春地区宜春市 中山路1号19"
 	adress := "李先生 13756376578 江西省宜春地区宜春市 建设路11号19A"
-	// ip := "http://211.95.152.42:11641"
 	ip := ""
 	orderid := "10000001"
-	jdorderid := "309702091453"
+	jdorderid := "310278586245"
 
 	cmd := exec.Command("python3", "../jd/main.py", action, ck, sku, orderid, jdorderid, adress, ip)
 	output, err := cmd.CombinedOutput()
