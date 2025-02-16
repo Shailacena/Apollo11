@@ -42,6 +42,7 @@ class CookieLogin():
         self.isInit = True
         self.output = {
             'err': [],#错误信息列表
+            'log': [], #日志
             'step':[],#记录步骤
             'jdaccount':'',#ck中提取的jd帐号jd_XgYOBMKfcELO
             'in_jdorderId':'',#传入的京东订单号
@@ -80,8 +81,8 @@ class CookieLogin():
             self.output['orderid'] = self.our_orderid
             self.output['in_jdorderId'] = self.in_jdorderId
         except Exception as e:
-            self.addLog('init:')
-            self.addLog(e)
+            self.addErr('init:')
+            self.addErr(e)
 
         # 设置超时时间，例如3秒
         timeout = 60
@@ -127,7 +128,7 @@ class CookieLogin():
         if hasattr(self, "proxyip") and self.proxyip != '':
             if checkProxy.check_proxy(self.proxyip) == False:
                 self.output['status'] = -7
-                self.addLog('ip time out')
+                self.addErr('ip time out')
                 raise
 
     def inter_request(self, request):
@@ -157,8 +158,8 @@ class CookieLogin():
                             # saveorder.addOrderWxurl(self.jdaccount, self.jdorderId, self.wxurl)
                             self.loggetOrderPayUrlAndRaise()
         except Exception as e:
-            self.addLog('inter_request:')
-            self.addLog(e)
+            self.addErr('inter_request:')
+            self.addErr(e)
             raise
     
     def loggetOrderPayUrlAndRaise(self):
@@ -250,7 +251,7 @@ class CookieLogin():
         try:
             WebDriverWait(self.drive, 100).until(EC.url_to_be(url))
         except TimeoutExpired:
-            self.addLog('扫码超时')
+            self.addErr('扫码超时')
 
         #登录之后停2秒
         time.sleep(2)
@@ -284,8 +285,8 @@ class CookieLogin():
             with open(tokenpath, mode='r', encoding='utf-8') as f:
                 cookie = f.read()
         except Exception as e:
-            self.addLog('loadcookie:')
-            self.addLog(e)
+            self.addErr('loadcookie:')
+            self.addErr(e)
             raise
         #读取到的是字符串类型，loads之后就变成了python中的字典类型
         cookie = json.loads(cookie)
@@ -316,7 +317,7 @@ class CookieLogin():
         self.output['step'].append('openGoods2buy in')
 
         # 立即购买
-        buyimielement = WebDriverWait(self.drive, 100).until(
+        buyimielement = self.wait.until(
             EC.element_to_be_clickable((By.ID, "rightBtn"))
         )
         # print('====================>找到立即购买按钮')
@@ -331,7 +332,7 @@ class CookieLogin():
         if self.checkVidff():
             # 去验证
             # verify.verify(self)
-            self.addLog('需要验证')
+            self.addErr('需要验证')
             raise
 
         # 是否未填地址
@@ -435,7 +436,7 @@ class CookieLogin():
             time.sleep(10)
             # print(self.drive.page_source)
         except TimeoutExpired:
-            self.addLog('收银台超时')
+            self.addErr('收银台超时')
 
     # 检查token是否有效
     def checkToken(self, ck, isauto = True):
@@ -551,13 +552,13 @@ class CookieLogin():
                 # 订单号不匹配
                 if self.in_jdorderId != last_jdorderId:
                     self.output['status'] = -102
-                    self.addLog('in_jdorderId != last_jdorderId')
+                    self.addErr('in_jdorderId != last_jdorderId')
                     self.logcheckOrderPayAndRaise()
 
         except Exception as e:
             # print('没有订单')
             self.output['status'] = -101
-            self.addLog('没有最近一笔订单')
+            self.addErr('没有最近一笔订单')
             raise e
 
     #用最近一笔订单生成微信链接
@@ -576,7 +577,7 @@ class CookieLogin():
                 self.shouyintai()
 
             except Exception as e:
-                self.addLog(e)
+                self.addErr(e)
                 # print('没有可支付的订单')
                 #去下单
                 login.openGoods2buy()
@@ -585,7 +586,7 @@ class CookieLogin():
             #没有最近一笔订单
             #或者订单号不匹配
             #去下单
-            self.addLog(e)
+            self.addErr(e)
             login.openGoods2buy()
         
 
@@ -701,12 +702,22 @@ class CookieLogin():
         return chinese_chars
     
     # 日志处理
+    def addErr(self, msg):
+        if self.test:
+            print(msg)
+        else:
+            # traceback.print_exc()
+            if (str(msg) != 'success'):
+                self.output['err'].append(str(msg))
+            else:
+                self.output['log'].append(str(msg))
+    
     def addLog(self, msg):
         if self.test:
             print(msg)
         else:
             # traceback.print_exc()
-            self.output['err'].append(str(msg))
+            self.output['log'].append(str(msg))
 
     # 关闭浏览器
     def close(self):
@@ -738,7 +749,7 @@ if __name__ == '__main__':
             # adress.adddress()
             # saveorder.addOrderWxurl('123', 'sIDDK')
         except Exception as e:
-            login.addLog(e)
+            login.addErr(e)
         finally:
             login.close()
             if (len(login.output['err'])) > 0:
@@ -751,7 +762,7 @@ if __name__ == '__main__':
             login.checkToken(login.ck, False)
             login.checkLastOrderIsPay()
         except Exception as e:
-            login.addLog(e)
+            login.addErr(e)
         finally:
             login.close()
             if (len(login.output['err'])) > 0:
@@ -764,7 +775,7 @@ if __name__ == '__main__':
             login.checkToken(login.ck, False)
             login.checkLastOrderIsPay()
         except Exception as e:
-            login.addLog(e)
+            login.addErr(e)
         finally:
             login.close()
             if (len(login.output['err'])) > 0:
