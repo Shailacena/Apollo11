@@ -4,8 +4,11 @@ from datetime import datetime, timedelta
 import logging
 import os
 import re
+import signal
 from subprocess import TimeoutExpired
 import sys
+
+import threading
 import traceback
 # import requests
 import requests
@@ -80,6 +83,11 @@ class CookieLogin():
             self.addLog('init:')
             self.addLog(e)
 
+        # 设置超时时间，例如3秒
+        timeout = 60
+        signal.signal(signal.SIGALRM, self.logTimeoutAndRaise)
+        signal.alarm(timeout)
+
         # headers = {
         #     'User-Agent': 'Mozilla/5.0 (Linux; Android 8.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Mobile Safari/537.36',
         #     'sec-ch-ua-platform' : '"Android"',
@@ -94,7 +102,7 @@ class CookieLogin():
         # opactions.add_argument('sec-ch-ua-platform="Android"')
         options = ChromeOptions()
 
-        # options.add_argument('--headless')
+        options.add_argument('--headless')
 
         if hasattr(self, "proxyip") and self.proxyip != "":
             options.add_argument("--proxy-server=%s" % self.proxyip)
@@ -168,6 +176,15 @@ class CookieLogin():
         self.output['orderId'] = self.our_orderid
         self.output['jdaccount'] = self.jdaccount
         raise ValueError(msg)
+    
+    def logTimeoutAndRaise(self, arg1, arg2):
+        if hasattr(self, 'jdorderId'):
+            self.output['jdorderId'] = self.jdorderId
+        if hasattr(self, 'our_orderid'):
+            self.output['orderId'] = self.our_orderid
+        if hasattr(self, 'jdaccount'):
+            self.output['jdaccount'] = self.jdaccount
+        raise ValueError('Time out')
 
     def inter_reponse(self, response):
         print('inter_reponse', response)
@@ -273,6 +290,7 @@ class CookieLogin():
         #读取到的是字符串类型，loads之后就变成了python中的字典类型
         cookie = json.loads(cookie)
         # print('读取cookie', cookie)
+        self.output['step'].append('loadcookie start jd home')
         self.drive.get('https://m.jd.com/')
         time.sleep(1)
         #先把所有的cookie全部删掉
@@ -284,7 +302,7 @@ class CookieLogin():
                 self.jdaccount = item['value']
             self.drive.add_cookie(item)
             #是一个列表内套字典的形式
-
+        self.output['step'].append('loadcookie before refresh')
         self.drive.refresh()
         self.output['step'].append('loadcookie success')
         time.sleep(2)
@@ -341,7 +359,7 @@ class CookieLogin():
         buysureelement.click()
         # print('====================>点击下单按钮后')
 
-        time.sleep(500)
+        # time.sleep(500)
 
         self.shouyintai()
 
@@ -383,7 +401,6 @@ class CookieLogin():
             wechatcheckbox.click()
         except Exception as e:
             # 使用模拟鼠标点击
-            time.sleep(100)
             ActionChains(self.drive).move_to_element(wechatcheckbox).click(wechatcheckbox).perform()
 
         self.output['step'].append('shouyintai choose wechat pay success')
@@ -662,7 +679,6 @@ class CookieLogin():
             pelement = self.drive.find_element(By.CSS_SELECTOR, selector)
         except Exception as e:
             print('没找到', e)
-            time.sleep(1000)
             self.drive.quit()
             raise SystemExit("退出脚本。")
 
@@ -705,6 +721,7 @@ if __name__ == '__main__':
     login.test = False
     #标记是否保存过wxurl链接到缓存订单中
     login.saveOrder = False
+
     if sys.argv[1] == 'getpayurl':
         # print(f"收到的参数: {sys.argv[1]} {sys.argv[2]}") 
         try:
@@ -724,6 +741,8 @@ if __name__ == '__main__':
             login.addLog(e)
         finally:
             login.close()
+            if (len(login.output['err'])) > 0:
+                print('发生错误:')
             print(json.dumps(login.output))
     elif sys.argv[1] == 'checkorder':
         try:
@@ -735,6 +754,8 @@ if __name__ == '__main__':
             login.addLog(e)
         finally:
             login.close()
+            if (len(login.output['err'])) > 0:
+                print('发生错误:')
             print(json.dumps(login.output))
     elif sys.argv[1] == 'getpayurl_my':
         try:
@@ -746,7 +767,7 @@ if __name__ == '__main__':
             login.addLog(e)
         finally:
             login.close()
-            if (len(login['output']['err'])) > 0:
+            if (len(login.output['err'])) > 0:
                 print('发生错误:')
             print(json.dumps(login.output))
 
