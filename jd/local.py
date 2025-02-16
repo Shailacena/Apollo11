@@ -57,7 +57,7 @@ class CookieLogin():
             self.drive.execute_script("arguments[0].remove();", jdPayWrap)
         except Exception as e:
             print('no jdPayWrap')
-            
+
         time.sleep(200)
         # wechatcheckbox.click()
         if isinstance(wechatcheckbox, WebElement):
@@ -175,12 +175,29 @@ class CookieLogin():
         
         time.sleep(5)
 
+    def takeOrder(self):
+        # 获取本地HTML文件的路径
+        # local_html_path = 'file:///' + os.path.abspath('F:/henry/z_local/Cooking/Apollo11/jd/files/京东收银台.html')
+        local_html_path = 'file:///Users/admin/Documents/Apollo11/jd/files/确认订单3.html'
+        print(local_html_path)
+        # 使用Selenium打开本地HTML文件
+        self.drive.get(local_html_path)
+        # time.sleep(100)
+        #找到含有SKU
+
+        # pelement = self.drive.find_element(By.XPATH,'//taro-button-core[contains(text(), "在线支付")]')
+        pelement = self.drive.find_element(By.XPATH, '//*[contains(@class,"ActionBar_submit")]')
+        # 打印元素的innerHTML
+        if isinstance(pelement, WebElement):
+            print(pelement.get_attribute('innerHTML'))
+
 if __name__ == '__main__':
     login = CookieLogin()
     # with open('data/adress.txt',mode='r',encoding='utf-8') as f:
     #     adress = f.read()
     # print(adress)
     # login.addAdrress(adress)
-    login.checkWechatPay()
+    # login.checkWechatPay()
+    login.takeOrder()
     # login.checkSku()
     login.drive.quit()

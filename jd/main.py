@@ -95,7 +95,7 @@ class CookieLogin():
         options = ChromeOptions()
 
         # options.add_argument('--headless')
-        
+
         if hasattr(self, "proxyip") and self.proxyip != "":
             options.add_argument("--proxy-server=%s" % self.proxyip)
         
@@ -115,7 +115,7 @@ class CookieLogin():
         self.drive.set_window_size(320, 880)
         self.url = 'https://plogin.m.jd.com/login/login'
         self.drive.add_cdp_listener('Network.requestWillBeSent', self.inter_request)
-
+        self.wait = WebDriverWait(self.drive, 5) 
         if hasattr(self, "proxyip") and self.proxyip != '':
             if checkProxy.check_proxy(self.proxyip) == False:
                 self.output['status'] = -7
@@ -327,10 +327,13 @@ class CookieLogin():
     def takeOrder(self):
         self.output['step'].append('takeOrder in')
         # 直接下单
-        # buysureelement = WebDriverWait(self.drive, 10).until(
-        #     self.drive.find_element(By.XPATH, '//*[contains(@class,"ActionBar_submit")]'))
 
-        buysureelement = self.drive.find_element(By.XPATH, '//*[contains(@class,"ActionBar_submit")]')
+        try:
+            locator = (By.XPATH, '//*[contains(@class,"ActionBar_submit")]')
+            buysureelement = self.wait.until(EC.visibility_of_element_located(locator))
+        except Exception as e:
+            buysureelement = self.drive.find_element(By.XPATH,'//taro-button-core[contains(text(), "在线支付")]')
+
         # print('====================>找到下单按钮')
         # print(buysureelement.text)
         self.output['step'].append('takeOrder find [ActionBar_submit]')
@@ -338,7 +341,7 @@ class CookieLogin():
         buysureelement.click()
         # print('====================>点击下单按钮后')
 
-        time.sleep(5)
+        time.sleep(500)
 
         self.shouyintai()
 
