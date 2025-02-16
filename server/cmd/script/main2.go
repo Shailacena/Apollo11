@@ -39,8 +39,8 @@ func main() {
 	sku := "10085738847942"
 	adress := "李先生 13756376578 江西省宜春地区宜春市 建设路11号19A"
 	ip := ""
-	orderid := "10000001"
-	jdorderid := "310278586245"
+	orderid := "df7643b5586d43b49bc3ce17487f687c"
+	jdorderid := ""
 
 	cmd := exec.Command("python3", "../jd/main.py", action, ck, sku, orderid, jdorderid, adress, ip)
 	output, err := cmd.CombinedOutput()

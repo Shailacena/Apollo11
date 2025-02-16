@@ -94,7 +94,8 @@ class CookieLogin():
         # opactions.add_argument('sec-ch-ua-platform="Android"')
         options = ChromeOptions()
 
-        options.add_argument('--headless')
+        # options.add_argument('--headless')
+        
         if hasattr(self, "proxyip") and self.proxyip != "":
             options.add_argument("--proxy-server=%s" % self.proxyip)
         
@@ -742,6 +743,8 @@ if __name__ == '__main__':
             login.addLog(e)
         finally:
             login.close()
+            if (len(login['output']['err'])) > 0:
+                print('发生错误:')
             print(json.dumps(login.output))
 
 
