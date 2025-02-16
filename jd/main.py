@@ -158,9 +158,9 @@ class CookieLogin():
                             # saveorder.addOrderWxurl(self.jdaccount, self.jdorderId, self.wxurl)
                             self.loggetOrderPayUrlAndRaise()
         except Exception as e:
-            self.addErr('inter_request:')
-            self.addErr(e)
-            raise
+            if (str(e) != 'No action exception to reraise'):
+                self.addErr('inter_request:' + str(e))
+                raise
     
     def loggetOrderPayUrlAndRaise(self):
         self.output['wxurl'] = self.wxurl
