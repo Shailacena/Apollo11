@@ -23,7 +23,7 @@ func (s *PartnerService) Register(c echo.Context, req *v1.PartnerRegisterReq) (*
 			Nickname: req.Name,
 			Remark:   req.Remark,
 		},
-		DailyLimit:    -1,
+		DailyLimit:    0,
 		CreditAmount:  0,
 		Priority:      10,
 		SuperiorAgent: req.SuperiorAgent,

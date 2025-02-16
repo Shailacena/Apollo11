@@ -7,10 +7,11 @@ import (
 )
 
 type ServerConfig struct {
-	Env         string      `mapstructure:"env"`
-	HttpConfig  HttpConfig  `mapstructure:"http"`
-	MysqlConfig MysqlConfig `mapstructure:"mysql"`
-	RedisConfig RedisConfig `mapstructure:"redis"`
+	Env               string      `mapstructure:"env"`
+	PaymentHttpConfig HttpConfig  `mapstructure:"payment_http"`
+	HttpConfig        HttpConfig  `mapstructure:"http"`
+	MysqlConfig       MysqlConfig `mapstructure:"mysql"`
+	RedisConfig       RedisConfig `mapstructure:"redis"`
 }
 
 type HttpConfig struct {
@@ -56,5 +57,9 @@ func getConfig(path string) *viper.Viper {
 		panic(err)
 	}
 
+	return conf
+}
+
+func Get() *ServerConfig {
 	return conf
 }
