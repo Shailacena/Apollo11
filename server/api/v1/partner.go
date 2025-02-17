@@ -136,7 +136,7 @@ type Order struct {
 	MerchantId      uint   `json:"merchantId"`
 	MerchantOrderId string `json:"merchantOrderId"`
 	OfficialOrderId string `json:"officialOrderId"`
-	Price           int    `json:"price"`
+	Price           int32  `json:"price"`
 	PayType         int    `json:"payType"`
 	PayAccount      string `json:"payAccount"`
 	PayStatus       uint   `json:"payStatus"`
