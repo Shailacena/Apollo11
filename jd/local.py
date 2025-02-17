@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 from subprocess import TimeoutExpired
 from selenium import webdriver
@@ -6,6 +7,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver import ActionChains
 import json
 
 from undetected_chromedriver import Chrome, ChromeOptions
@@ -191,6 +193,35 @@ class CookieLogin():
         if isinstance(pelement, WebElement):
             print(pelement.get_attribute('innerHTML'))
 
+    def checkeCardTip(self):
+        # 获取本地HTML文件的路径
+        # local_html_path = 'file:///' + os.path.abspath('F:/henry/z_local/Cooking/Apollo11/jd/files/京东收银台.html')
+        local_html_path = 'file:///Users/admin/Documents/Apollo11/jd/files/填写订单-点卡.html'
+        print(local_html_path)
+        # 使用Selenium打开本地HTML文件
+        self.drive.get(local_html_path)
+        # time.sleep(100)
+        #找到含有SKU
+        time.sleep(1)
+        nut_dialog__mask = self.drive.find_element(By.XPATH,'//*[contains(text(), "充值类商品")]/parent::div/parent::div/parent::div/parent::div')
+        nut_button = nut_dialog__mask.find_element(By.XPATH, '//button[contains(@class,"nut-button")]/parent::div')
+        print(1, nut_dialog__mask.get_attribute('offsetTop'))
+        print(11, nut_dialog__mask.find_element(By.CLASS_NAME, 'nut-dialog__outer').get_attribute('offsetTop'))
+        print(2, nut_button.get_attribute('innerHTML'))
+        print(nut_button.rect)
+        print(3, nut_button.location)
+        print(4, nut_dialog__mask.location)
+        
+        # nut_button.click()
+        self.drive.execute_script("arguments[0].click();", nut_button)
+
+        documentx = self.drive.execute_script('return document.documentElement.clientWidth')
+        documenty = self.drive.execute_script('return document.documentElement.clientHeight')
+        print('网页尺寸  width:', documentx, 'height:', documenty)
+
+        # ActionChains(self.drive).move_to_element(nut_button).perform()
+        time.sleep(100)
+        nut_button.click()
 if __name__ == '__main__':
     login = CookieLogin()
     # with open('data/adress.txt',mode='r',encoding='utf-8') as f:
@@ -198,6 +229,7 @@ if __name__ == '__main__':
     # print(adress)
     # login.addAdrress(adress)
     # login.checkWechatPay()
-    login.takeOrder()
+    login.checkeCardTip()
     # login.checkSku()
     login.drive.quit()
+    # print(datetime.now().strftime("%Y%m%d"))

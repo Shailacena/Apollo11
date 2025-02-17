@@ -4,10 +4,11 @@ import json
 import os
 
 current_dir = current_dir = os.path.dirname(os.path.abspath(__file__))
+todaystr = datetime.now().strftime("%Y%m%d")
 
 # 新增新生成的订单
 def addOrderWxurl(jdaccount, orderId, wxurl):
-    with open(os.path.join(current_dir, 'data', 'Jdorder', jdaccount+'.json'), mode='a+', encoding='utf-8') as f:
+    with open(os.path.join(current_dir, 'data', todaystr, 'Jdorder', jdaccount+'.json'), mode='a+', encoding='utf-8') as f:
         data = f.read()
     try:
         orders = json.loads(data)
@@ -31,12 +32,12 @@ def addOrderWxurl(jdaccount, orderId, wxurl):
             'state': 0 # 0为未支付，1为已支付
             })
     
-    with open(os.path.join(current_dir, 'data', 'Jdorder', jdaccount+'.json'), mode='w+', encoding='utf-8') as f:
+    with open(os.path.join(current_dir, 'data', todaystr, 'Jdorder', jdaccount+'.json'), mode='w+', encoding='utf-8') as f:
         f.write(json.dumps(orders))
 
 # 删除过期且未完成的订单
 def deleteOutexpOrder():
-    lpath = os.path.join(current_dir, 'data', 'Jdorder')
+    lpath = os.path.join(current_dir, 'data', todaystr, 'Jdorder')
     for file_name in os.listdir(lpath):
         file_path = os.path.join(lpath, file_name)
         if os.path.isfile(file_path):
@@ -53,7 +54,7 @@ def deleteOutexpOrder():
 
 # 删除订单
 def deleteOrder(jdaccount, orderId):
-    with open(os.path.join(current_dir, 'data', 'Jdorder', jdaccount+'.json'), mode='r', encoding='utf-8') as f:
+    with open(os.path.join(current_dir, 'data', todaystr, 'Jdorder', jdaccount+'.json'), mode='r', encoding='utf-8') as f:
         data = f.read()
     try:
         orders = json.loads(data)
@@ -64,12 +65,12 @@ def deleteOrder(jdaccount, orderId):
         if key['orderId'] == orderId:
             del orders[key]
     
-    with open(os.path.join(current_dir, 'data', 'Jdorder', jdaccount+'.json'), mode='w+', encoding='utf-8') as f:
+    with open(os.path.join(current_dir, 'data', todaystr, 'Jdorder', jdaccount+'.json'), mode='w+', encoding='utf-8') as f:
         f.write(json.dumps(orders))
 
 # 完成订单，将完成的订单状态修改
 def finishOrder(jdaccount, orderId):
-    with open(os.path.join(current_dir, 'data', 'Jdorder', jdaccount+'.json'), mode='r', encoding='utf-8') as f:
+    with open(os.path.join(current_dir, 'data', todaystr, 'Jdorder', jdaccount+'.json'), mode='r', encoding='utf-8') as f:
         data = f.read()
     try:
         orders = json.loads(data)
@@ -82,5 +83,5 @@ def finishOrder(jdaccount, orderId):
             key['state'] = 1
             finish_list.insert(0, orders[key])
     
-    with open(os.path.join(current_dir, 'data', 'Jdorder', jdaccount+'.json'), mode='w+', encoding='utf-8') as f:
+    with open(os.path.join(current_dir, 'data', todaystr, 'Jdorder', jdaccount+'.json'), mode='w+', encoding='utf-8') as f:
         f.write(json.dumps(orders))

@@ -1,0 +1,52 @@
+[
+    {
+        "name": "guid",
+        "value": "5929c29f59e26672ea32b3ca51e4f680586a752b3941168bc00bd0063a20a9b6",
+        "domain": ".jd.com",
+        "expiry": 1739377098,
+        "httpOnly": false,
+        "path": "/",
+        "sameSite": "Lax",
+        "secure": false
+    },
+    {
+        "name": "sid",
+        "value": "4b731d5fcdd40a44f287d9eb79b91ccw",
+        "domain": ".jd.com",
+        "expiry": 1739377098,
+        "httpOnly": false,
+        "path": "/",
+        "sameSite": "Lax",
+        "secure": false
+    },
+    {
+        "name": "pwdt_id",
+        "value": "jd_XgYOBMKfcELO",
+        "domain": ".jd.com",
+        "expiry": 1739377098,
+        "httpOnly": false,
+        "path": "/",
+        "sameSite": "Lax",
+        "secure": false
+    },
+    {
+        "name": "pt_pin",
+        "value": "jd_XgYOBMKfcELO",
+        "domain": ".jd.com",
+        "expiry": 1739377098,
+        "httpOnly": true,
+        "path": "/",
+        "sameSite": "Lax",
+        "secure": false
+    },
+    {
+        "name": "pt_key",
+        "value": "app_openAAJnq3hKADAIzkQqkmx-746EKlh_HSXouAAhtSq3_kLE_O3HM93vu5-rhHvb7N0SmKEL9WWeu6M",
+        "domain": ".jd.com",
+        "expiry": 1739377098,
+        "httpOnly": true,
+        "path": "/",
+        "sameSite": "Lax",
+        "secure": false
+    }
+]

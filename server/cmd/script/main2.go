@@ -26,7 +26,7 @@ func main() {
 	//======================
 	// action := "getpayurl"
 	// ck := "pin=jd_44754e08b8767;wskey=AAJnqh-tADAzXrPjDuVgolEya6lscGQnnbW2IxYvV_Lzwj1_9aoHgxL6zd1GEWMuHVtky94yqzs;"
-	// sku := "10085738847942"
+	// sku := "10077221265581"
 	// adress := "李先生 13756376578 江西省宜春地区宜春市 建设路11号19A"
 	// // ip := "http://211.95.152.42:11641"
 	// ip := ""
@@ -34,13 +34,13 @@ func main() {
 	// jdorderid := ""
 
 	//===========================
-	action := "checkorder"
+	action := "getpayurl"
 	ck := "pin=jd_44754e08b8767;wskey=AAJnqh-tADAzXrPjDuVgolEya6lscGQnnbW2IxYvV_Lzwj1_9aoHgxL6zd1GEWMuHVtky94yqzs;"
-	sku := "10085738847942"
+	sku := "10077221265581"
 	adress := "李先生 13756376578 江西省宜春地区宜春市 建设路11号19A"
-	ip := "211.95.152.52:15814"
+	ip := ""
 	orderid := "df7643b5586d43b49bc3ce17487f687c"
-	jdorderid := "309832923825"
+	jdorderid := ""
 
 	cmd := exec.Command("python3", "../jd/main.py", action, ck, sku, orderid, jdorderid, adress, ip)
 	output, err := cmd.CombinedOutput()
