@@ -23,7 +23,7 @@ func (r *PartnerRepo) Register(c echo.Context, p *model.Partner) (*model.Partner
 	db := data.Instance()
 
 	var partner model.Partner
-	err := db.Where("name = ?", p.Nickname).First(&partner).Error
+	err := db.Where("nickname = ?", p.Nickname).First(&partner).Error
 	if err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, errors.New("合作商名称已注册")
 	}

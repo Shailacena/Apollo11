@@ -51,8 +51,8 @@ export function useAppContext() {
 function AppProvider({ children }: { children: React.ReactNode }) {
   // let [token, setToken] = React.useState<any>(null);
   // let [name, setName] = React.useState<any>(null);
-  let [id, setID] = React.useState<any>(null);
-  let [level, setLevel] = React.useState(0);
+  // let [id, setID] = React.useState<any>(null);
+  // let [level, setLevel] = React.useState(0);
   let [partnerList] = React.useState<any>(null);
 
   let [cookie, setCookie, removeCookie] = useCookies([CookieFiled.Token, CookieFiled.Nickname, CookieFiled.Role, CookieFiled.ID, CookieFiled.LEVEL]);

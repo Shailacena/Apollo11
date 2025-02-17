@@ -5,7 +5,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../AppProvider';
 import { getRouteConfig } from './RouteConfigs';
 import axios from 'axios';
-import { PartnerLoginReq, useApis } from '../api/api';
+import { useApis } from '../api/api';
+import { PartnerLoginReq } from '../api/types';
 
 // const TAG = 'Partner Login';
 

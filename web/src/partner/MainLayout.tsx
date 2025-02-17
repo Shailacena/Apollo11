@@ -81,7 +81,7 @@ function MainLayout() {
             }} trigger={['click']}>
               <a style={{ color: "#fff" }} onClick={(e) => e.preventDefault()}>
                 <Space>
-                  {ctx.auth.name}
+                  {/* {ctx.auth.name} */}
                   <DownOutlined />
                 </Space>
               </a>
