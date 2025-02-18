@@ -88,7 +88,7 @@ class CookieLogin():
             self.addErr('init:')
             self.addErr(e)
         
-        if hasattr(self, "proxyip") == False or self.proxyip != "":
+        if hasattr(self, "proxyip") == False or self.proxyip == "":
             self.getProxyIp()
 
         # 设置超时时间，例如3秒
@@ -142,7 +142,7 @@ class CookieLogin():
                 raise
 
     def inter_request(self, request):
-        print('inter_request', request)
+        # print('inter_request', request)
         try:
             if 'params' in request:
                 if 'plogin.m.jd.com' in request['params']['documentURL']:
@@ -153,7 +153,7 @@ class CookieLogin():
                     self.start(self.argv)
 
                 if 'weixin' in request['params']['documentURL']:
-                    print('inter_request weixin pay', request['params']['documentURL'])
+                    # print('inter_request weixin pay', request['params']['documentURL'])
                     self.wxurl = request['params']['documentURL']
                     if hasattr(self, 'orderId'):
                         if login.saveOrder == False:
@@ -873,12 +873,10 @@ class CookieLogin():
                     while True:
                         time.sleep(1)
                 except KeyboardInterrupt:
-                    print('中断退出')
-
-                self.close()
-                if (len(self.output['err'])) > 0:
-                    print('发生错误:')
-                print(json.dumps(self.output))
+                    self.close()
+                    if (len(self.output['err'])) > 0:
+                        print(json.dumps(self.output))
+                    raise ValueError('Interrupt out')
         elif argv[1] == 'checkorder':
             try:
                 self.init(argv)
@@ -890,8 +888,7 @@ class CookieLogin():
             finally:
                 self.close()
                 if (len(self.output['err'])) > 0:
-                    print('发生错误:')
-                print(json.dumps(self.output))
+                    print(json.dumps(self.output))
         elif argv[1] == 'getpayurl_my':
             try:
                 self.init(argv)
@@ -903,8 +900,7 @@ class CookieLogin():
             finally:
                 self.close()
                 if (len(self.output['err'])) > 0:
-                    print('发生错误:')
-                print(json.dumps(self.output))
+                    print(json.dumps(self.output))
 
 if __name__ == '__main__':
     # print('开始')
@@ -915,18 +911,18 @@ if __name__ == '__main__':
     #标记是否保存过wxurl链接到缓存订单中
     login.saveOrder = False
     login.argv = sys.argv
-    # a = [
-    #     "",
-    #     # "getpayurl",
-    #     "checkorder",
-    #     "pin=jd_NnRLHEZashtE;wskey=AAJnkAPKAECpKtR5aTHqaMQFZiekKQxPhlLqnTWFdEBtFHapDD0CrI9I-jIjV7QzxQHVCsUCMQm4aC4EgfRodXVaNIgIYVoN;",
-    #     "10077221265581",
-    #     "df7643b5586d43b49bc3ce17487f687c",
-    #     "310406434923",
-    #     "李先生 13756376578 江西省宜春地区宜春市 建设路11号19A",
-    #     "211.95.152.52:17976",
-    # ]
-    # login.argv = a
+    a = [
+        "",
+        # "getpayurl",
+        "checkorder",
+        "pin=jd_NnRLHEZashtE;wskey=AAJnkAPKAECpKtR5aTHqaMQFZiekKQxPhlLqnTWFdEBtFHapDD0CrI9I-jIjV7QzxQHVCsUCMQm4aC4EgfRodXVaNIgIYVoN;",
+        "10077221265581",
+        "df7643b5586d43b49bc3ce17487f687c",
+        "310406434923",
+        "李先生 13756376578 江西省宜春地区宜春市 建设路11号19A",
+        "1",
+    ]
+    login.argv = a
     login.start(login.argv)
     
 

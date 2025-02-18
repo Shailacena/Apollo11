@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试链接</title>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+
+</head>
+<body>
+    <button id="postButton">发起购买请求</button>
+    <pre id="response"></pre>
+ 
+    <script>
+        document.getElementById('postButton').addEventListener('click', function() {
+            fetch('http://120.79.24.88:9000/payment/order', {
+                method: 'POST', // or 'PUT'
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    mchId: "10000",
+                    outTradeNo: "P123123123",
+                    amount: 5,
+                    notifyUrl: "",
+                    extParam: ""
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data); // 在控制台打印结果
+                document.getElementById('response').textContent = JSON.stringify(data, null, 2); // 在页面上显示结果
+                if (data.code === 0) {
+                    window.location.href = data.data.payPageUrl;
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                document.getElementById('response').textContent = 'Error: ' + error.message;
+            });
+        });
+    </script>
+</body>
+</html>
