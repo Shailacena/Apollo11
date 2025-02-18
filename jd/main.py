@@ -121,7 +121,10 @@ class CookieLogin():
         
         current_dir = os.path.dirname(os.path.abspath(__file__))
 
-        # mac平台
+        # 平台判断
+        if sys.platform == 'linux':
+            path = os.path.join(current_dir, 'chromedriver-linux64', 'chromedriver')
+            self.drive = uc.Chrome(options=options, enable_cdp_events=True, driver_executable_path=path)
         if sys.platform == 'darwin':
             path = os.path.join(current_dir, 'chromedriver-mac-x64-133', 'chromedriver')
             # path = '/Users/admin/Documents/Apollo11/jd/chromedriver-mac-x64-133/chromedriver'

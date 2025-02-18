@@ -9,6 +9,7 @@
         body {
             display: flex;
             justify-content: center;
+            flex-direction: column;
             align-items: center;
             height: 100vh;
             margin: 0;
@@ -30,8 +31,14 @@
 
 </head>
 <body>
-    <button id="postButton">发起购买请求</button>
-    <pre id="response"></pre>
+    <div>
+        <button id="postButton">发起购买请求</button>
+    </div>
+    
+    <div style="margin-top: 20px;">
+        <text id="response">点击按钮下单</text>
+    </div>
+    
  
     <script>
         document.getElementById('postButton').addEventListener('click', function() {
