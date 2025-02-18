@@ -78,3 +78,9 @@ Chrome浏览器自动升级导致driver失效
 
 /Users/admin/Library/Python/3.9/lib/python/site-packages/undetected_chromedriver/patcher.py
 352行patch_exe，去掉检查新版本
+
+/Users/admin/Library/Python/3.9/lib/python/site-packages/selenium/webdriver/remote/webdriver.py
+247行 返回空
+
+/Users/admin/Library/Python/3.9/lib/python/site-packages/undetected_chromedriver/webelement.py
+60行 返回空
