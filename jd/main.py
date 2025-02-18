@@ -115,7 +115,7 @@ class CookieLogin():
         # 禁止弹窗
         options.add_experimental_option("prefs", {"profile.default_content_setting_values.notifications" : 2})
         
-        options.add_argument('--headless')
+        # options.add_argument('--headless')
 
         if hasattr(self, "proxyip") and self.proxyip != "":
             options.add_argument("--proxy-server=%s" % self.proxyip)
@@ -140,11 +140,11 @@ class CookieLogin():
         self.url = 'https://plogin.m.jd.com/login/login'
         self.drive.add_cdp_listener('Network.requestWillBeSent', self.inter_request)
         self.wait = WebDriverWait(self.drive, 5) 
-        if hasattr(self, "proxyip") and self.proxyip != '':
-            if checkProxy.check_proxy(self.proxyip) == False:
-                self.output['status'] = -7
-                self.addErr('ip time out' + self.proxyip)
-                raise
+        # if hasattr(self, "proxyip") and self.proxyip != '':
+        #     if checkProxy.checkByPin(self.proxyip) == False:
+        #         self.output['status'] = -7
+        #         self.addErr('ip time out' + self.proxyip)
+        #         raise
 
     def inter_request(self, request):
         # print('inter_request', request)
@@ -783,7 +783,7 @@ class CookieLogin():
         self.output['step'].append('getProxyIp in')
         session = requests.session()
         API = 'https://api.wandouapp.com/?app_key=f8367eaaea4c2508afdba24c4d41ab3b&num=1&xy=1&type=1&lb=\r\n&nr=0&area_id=&isp=0&'
-        ips = session.get(API).text.split('\r\n')
+        ips = session.get(API, headers={"X-Forwarded-For": "120.229.36.68"}).text.split('\r\n')
         if '-1' in ips[0]:
             self.addErr('getProxyIp fail')
             raise
@@ -916,18 +916,19 @@ if __name__ == '__main__':
     #标记是否保存过wxurl链接到缓存订单中
     login.saveOrder = False
     login.argv = sys.argv
-    # a = [
-    #     "",
-    #     # "getpayurl",
-    #     "checkorder",
-    #     "pin=jd_NnRLHEZashtE;wskey=AAJnkAPKAECpKtR5aTHqaMQFZiekKQxPhlLqnTWFdEBtFHapDD0CrI9I-jIjV7QzxQHVCsUCMQm4aC4EgfRodXVaNIgIYVoN;",
-    #     "10077221265581",
-    #     "df7643b5586d43b49bc3ce17487f687c",
-    #     "310406434923",
-    #     "李先生 13756376578 江西省宜春地区宜春市 建设路11号19A",
-    #     "1",
-    # ]
-    # login.argv = a
+    a = [
+        "",
+        # "getpayurl",
+        "checkorder",
+        "pin=jd_44754e08b8767;wskey=AAJnqh-tADAzXrPjDuVgolEya6lscGQnnbW2IxYvV_Lzwj1_9aoHgxL6zd1GEWMuHVtky94yqzs",
+        # "pin=jd_NnRLHEZashtE;wskey=AAJnkAPKAECpKtR5aTHqaMQFZiekKQxPhlLqnTWFdEBtFHapDD0CrI9I-jIjV7QzxQHVCsUCMQm4aC4EgfRodXVaNIgIYVoN;",
+        "10077221265581",
+        "df7643b5586d43b49bc3ce17487f687c",
+        "310406434923",
+        "李先生 13756376578 江西省宜春地区宜春市 建设路11号19A",
+        "",
+    ]
+    login.argv = a
     login.start(login.argv)
     
 

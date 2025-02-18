@@ -1,10 +1,13 @@
 
+import platform
+import subprocess
 import requests
  
 def check_proxy(proxy):
     # print(proxy)
     try:
         response = requests.get('http://www.baidu.com', proxies={'http': proxy, 'https': proxy}, timeout=10)
+        print(response)
         if response.status_code == 200:
             return True
         else:
@@ -38,6 +41,19 @@ def check_proxy_demo():
         except Exception as e:
             print('{}:{}'.format(x,str(e)))
 
+def checkByPin(proxy):
+    # 根据操作系统选择ping命令
+    if platform.system().lower() == 'windows':
+        args = ['ping', '-n', '1', proxy]
+    else:
+        args = ['ping', '-c', '1', proxy]
+    
+    try:
+        output = subprocess.check_output(args, stderr=subprocess.STDOUT)
+        print(output.decode())
+        return 'bytes from' in output.decode()  # 如果包含'bytes from'，则表示可达
+    except subprocess.CalledProcessError:
+        return False
 # 获取IP
 # session = requests.session()
 # API = 'https://api.wandouapp.com/?app_key=f8367eaaea4c2508afdba24c4d41ab3b&num=1&xy=1&type=1&lb=\r\n&nr=0&area_id=&isp=0&'
