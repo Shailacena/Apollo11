@@ -59,6 +59,7 @@ class CookieLogin():
             # -4 JD_appjmp 接口错误 请重试或者更换IP
             # -5 JD_appjmp提取Cookie错误 请重试或者更换IP
             # -6 WsKey状态失效;token有fake
+
             # -7 代理ip失效
             
             # 100 已付款，待收货
@@ -142,7 +143,7 @@ class CookieLogin():
         if hasattr(self, "proxyip") and self.proxyip != '':
             if checkProxy.check_proxy(self.proxyip) == False:
                 self.output['status'] = -7
-                self.addErr('ip time out')
+                self.addErr('ip time out' + self.proxyip)
                 raise
 
     def inter_request(self, request):
@@ -915,18 +916,18 @@ if __name__ == '__main__':
     #标记是否保存过wxurl链接到缓存订单中
     login.saveOrder = False
     login.argv = sys.argv
-    a = [
-        "",
-        # "getpayurl",
-        "checkorder",
-        "pin=jd_NnRLHEZashtE;wskey=AAJnkAPKAECpKtR5aTHqaMQFZiekKQxPhlLqnTWFdEBtFHapDD0CrI9I-jIjV7QzxQHVCsUCMQm4aC4EgfRodXVaNIgIYVoN;",
-        "10077221265581",
-        "df7643b5586d43b49bc3ce17487f687c",
-        "310406434923",
-        "李先生 13756376578 江西省宜春地区宜春市 建设路11号19A",
-        "1",
-    ]
-    login.argv = a
+    # a = [
+    #     "",
+    #     # "getpayurl",
+    #     "checkorder",
+    #     "pin=jd_NnRLHEZashtE;wskey=AAJnkAPKAECpKtR5aTHqaMQFZiekKQxPhlLqnTWFdEBtFHapDD0CrI9I-jIjV7QzxQHVCsUCMQm4aC4EgfRodXVaNIgIYVoN;",
+    #     "10077221265581",
+    #     "df7643b5586d43b49bc3ce17487f687c",
+    #     "310406434923",
+    #     "李先生 13756376578 江西省宜春地区宜春市 建设路11号19A",
+    #     "1",
+    # ]
+    # login.argv = a
     login.start(login.argv)
     
 
