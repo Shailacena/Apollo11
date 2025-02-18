@@ -1,33 +1,33 @@
 import { SearchOutlined } from "@ant-design/icons";
-import { Button, DatePicker, DatePickerProps, Flex, Form, Input, message, Select, SelectProps } from "antd";
+import { Button, Form, Input, message, Select, SelectProps } from "antd";
 
 const PartnerSearchForm = () => {
     const state_options: SelectProps['options'] = [
       { value: 0, label: '正常' },
       { value: 1, label: '冻结' }
     ];
-  
+
     const level_options: SelectProps['options'] = [
       { value: 0, label: '0' },
       { value: 1, label: '1' },
       { value: 2, label: '2' }
     ];
-  
+
     const [form] = Form.useForm();
-  
+
     const onFinish = (values: any) => {
       console.log('Search values:', values);
       message.success('Search Success!');
     };
-  
+
     const handleChange = (value: string | string[]) => {
       console.log(`Selected: ${value}`);
     };
-  
-    const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
-      console.log(date, dateString);
-    };
-  
+
+    // const onDateChange: DatePickerProps['onChange'] = (date, dateString) => {
+    //   console.log(date, dateString);
+    // };
+
     return (
       <Form
         form={form}

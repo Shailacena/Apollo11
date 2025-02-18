@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Button, Form, FormProps, Input, message, Modal } from 'antd';
-import { PartnerBaseInfoReq, useApis } from '../../api/api';
+import { useApis } from '../../api/api';
 import axios from 'axios';
 import TextArea from 'antd/es/input/TextArea';
+import { PartnerBaseInfoReq, PartnerUpdateReq } from '../../api/types';
 
 interface ModalDataType {
   isModalOpen: boolean
@@ -44,7 +45,7 @@ const PartnerSetCreditModal = (params: ModalDataType) => {
     setTitle(isEdit ? Title.EditTxt : Title.EditTxt)
   }, [isEdit])
 
-  const onFinish: FormProps<PartnerBaseInfoReq>['onFinish'] = async (value) => {
+  const onFinish: FormProps<PartnerUpdateReq>['onFinish'] = async (value) => {
     setFormDisabled(true)
     setConfirmLoading(true)
     try {
@@ -71,7 +72,7 @@ const PartnerSetCreditModal = (params: ModalDataType) => {
     });
   }
 
-  const handleEdit = async (value: PartnerBaseInfoReq) => {
+  const handleEdit = async (value: PartnerUpdateReq) => {
     await apis.partnerUpdate(value)
     params?.onOk?.();
     message.success(`修改成功`)
@@ -89,7 +90,7 @@ const PartnerSetCreditModal = (params: ModalDataType) => {
           onFinish={onFinish}
           initialValues={{ ...info }}
         >
-          <Form.Item<PartnerBaseInfoReq>
+          <Form.Item<PartnerUpdateReq>
             name="name"
             label="名称"
             required
@@ -97,7 +98,7 @@ const PartnerSetCreditModal = (params: ModalDataType) => {
             <Input />
           </Form.Item>
 
-          <Form.Item<PartnerBaseInfoReq>
+          <Form.Item<PartnerUpdateReq>
             name="priority"
             label="优先级"
             required
@@ -105,28 +106,28 @@ const PartnerSetCreditModal = (params: ModalDataType) => {
             <Input type='number' />
           </Form.Item>
 
-          <Form.Item<PartnerBaseInfoReq>
+          <Form.Item<PartnerUpdateReq>
             name="dailyLimit"
             label="每日限额"
           >
             <Input type='number' />
           </Form.Item>
 
-          <Form.Item<PartnerBaseInfoReq>
+          <Form.Item<PartnerUpdateReq>
             name="rechargeTime"
             label="充值时间"
           >
             <Input type='number' />
           </Form.Item>
 
-          <Form.Item<PartnerBaseInfoReq>
+          <Form.Item<PartnerUpdateReq>
             name="privateKey"
             label="私钥"
           >
             <Input />
           </Form.Item>
 
-          <Form.Item<PartnerBaseInfoReq>
+          <Form.Item<PartnerUpdateReq>
             name="remark"
             label="备注"
           >

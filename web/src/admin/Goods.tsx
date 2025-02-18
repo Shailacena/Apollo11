@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Button, Card, Divider, Form, Input, message, Modal, Select, Space, Table } from 'antd';
 import type { FormProps, TableProps } from 'antd';
-import { GoodsCreateReq, useApis } from '../api/api';
+import { useApis } from '../api/api';
 import axios from 'axios';
 import { useAppContext } from '../AppProvider';
+import { GoodsCreateReq } from '../api/types';
 
 interface DataType {
   key: string;
@@ -219,8 +220,8 @@ function Goods() {
   return (
     <>
       <Card>
-      <div>
-        <Button type="primary" onClick={showAddGoodsModal}>新增商品</Button>
+        <div>
+          <Button type="primary" onClick={showAddGoodsModal}>新增商品</Button>
         </div>
         <Divider />
         <Table<DataType>

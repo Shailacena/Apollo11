@@ -5,7 +5,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../AppProvider';
 import { getRouteConfig } from './RouteConfigs';
 import axios from 'axios';
-import { MerchantLoginReq, useApis } from '../api/api';
+import { useApis } from '../api/api';
+import { MerchantLoginReq } from '../api/types';
 
 // const TAG = 'Merchant Login';
 

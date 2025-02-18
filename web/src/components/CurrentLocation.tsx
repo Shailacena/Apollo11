@@ -9,7 +9,7 @@ interface CurrentLocationProps {
 }
 
 const CurrentLocation: React.FC<CurrentLocationProps> = ({routeconfigs}) => {
-  
+
   const location = useLocation();
   // 使用路由路径找到模块名称
   let routes: IRoute[] = []
@@ -30,7 +30,7 @@ const CurrentLocation: React.FC<CurrentLocationProps> = ({routeconfigs}) => {
     }
   }
 
-  function itemRender(currentRoute: any, params: any, items: any, paths: any) {
+  function itemRender(currentRoute: any, _: any, items: any, paths: any) {
     // console.log(location)
     // console.log(routes)
     let isLast = currentRoute?.path === items[items.length - 1]?.path;

@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { Divider, Form, FormProps, Input, message, Modal } from 'antd';
-import { MerchantSetPasswordReq, useApis } from '../../api/api';
+import { useApis } from '../../api/api';
 import axios from 'axios';
 import { useAppContext } from '../../AppProvider';
 
@@ -41,7 +41,7 @@ const SetPasswordModal = (params: MerchantSetPasswordDataType) => {
     setComponentDisabled(true)
     setConfirmLoading(true)
     try {
-      let { data } = await merchantSetPassword({id: Number(ctx.cookie.id), ...value})
+      let { data } = await merchantSetPassword({ id: Number(ctx.cookie.id), ...value })
       console.log(data)
       if (params.callback) {
         params.callback()
