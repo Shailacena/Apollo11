@@ -1,1 +1,1 @@
-python3 main.py getpayurl_my 'pin=jd_44754e08b8767;wskey=AAJnqh-tADAzXrPjDuVgolEya6lscGQnnbW2IxYvV_Lzwj1_9aoHgxL6zd1GEWMuHVtky94yqzs;'
+python3 main.py getpayurl_my "pin=jd_rnQayWzSzxie;wskey=AAJnjFGIAECZzqoiHl80yojPuCakPwEASKc7OrjjUfCj6NDFgdJsXoy-x9e5QgzXrf5L1pvHF3ymS33_VTrel-tpFtTwNO8U;"

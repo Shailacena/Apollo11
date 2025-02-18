@@ -68,6 +68,7 @@ class CookieLogin():
             # -103 订单已取消
             # -104 SKU不匹配
             # -105 待支付
+            # -106 已请求微信支付，但是微信返回异常，应该重新根据jd订单再生成一次微信码
         }
 
     def init(self, params):
@@ -88,7 +89,7 @@ class CookieLogin():
             self.addErr(e)
 
         # 设置超时时间，例如3秒
-        timeout = 60
+        timeout = 600
         signal.signal(signal.SIGALRM, self.logTimeoutAndRaise)
         signal.alarm(timeout)
 
@@ -107,7 +108,8 @@ class CookieLogin():
         # opactions.add_argument(f"user-agent={headers['User-Agent']}")
         # opactions.add_argument('sec-ch-ua-platform="Android"')
         options = ChromeOptions()
-
+        # 禁止弹窗
+        options.add_experimental_option("prefs", {"profile.default_content_setting_values.notifications" : 2})
         # options.add_argument('--headless')
 
         if hasattr(self, "proxyip") and self.proxyip != "":
@@ -137,6 +139,7 @@ class CookieLogin():
                 raise
 
     def inter_request(self, request):
+        print('inter_request', request)
         try:
             if 'params' in request:
                 if 'plogin.m.jd.com' in request['params']['documentURL']:
@@ -147,7 +150,7 @@ class CookieLogin():
                     self.start(self.argv)
 
                 if 'weixin' in request['params']['documentURL']:
-                    # print('inter_request weixin pay', request['params']['documentURL'])
+                    print('inter_request weixin pay', request['params']['documentURL'])
                     self.wxurl = request['params']['documentURL']
                     if hasattr(self, 'orderId'):
                         if login.saveOrder == False:
@@ -329,6 +332,8 @@ class CookieLogin():
         # print('====================>打开商品后')
         self.output['step'].append('openGoods2buy in')
 
+        # time.sleep(10000)
+
         # 立即购买
         buyimielement = self.wait.until(
             EC.element_to_be_clickable((By.ID, "rightBtn"))
@@ -352,34 +357,34 @@ class CookieLogin():
             raise
 
         # 点卡充值提示弹窗
-        try:
-            nut_dialog__mask = self.drive.find_element(By.XPATH,'//*[contains(text(), "充值类商品")]/parent::div/parent::div/parent::div')
-            nut_button = nut_dialog__mask.find_element(By.XPATH, '//button[contains(@class,"nut-button")]')
-            # print(1, nut_dialog__mask.get_attribute('innerHTML'))
-            # print(2, nut_button.get_attribute('innerHTML'))
-            try:
-                nut_button.click()
-                self.output['step'].append('openGoods2buy click nut_button 1')
-            except Exception as e:
-                # 使用模拟鼠标点击
-                try:
-                    ActionChains(self.drive).click(nut_button).perform()
-                    self.output['step'].append('openGoods2buy click nut_button 2')
-                except Exception as e:
-                    try:
-                        self.drive.execute_script("arguments[0].click();", nut_button)
-                        self.output['step'].append('openGoods2buy click nut_button 3')
-                    except Exception as e:
-                        self.output['step'].append('openGoods2buy can not click nut_button')
+        # try:
+        #     nut_dialog__mask = self.drive.find_element(By.XPATH,'//*[contains(text(), "充值类商品")]/parent::div/parent::div/parent::div')
+        #     nut_button = nut_dialog__mask.find_element(By.XPATH, '//button[contains(@class,"nut-button")]')
+        #     # print(1, nut_dialog__mask.get_attribute('innerHTML'))
+        #     # print(2, nut_button.get_attribute('innerHTML'))
+        #     try:
+        #         nut_button.click()
+        #         self.output['step'].append('openGoods2buy click nut_button 1')
+        #     except Exception as e:
+        #         # 使用模拟鼠标点击
+        #         try:
+        #             ActionChains(self.drive).click(nut_button).perform()
+        #             self.output['step'].append('openGoods2buy click nut_button 2')
+        #         except Exception as e:
+        #             try:
+        #                 self.drive.execute_script("arguments[0].click();", nut_button)
+        #                 self.output['step'].append('openGoods2buy click nut_button 3')
+        #             except Exception as e:
+        #                 self.output['step'].append('openGoods2buy can not click nut_button')
             
-            # 删除mask
-            # nut_dialog__mask = self.drive.find_element(By.XPATH, '//div[contains(@class,"nut-dialog__mask")]/parent::div')
-            # self.drive.execute_script("arguments[0].remove();", nut_dialog__mask)
+        #     # 删除mask
+        #     # nut_dialog__mask = self.drive.find_element(By.XPATH, '//div[contains(@class,"nut-dialog__mask")]/parent::div')
+        #     # self.drive.execute_script("arguments[0].remove();", nut_dialog__mask)
 
-            self.output['step'].append('openGoods2buy find [nut_button and click]')
-        except Exception as e:
-            self.addLog('no e card tip dialog')
-            # print('没有点卡充值提示')
+        #     self.output['step'].append('openGoods2buy find [nut_button and click]')
+        # except Exception as e:
+        #     self.addLog('no e card tip dialog')
+        #     # print('没有点卡充值提示')
 
         # 是否未填地址
         if self.checkaddress():
@@ -436,6 +441,7 @@ class CookieLogin():
     def shouyintai(self):
         self.output['step'].append('shouyintai in')
 
+        time.sleep(5)
         # ===================只有微信支付方式==================================
 
         # 删除京东银行卡支付
@@ -447,12 +453,13 @@ class CookieLogin():
 
         #找到含有微信的父父节点
         try:
-            pelement = self.drive.find_element(By.XPATH,'//*[contains(text(), "微信支付")]/parent::div/parent::div/parent::div/parent::div/parent::div')
+            pelement = self.drive.find_element(By.XPATH,'//*[contains(text(), "微信支付")]/parent::div/parent::div/parent::div/parent::div')
         except Exception as e:
             self.output['step'].append('shouyintai not find wechat pay')
         # 打印元素的innerHTML
         # if isinstance(pelement, WebElement):
         #     print(pelement.get_attribute('innerHTML'))
+        time.sleep(1)
 
         try:
             wechatcheckbox = pelement.find_element(By.CLASS_NAME, 'checkboxWrap')
@@ -478,23 +485,27 @@ class CookieLogin():
                 self.output['step'].append('shouyintai can not choose wechat pay')
         
         # print('====================>勾选checkbox后')
-        # self.drive.execute_script("arguments[0].checked = true;", wechatcheckbox)
-
-        # time.sleep(100)
+        self.drive.execute_script("arguments[0].checked = true;", wechatcheckbox)
 
         try:
             paybottom = self.drive.find_element(By.CLASS_NAME, 'PayButtom')
             paybtn = paybottom.find_element(By.CLASS_NAME, 'payBtn')
         except Exception as e:
-            paybtn = self.drive.find_element(By.XPATH,'//*[contains(text(), "确认付款")]/parent::div')
-
+            # paybtn = self.drive.find_element(By.XPATH,'//*[contains(text(), "确认付款")]/parent::div')
+            paybtn = self.wait.until(
+                        EC.element_to_be_clickable((By.XPATH, '//*[contains(text(), "确认付款")]/parent::div'))
+                    )
+            
         self.output['step'].append('shouyintai find [pay button]')
         # print('====================>找到支付按钮')
 
-        time.sleep(1)
+        # time.sleep(1)
         paybtn.click()
 
         # print('====================>点击支付按钮后')
+        self.output['step'].append('shouyintai click [pay button]')
+
+        # time.sleep(100)
 
         try:
         # 等待页面加载完成
@@ -506,6 +517,16 @@ class CookieLogin():
 
             # 等待10s
             time.sleep(5)
+
+            try:
+                self.drive.find_element(By.XPATH,'//*[contains(text(), "支付确认")]')
+            except Exception as e:
+                if hasattr(self, 'wxurl'):
+                    if self.wxurl == '':
+                        self.output['status'] = -106
+                else:
+                    self.output['status'] = -106
+
             # print(self.drive.page_source)
         except TimeoutExpired:
             self.addErr('收银台超时')
@@ -828,6 +849,17 @@ class CookieLogin():
             except Exception as e:
                 self.addErr(e)
             finally:
+                try:
+                    self.drive.switch_to.alert.accept()
+                except Exception as e:
+                    self.output['step'].append('alert')
+
+                try:
+                    while True:
+                        time.sleep(1)
+                except KeyboardInterrupt:
+                    print('中断退出')
+
                 self.close()
                 if (len(self.output['err'])) > 0:
                     print('发生错误:')
@@ -868,7 +900,19 @@ if __name__ == '__main__':
     #标记是否保存过wxurl链接到缓存订单中
     login.saveOrder = False
     login.argv = sys.argv
-    login.start(sys.argv)
+    a = [
+        "",
+        # "getpayurl",
+        "checkorder",
+        "pin=jd_NnRLHEZashtE;wskey=AAJnkAPKAECpKtR5aTHqaMQFZiekKQxPhlLqnTWFdEBtFHapDD0CrI9I-jIjV7QzxQHVCsUCMQm4aC4EgfRodXVaNIgIYVoN;",
+        "10077221265581",
+        "df7643b5586d43b49bc3ce17487f687c",
+        "310406434923",
+        "李先生 13756376578 江西省宜春地区宜春市 建设路11号19A",
+        "211.95.152.52:17976",
+    ]
+    login.argv = a
+    login.start(login.argv)
     
 
 

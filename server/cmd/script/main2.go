@@ -35,10 +35,10 @@ func main() {
 
 	//===========================
 	action := "getpayurl"
-	ck := "pin=jd_44754e08b8767;wskey=AAJnqh-tADAzXrPjDuVgolEya6lscGQnnbW2IxYvV_Lzwj1_9aoHgxL6zd1GEWMuHVtky94yqzs;"
+	ck := "pin=jd_rnQayWzSzxie;wskey=AAJnjFGIAECZzqoiHl80yojPuCakPwEASKc7OrjjUfCj6NDFgdJsXoy-x9e5QgzXrf5L1pvHF3ymS33_VTrel-tpFtTwNO8U;"
 	sku := "10077221265581"
 	adress := "李先生 13756376578 江西省宜春地区宜春市 建设路11号19A"
-	ip := ""
+	ip := "211.95.152.52:12882"
 	orderid := "df7643b5586d43b49bc3ce17487f687c"
 	jdorderid := ""
 
