@@ -113,7 +113,8 @@ class CookieLogin():
         options = ChromeOptions()
         # 禁止弹窗
         options.add_experimental_option("prefs", {"profile.default_content_setting_values.notifications" : 2})
-        # options.add_argument('--headless')
+        
+        options.add_argument('--headless')
 
         if hasattr(self, "proxyip") and self.proxyip != "":
             options.add_argument("--proxy-server=%s" % self.proxyip)

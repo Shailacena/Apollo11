@@ -45,12 +45,17 @@ class CookieLogin():
             # -6 WsKey状态失效;token有fake
         }
 
+    
+
     def init1(self):
         options = ChromeOptions()
         options.add_argument('--headless')
+        current_dir = os.path.dirname(os.path.abspath(__file__))
         # mac平台
         if sys.platform == 'darwin':
-            self.drive = uc.Chrome(options=options, enable_cdp_events=True, driver_executable_path="/Users/admin/Documents/Apollo11/jd/chromedriver-mac-x64-133/chromedriver")
+            path = os.path.join(current_dir, 'chromedriver-mac-x64-133', 'chromedriver')
+            # path = '/Users/admin/Documents/Apollo11/jd/chromedriver-mac-x64-133/chromedriver'
+            self.drive = uc.Chrome(options=options, enable_cdp_events=True, driver_executable_path=path)
         if sys.platform == 'windows':
             # windows平台
             self.drive = uc.Chrome(enable_cdp_events=True, driver_executable_path=r"F:\henry\z_local\Cooking\Apollo11\jd\chromedriver-win64\chromedriver.exe")
