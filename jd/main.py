@@ -87,9 +87,12 @@ class CookieLogin():
         except Exception as e:
             self.addErr('init:')
             self.addErr(e)
+        
+        if hasattr(self, "proxyip") == False or self.proxyip != "":
+            self.getProxyIp()
 
         # 设置超时时间，例如3秒
-        timeout = 600
+        timeout = 60
         signal.signal(signal.SIGALRM, self.logTimeoutAndRaise)
         signal.alarm(timeout)
 
@@ -771,6 +774,18 @@ class CookieLogin():
         
         self.logcheckOrderPayAndRaise()
 
+    def getProxyIp(self):
+        self.output['step'].append('getProxyIp in')
+        session = requests.session()
+        API = 'https://api.wandouapp.com/?app_key=f8367eaaea4c2508afdba24c4d41ab3b&num=1&xy=1&type=1&lb=\r\n&nr=0&area_id=&isp=0&'
+        ips = session.get(API).text.split('\r\n')
+        if '-1' in ips[0]:
+            self.addErr('getProxyIp fail')
+            raise
+        else:
+            self.proxyip = ips[0]
+            self.output['step'].append('getProxyIp success')
+    
     def getOrderDeatilParam(self):
         try:
             # 待支付页面没有这个eparam
@@ -900,18 +915,18 @@ if __name__ == '__main__':
     #标记是否保存过wxurl链接到缓存订单中
     login.saveOrder = False
     login.argv = sys.argv
-    a = [
-        "",
-        # "getpayurl",
-        "checkorder",
-        "pin=jd_NnRLHEZashtE;wskey=AAJnkAPKAECpKtR5aTHqaMQFZiekKQxPhlLqnTWFdEBtFHapDD0CrI9I-jIjV7QzxQHVCsUCMQm4aC4EgfRodXVaNIgIYVoN;",
-        "10077221265581",
-        "df7643b5586d43b49bc3ce17487f687c",
-        "310406434923",
-        "李先生 13756376578 江西省宜春地区宜春市 建设路11号19A",
-        "211.95.152.52:17976",
-    ]
-    login.argv = a
+    # a = [
+    #     "",
+    #     # "getpayurl",
+    #     "checkorder",
+    #     "pin=jd_NnRLHEZashtE;wskey=AAJnkAPKAECpKtR5aTHqaMQFZiekKQxPhlLqnTWFdEBtFHapDD0CrI9I-jIjV7QzxQHVCsUCMQm4aC4EgfRodXVaNIgIYVoN;",
+    #     "10077221265581",
+    #     "df7643b5586d43b49bc3ce17487f687c",
+    #     "310406434923",
+    #     "李先生 13756376578 江西省宜春地区宜春市 建设路11号19A",
+    #     "211.95.152.52:17976",
+    # ]
+    # login.argv = a
     login.start(login.argv)
     
 
