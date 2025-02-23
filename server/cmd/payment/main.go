@@ -1,7 +1,7 @@
 package main
 
 import (
-	"apollo/server/cmd/payment/order"
+	"apollo/server/cmd/payment/order/merchant"
 	"apollo/server/pkg/app"
 	"apollo/server/pkg/config"
 	"apollo/server/pkg/data"
@@ -33,8 +33,16 @@ func main() {
 	e.Static("/page", "cmd/payment/html")
 
 	paymentGroup := e.Group("/payment")
-	paymentGroup.GET("/order", order.GetOrderDetail)
-	paymentGroup.POST("/order", order.CreateOrder)
+	merchantOrderGroup := paymentGroup.Group("/merchant/order")
+	merchantOrderGroup.POST("/create", merchant.CreateOrder)
+	merchantOrderGroup.POST("/query", merchant.QueryOrder)
+	// orderGroup.POST("/query/balance", order.CreateOrder)
+
+	notifyGroup := paymentGroup.Group("/notify")
+	notifyGroup.POST("/agiso", merchant.AgisoNotify)
+
+	// innerOrderGroup := paymentGroup.Group("/o")
+	// innerOrderGroup.GET("/query", order.CreateOrder)
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", conf.PaymentHttpConfig.Port)))
 }

@@ -26,6 +26,18 @@ func (r *OrderRepo) Get(c echo.Context, orderId string) (*model.Order, error) {
 	return &order, err
 }
 
+func (r *OrderRepo) GetByMerchantOrderId(c echo.Context, merchantOrderId string) (*model.Order, error) {
+	db := data.Instance()
+
+	var order model.Order
+	err := db.Where("merchant_order_id = ?", merchantOrderId).First(&order).Error
+	if err != nil {
+		return nil, err
+	}
+
+	return &order, err
+}
+
 func (r *OrderRepo) List(c echo.Context) ([]*model.Order, error) {
 	db := data.Instance()
 
