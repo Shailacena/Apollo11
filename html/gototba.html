@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="
+https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css
+" rel="stylesheet">
+    <script src="
+https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js
+"></script>
+    <title>淘宝直付</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            height: 100%;
+            padding: 5px;
+            background-color: ghostwhite;
+        }
+
+        .item {
+            margin-top: 10px;
+        }
+
+        .rounded-box {
+            background-color: white;
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            /* 垂直居中 */
+        }
+
+        .price-item {
+            height: 80px;
+        }
+
+        .space-between {
+            justify-content: space-between;
+            /* 两端对齐 */
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+        }
+
+        .text-left {
+            font-size: 28px;
+            color: black;
+        }
+
+        .text-right {
+            font-size: 28px;
+            color: red;
+        }
+
+        .red {
+            color: red;
+        }
+
+        .green {
+            color: #1AAD19;
+        }
+
+        .orange {
+            color: orange;
+        }
+
+        .text-size-auto {
+            font-size: 4vw;
+        }
+
+        .text-size-7 {
+            font-size: 8px;
+        }
+
+        .text-size-6 {
+            font-size: 12px;
+        }
+
+        .text-size-5 {
+            font-size: 18px;
+        }
+
+        .text-size-4 {
+            font-size: 20px;
+        }
+
+        .text-size-3 {
+            font-size: 22px;
+        }
+
+        .text-size-2 {
+            font-size: 28px;
+        }
+
+        .text-size-1 {
+            font-size: 32px;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-left {
+            text-align: left;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .padding-20 {
+            padding: 20px;
+        }
+
+        .text-bolder {
+            font-weight: bolder;
+        }
+
+        .box-grid {
+            display: grid;
+            /* 或者使用 display: grid; */
+            margin-bottom: 10px;
+            /* 下边距 */
+            padding-left: 50px;
+        }
+
+        .separator {
+            height: 0.5px;
+            /* 分割线高度 */
+            background-color: rgba(0, 0, 0, 0.2);
+            /* 分割线颜色 */
+            margin: 5px 0;
+            /* 控制与上下元素的间距 */
+        }
+
+        .circle-item {
+            position: relative;
+        }
+
+        .circle-item::before {
+            content: "\2713"; /* 勾的Unicode字符 */
+            position: absolute;
+            color: white; /* 白色 */
+            font-size: 8px; /* 根据需要调整大小 */
+            text-align: center; /* 文本居中 */
+            top: 4px;
+            /* 根据需要调整 */
+            left: -29px;
+            /* 根据需要调整 */
+            width: 10px;
+            /* 圆圈直径 */
+            height: 10px;
+            /* 圆圈直径 */
+            background-color: #1AAD19;
+            /* 圆圈颜色 */
+            border-radius: 50%;
+            /* 圆形 */
+        }
+
+        .circle-container {
+            position: relative;
+        }
+
+        /* 为了显示线条连接效果，可以给第一个元素之前的圆圈添加额外的样式或者使用边框 */
+        .circle-container::before {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 25px;
+            /* 与.circle-item::before的left一致 */
+            width: 1px;
+            /* 线条宽度 */
+            height: calc(100% - 30px);
+            /* 高度覆盖所有元素加上间距 */
+            background-color: #1AAD19;
+            /* 线条颜色 */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="item">
+        订单号:<span id="orderId"></span>
+    </div>
+
+    <div class="rounded-box item space-between price-item">
+        <div class="text-left">
+            充值金额
+        </div>
+        <div class="text-right">
+            ¥<span id="price"></span>
+        </div>
+    </div>
+
+    <div class="item red text-size-auto">
+        请勿用微信支付方式，造成损失不退不补
+    </div>
+
+    <div class="d-grid gap-2 item">
+        <button onclick="goPay()" type="button" class="btn btn-primary btn-lg">启动淘宝付款</button>
+        <div class="item center">
+            支付倒计时:
+            <span id="time" class="red text-bolder">
+                
+            </span>
+        </div>
+    </div>
+
+    <div class="item red text-size-auto text-center text-bolder">
+        注意：请勿超时支付和确认收货
+    </div>
+
+    <div class="rounded-box item box-grid text-size-6 circle-container">
+        <div class="green circle-item text-bolder">
+            点击<span class="red">【启动淘宝付款】</span>按钮，购买商品
+        </div>
+        <div class="separator"></div>
+        <div class="red text-bolder circle-item">
+            请不要选择其他店铺的商品或者修改价格和数量
+        </div>
+        <div class="separator"></div>
+        <div class="green circle-item text-bolder">
+            付款后，请点<span class="red">【确认收货】</span>，秒上分
+        </div>
+    </div>
+
+    <script>
+        function getUrlParams(url) {
+            // 通过 ? 分割获取后面的参数字符串
+            let urlStr = url.split('?')[1]
+            // 创建空对象存储参数
+            let obj = {};
+            // 再通过 & 将每一个参数单独分割出来
+            let paramsArr = urlStr.split('&')
+            for (let i = 0, len = paramsArr.length; i < len; i++) {
+                // 再通过 = 将每一个参数分割为 key:value 的形式
+                let arr = paramsArr[i].split('=')
+                obj[arr[0]] = arr[1];
+            }
+            return obj
+        }
+
+        // let order = {}
+        // fetch(`${location.origin}/payment/order${location.search}`, { method: 'GET' })
+        //     .then((response) => response.json())
+        //     .then((resp) => {
+        //         console.log(resp.data);
+        //         order = resp.data
+
+        //         document.querySelector("#orderId").textContent = order.outTradeNo
+        //         document.querySelector("#price").textContent = (order.amount / 100) + '元'
+
+        //         document.getElementById('response').textContent = JSON.stringify(data, null, 2);
+        //     })
+
+        var fiveMinutes = 0
+        var sku = ''
+
+        function goPay() {
+            // console.log(order);
+            // if (!order.wxPayUrl) {
+            //     console.log("wxPayUrl为空");
+            //     return
+            // }
+            if (fiveMinutes > 0)
+                location.href = 'taobao://item.taobao.com/item.htm?id='+sku;
+            else {
+                alert('支付超时，请重新下单！');
+            }
+        }
+        
+        // 倒计时
+        function startCountdown(duration, display) {
+            var timer = duration, minutes, seconds;
+            let timeid = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + "分:" + seconds + '秒';
+
+                if (--timer < 0) {
+                    fiveMinutes = 0;
+                    clearInterval(timeid);
+                }
+            }, 1000);
+        }
+
+        window.onload = function () {
+            let params = getUrlParams(location.search)
+            console.log(params);
+
+            fiveMinutes = params.time
+            sku = params.sku
+            document.querySelector("#orderId").textContent = params.orderid
+            document.querySelector("#price").textContent = params.price
+
+            display = document.querySelector('#time');
+            startCountdown(fiveMinutes, display);
+        };
+    </script>
+</body>
+
+</html>

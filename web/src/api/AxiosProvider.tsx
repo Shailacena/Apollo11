@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from "react";
 import { request } from "./request";
 import { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { useAppContext } from "../AppProvider";
+import { Modal } from "antd";
 
 interface AxiosInstanceContextType {
   axiosInstance: AxiosInstance;
@@ -40,6 +41,13 @@ export function AxiosProvider({ children }: { children: React.ReactNode }) {
     }).catch((e: AxiosError) => {
       if (e.status == 401) {
         app.auth?.adminSignout(() => { })
+      } else if (e.status == 500) {
+        //@ts-ignore
+        if (e.response && e.response.data && e.response.data.message)
+          Modal.error({
+            //@ts-ignore
+            content: e.response.data.message,
+          });
       }
     })
   }
