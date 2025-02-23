@@ -185,7 +185,7 @@ https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js
 
 <body>
     <div class="item">
-        订单号:BF112234
+        订单号:<span id="orderId"></span>
     </div>
 
     <div class="rounded-box item space-between price-item">
@@ -193,7 +193,7 @@ https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js
             充值金额
         </div>
         <div class="text-right">
-            ¥50
+            ¥<span id="price"></span>
         </div>
     </div>
 
@@ -206,7 +206,7 @@ https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js
         <div class="item center">
             支付倒计时:
             <span id="time" class="red text-bolder">
-                05分00秒
+                
             </span>
         </div>
     </div>
@@ -244,8 +244,6 @@ https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js
             }
             return obj
         }
-        // let params = getUrlParams(location.search)
-        // console.log(params);
 
         // let order = {}
         // fetch(`${location.origin}/payment/order${location.search}`, { method: 'GET' })
@@ -260,15 +258,19 @@ https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js
         //         document.getElementById('response').textContent = JSON.stringify(data, null, 2);
         //     })
 
+        var fiveMinutes = 0
+        var sku = ''
+
         function goPay() {
             // console.log(order);
             // if (!order.wxPayUrl) {
             //     console.log("wxPayUrl为空");
             //     return
             // }
-            location.href = 'taobao://item.taobao.com/item.htm?id=642108934998';
+            if (fiveMinutes > 0)
+                location.href = 'taobao://item.taobao.com/item.htm?id='+sku;
         }
-
+        
         // 倒计时
         function startCountdown(duration, display) {
             var timer = duration, minutes, seconds;
@@ -282,14 +284,21 @@ https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js
                 display.textContent = minutes + "分:" + seconds + '秒';
 
                 if (--timer < 0) {
-                    timer = duration;
+                    fiveMinutes = 0;
                 }
             }, 1000);
         }
 
         window.onload = function () {
-            var fiveMinutes = 60 * 5, // 5 minutes in seconds
-                display = document.querySelector('#time');
+            let params = getUrlParams(location.search)
+            console.log(params);
+
+            fiveMinutes = params.time
+            sku = params.sku
+            document.querySelector("#orderId").textContent = params.orderid
+            document.querySelector("#price").textContent = params.price
+
+            display = document.querySelector('#time');
             startCountdown(fiveMinutes, display);
         };
     </script>
